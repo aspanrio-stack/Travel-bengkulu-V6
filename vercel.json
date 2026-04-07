@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.bengkulutravel.com"
+        }
+      ],
+      "destination": "https://bengkulutravel.com/:path*",
+      "permanent": true
+    }
+  ]
+}
