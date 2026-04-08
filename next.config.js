@@ -28,7 +28,7 @@ const nextConfig = {
       { source: '/2026/02/travel-bengkulu-ke-curup-door-to-door.html', destination: '/travel-bengkulu-curup', permanent: true },
 
       // [GSC-5] Bengkulu ke Jambi berapa jam
-      { source: '/2026/02/bengkulu-ke-jambi-berapa-jam.html', destination: '/jarak-jambi-bengkulu', permanent: true },
+      { source: '/2026/02/bengkulu-ke-jambi-berapa-jam.html', destination: 'bengkulu-ke-jambi-berapa-jam', permanent: true },
 
       // [GSC-6] Travel Bengkulu Palembang setiap hari
       { source: '/2026/02/travel-bengkulu-palembang-setiap-hari.html', destination: '/travel-bengkulu-palembang', permanent: true },
