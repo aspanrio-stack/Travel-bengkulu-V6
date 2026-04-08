@@ -18,10 +18,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/kirim-paket-bengkulu-palembang`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
     // Halaman "berapa jam" — keyword volume tinggi
     { url: `${baseUrl}/bengkulu-ke-palembang-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${baseUrl}/bengkulu-palembang-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/bengkulu-ke-jambi-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${baseUrl}/bengkulu-jambi-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${baseUrl}/jambi-bengkulu-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
+     { url: `${baseUrl}/jambi-bengkulu-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/jambi-bengkulu-berapa-jam-naik-mobil`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/bengkulu-ke-palembang`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     // Artikel
