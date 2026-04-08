@@ -21,7 +21,7 @@ const nextConfig = {
       { source: '/2026/02/travel-bengkulu-jambi.html', destination: '/travel-bengkulu-jambi', permanent: true },
 
       // [GSC-3] Label Bengkulu Palembang
-      { source: '/search/label/Bengkulu Palembang', destination: '/travel-bengkulu-palembang', permanent: true },
+    
       { source: '/search/label/Bengkulu%20Palembang', destination: '/travel-bengkulu-palembang', permanent: true },
 
       // [GSC-4] Travel Bengkulu ke Curup
