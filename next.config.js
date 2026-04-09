@@ -21,14 +21,14 @@ const nextConfig = {
       { source: '/2026/02/travel-bengkulu-jambi.html', destination: '/travel-bengkulu-jambi', permanent: true },
 
       // [GSC-3] Label Bengkulu Palembang
-    
+      { source: '/search/label/Bengkulu Palembang', destination: '/travel-bengkulu-palembang', permanent: true },
       { source: '/search/label/Bengkulu%20Palembang', destination: '/travel-bengkulu-palembang', permanent: true },
 
       // [GSC-4] Travel Bengkulu ke Curup
       { source: '/2026/02/travel-bengkulu-ke-curup-door-to-door.html', destination: '/travel-bengkulu-curup', permanent: true },
 
       // [GSC-5] Bengkulu ke Jambi berapa jam
-      { source: '/2026/02/bengkulu-ke-jambi-berapa-jam.html', destination: 'bengkulu-ke-jambi-berapa-jam', permanent: true },
+      { source: '/2026/02/bengkulu-ke-jambi-berapa-jam.html', destination: '/jarak-jambi-bengkulu', permanent: true },
 
       // [GSC-6] Travel Bengkulu Palembang setiap hari
       { source: '/2026/02/travel-bengkulu-palembang-setiap-hari.html', destination: '/travel-bengkulu-palembang', permanent: true },
@@ -53,6 +53,26 @@ const nextConfig = {
 
       // Travel Bengkulu ke Jambi (variasi slug)
       { source: '/2026/02/travel-bengkulu-ke-kota-jambi-door-to-door.html', destination: '/travel-bengkulu-jambi', permanent: true },
+
+      // ================================================================
+      // ================================================================
+      // BAGIAN 2.5: REDIRECT RUTE BARU — variasi slug Lebong & Lampung
+      // ================================================================
+
+      // Lebong variasi
+      { source: '/travel-bengkulu-ke-lebong', destination: '/travel-bengkulu-lebong', permanent: true },
+      { source: '/travel-lebong-ke-bengkulu', destination: '/travel-lebong-bengkulu', permanent: true },
+
+      // Lampung variasi
+      { source: '/travel-bengkulu-ke-lampung', destination: '/travel-bengkulu-lampung', permanent: true },
+      { source: '/travel-lampung-ke-bengkulu', destination: '/travel-lampung-bengkulu', permanent: true },
+
+      // BAGIAN 2.5: REDIRECT URL DUPLIKAT (tanpa kata 'ke' → canonical)
+      // ================================================================
+
+      // Variasi tanpa 'ke' redirect ke URL canonical yang ada di sitemap
+      { source: '/bengkulu-palembang-berapa-jam', destination: '/bengkulu-ke-palembang-berapa-jam', permanent: true },
+      { source: '/bengkulu-jambi-berapa-jam', destination: '/bengkulu-ke-jambi-berapa-jam', permanent: true },
 
       // ================================================================
       // BAGIAN 3: POLA FALLBACK
