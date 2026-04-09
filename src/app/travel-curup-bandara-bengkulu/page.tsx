@@ -16,7 +16,7 @@ export default function TravelCurupBandaraBengkulu() {
       description="Layanan antar jemput khusus dari Curup ke Bandara Fatmawati Soekarno Bengkulu. On-time guarantee, siap 24 jam."
       breadcrumbs={[{ label: 'Travel Curup ke Bandara Bengkulu' }]}
       badge="✈️ Airport Transfer"
-      price="Rp 150.000"
+      price="Rp 100.000"
     >
       <p>
         Kami menyediakan layanan <strong>antar jemput khusus dari Curup ke Bandara Fatmawati Soekarno Bengkulu</strong> yang dirancang khusus untuk penumpang pesawat. Ketepatan waktu adalah prioritas utama kami — driver kami selalu hadir sebelum waktu penjemputan dan memantau jadwal penerbangan Anda.
@@ -34,12 +34,12 @@ export default function TravelCurupBandaraBengkulu() {
         <tbody>
           <tr>
             <td>Curup → Bandara Bengkulu</td>
-            <td><strong>Rp 150.000</strong></td>
+            <td><strong>Rp 100.000</strong></td>
             <td>Per orang, door to door</td>
           </tr>
           <tr>
             <td>Bandara Bengkulu → Curup</td>
-            <td><strong>Rp 150.000</strong></td>
+            <td><strong>Rp 100.000</strong></td>
             <td>Per orang, door to door</td>
           </tr>
           <tr>
