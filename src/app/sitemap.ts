@@ -1,14 +1,14 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.bengkulutravel.com';
+  const baseUrl = 'https://bengkulutravel.com';
   const lastModified = new Date();
 
   return [
-    // ── Homepage ────────────────────────────────────────────
+    // ── Homepage ─────────────────────────────────────────────
     { url: baseUrl, lastModified, changeFrequency: 'weekly', priority: 1 },
 
-    // ── Halaman Travel Utama ─────────────────────────────────
+    // ── Halaman Travel Utama ──────────────────────────────────
     { url: `${baseUrl}/travel-bengkulu`, lastModified, changeFrequency: 'weekly', priority: 1 },
     { url: `${baseUrl}/travel-bengkulu-palembang`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/travel-palembang-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
@@ -20,16 +20,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/kirim-paket-bengkulu-palembang`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/bengkulu-ke-palembang`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
 
-    // ── Artikel "Berapa Jam" (canonical, tanpa duplikat) ─────
-    // /bengkulu-palembang-berapa-jam → redirect ke ini
+    // ── Rute Baru ─────────────────────────────────────────────
+    { url: `${baseUrl}/travel-bengkulu-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/travel-lebong-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/travel-bengkulu-lampung`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/travel-lampung-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+
+    // ── Artikel "Berapa Jam" ───────────────────────────────────
     { url: `${baseUrl}/bengkulu-ke-palembang-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
-    // /bengkulu-jambi-berapa-jam → redirect ke ini
     { url: `${baseUrl}/bengkulu-ke-jambi-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/jambi-bengkulu-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/jambi-bengkulu-berapa-jam-naik-mobil`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/jarak-jambi-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
 
-    // ── Artikel Wisata ───────────────────────────────────────
+    // ── Artikel Wisata ────────────────────────────────────────
     { url: `${baseUrl}/tempat-wisata-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/wisata-pantai-panjang-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
   ];
