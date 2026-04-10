@@ -27,8 +27,9 @@ module.exports = {
         }
       },
       fontFamily: {
-        display: ['Playfair Display', 'Georgia', 'serif'],
-        body: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        // Gunakan CSS variable dari Next.js font optimization
+        display: ['var(--font-playfair)', 'Georgia', 'serif'],
+        body: ['var(--font-jakarta)', 'system-ui', 'sans-serif'],
       },
       animation: {
         'fade-up': 'fadeUp 0.6s ease-out forwards',
