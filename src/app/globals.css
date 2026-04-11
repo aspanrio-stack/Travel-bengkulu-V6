@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -85,7 +87,7 @@ h1, h2, h3 {
   }
 
   .prose-article th {
-    @apply bg-primary-600 text-white px-4 py-2 text-left text-sm font-semibold;
+    @apply bg-primary-800 text-white px-4 py-2 text-left text-sm font-semibold;
   }
 
   .prose-article td {
