@@ -1,12 +1,11 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import { Playfair_Display, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
 
-// Next.js font optimization — font dihost lokal, tidak blocking render
+// Next.js font optimization
 const playfair = Playfair_Display({
   subsets: ['latin'],
   weight: ['400', '600', '700', '800'],
@@ -20,8 +19,6 @@ const plusJakarta = Plus_Jakarta_Sans({
   variable: '--font-jakarta',
   display: 'swap',
 });
-
-const GA_ID = 'G-H8TJZM1ZNM';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://bengkulutravel.com'),
@@ -78,23 +75,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id" className={`${playfair.variable} ${plusJakarta.variable}`}>
-      <head>
-        {/* Google Analytics GA4 */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_ID}', {
-              page_path: window.location.pathname,
-            });
-          `}
-        </Script>
-      </head>
       <body>
         <Navbar />
         <main>{children}</main>
