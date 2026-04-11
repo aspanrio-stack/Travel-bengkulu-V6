@@ -7,7 +7,8 @@ export default function WhatsAppFloat() {
       href="https://wa.me/6285268645461?text=Halo%20Travel%20Bengkulu%2C%20saya%20ingin%20pesan%20travel"
       target="_blank"
       rel="noopener noreferrer"
-      onClick={() => trackWhatsAppClick('floating_button')}
+      // Perbaikan di baris bawah ini: Menambahkan argumen kedua
+      onClick={() => trackWhatsAppClick('floating_button', 'whatsapp_link')}
       aria-label="Hubungi Travel Bengkulu via WhatsApp"
       className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center shadow-xl wa-float transition-colors group"
       title="Chat WhatsApp Travel Bengkulu"
