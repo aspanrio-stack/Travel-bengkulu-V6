@@ -609,11 +609,11 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
                 <label className="block text-sm font-semibold text-slate-700 mb-3">
                   Metode Pembayaran <span className="text-red-500">*</span>
                 </label>
-                <div className="grid grid-cols-3 gap-3">
+                {/* Baris 1: QRIS & Transfer Bank */}
+                <div className="grid grid-cols-2 gap-3 mb-3">
                   {[
                     { value: 'qris', label: 'QRIS', desc: 'GoPay, OVO, Dana, dll', icon: '📱' },
                     { value: 'bank_transfer', label: 'Transfer Bank', desc: 'BCA, BNI, BRI, Mandiri', icon: '🏦' },
-                    { value: 'tunai', label: 'Bayar Tunai', desc: 'Bayar langsung ke driver', icon: '💵' },
                   ].map(method => (
                     <label
                       key={method.value}
@@ -639,6 +639,28 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
                     </label>
                   ))}
                 </div>
+                {/* Baris 2: Bayar Tunai — full width */}
+                <label
+                  className={`flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all w-full ${
+                    form.paymentMethod === 'tunai'
+                      ? 'border-green-500 bg-green-50'
+                      : 'border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="tunai"
+                    checked={form.paymentMethod === 'tunai'}
+                    onChange={handleChange}
+                    className="accent-green-600"
+                  />
+                  <span className="text-2xl">💵</span>
+                  <div>
+                    <p className="font-semibold text-slate-800 text-sm">Bayar Tunai</p>
+                    <p className="text-xs text-slate-500">Bayar langsung ke driver saat dijemput · Konfirmasi via WhatsApp dulu</p>
+                  </div>
+                </label>
               </div>
 
               {error && <p className="text-red-500 text-sm bg-red-50 px-4 py-3 rounded-xl">{error}</p>}
