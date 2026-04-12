@@ -528,14 +528,14 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Nama Lengkap <span className="text-red-500">*</span>
+                    Nama <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     name="name"
                     value={form.name}
                     onChange={handleChange}
-                    placeholder="Nama"
+                    placeholder="Nama pemesan/penumpang"
                     className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
