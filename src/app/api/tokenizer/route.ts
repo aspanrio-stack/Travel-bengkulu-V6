@@ -1,37 +1,42 @@
+import { NextResponse } from 'next/server';
 // @ts-ignore
 import Midtrans from 'midtrans-client';
-import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    
-    // Inisialisasi Snap di dalam POST agar lebih aman
-    let snap = new Midtrans.Snap({
-      isProduction: false,
+    const { id, productName, price, quantity, customerName, customerPhone } = await request.json();
+
+    // Inisialisasi harus di dalam fungsi POST atau dipisahkan dengan benar
+    const snap = new Midtrans.Snap({
+      isProduction: false, // Ubah ke true jika sudah siap live
       serverKey: process.env.MIDTRANS_SERVER_KEY,
-      clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY
+      clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY,
     });
+
+    const parameter = {
+      transaction_details: {
+        order_id: id || `TRV-${Date.now()}`,
+        gross_amount: Number(price) * Number(quantity),
+      },
+      item_details: [
+        {
+          id: 'ITEM1',
+          price: Number(price),
+          quantity: Number(quantity),
+          name: productName,
+        },
+      ],
+      customer_details: {
+        first_name: customerName,
+        phone: customerPhone,
+      },
+    };
+
+    const transaction = await snap.createTransaction(parameter);
     
-export async function POST(request: Request) {
-  const { id, productName, price, quantity, customerName, customerPhone } = await request.json();
-
-  let parameter = {
-    item_details: {
-      name: productName,
-      price: price,
-      quantity: quantity
-    },
-    transaction_details: {
-      order_id: id,
-      gross_amount: price * quantity
-    },
-    customer_details: {
-      first_name: customerName,
-      phone: customerPhone
-    }
-  };
-
-  const token = await snap.createTransactionToken(parameter);
-  return NextResponse.json({ token });
+    return NextResponse.json({ token: transaction.token });
+  } catch (error: any) {
+    console.error("Midtrans Error:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
