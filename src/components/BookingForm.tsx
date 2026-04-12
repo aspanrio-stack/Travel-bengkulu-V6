@@ -535,7 +535,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
                     name="name"
                     value={form.name}
                     onChange={handleChange}
-                    placeholder="Nama sesuai KTP"
+                    placeholder="Nama"
                     className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
