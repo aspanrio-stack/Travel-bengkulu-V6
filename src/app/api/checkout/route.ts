@@ -1,42 +1,40 @@
 import { NextResponse } from 'next/server';
+// @ts-ignore
 import Midtrans from 'midtrans-client';
-
-const snap = new Midtrans.Snap({
-  isProduction: false, // Ubah ke true jika sudah siap launching (Production)
-  serverKey: process.env.MIDTRANS_SERVER_KEY || '',
-  clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || '',
-});
 
 export async function POST(request: Request) {
   try {
-    const { name, phone, route, price, passengers } = await request.json();
+    const body = await request.json();
+    const { name, phone, route, price, passengers } = body;
+
+    const snap = new Midtrans.Snap({
+      isProduction: false,
+      serverKey: process.env.MIDTRANS_SERVER_KEY,
+      clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY,
+    });
+
     const orderId = `TRV-${Date.now()}`;
 
     const parameter = {
       transaction_details: {
         order_id: orderId,
-        gross_amount: price * parseInt(passengers),
+        gross_amount: Number(price) * Number(passengers),
       },
-      item_details: [
-        {
-          id: route.replace(/\s+/g, '-'),
-          price: price,
-          quantity: parseInt(passengers),
-          name: `Tiket Travel: ${route}`,
-        },
-      ],
+      item_details: [{
+        id: 'TICKET-001',
+        price: Number(price),
+        quantity: Number(passengers),
+        name: `Travel ${route}`,
+      }],
       customer_details: {
         first_name: name,
         phone: phone,
       },
-      // Aktifkan hanya metode pembayaran tertentu (Opsional)
-      enabled_payments: ["gopay", "shopeepay", "other_qris", "bank_transfer"],
     };
 
     const transaction = await snap.createTransaction(parameter);
     return NextResponse.json({ token: transaction.token, orderId });
-  } catch (error) {
-    console.error('Midtrans Error:', error);
-    return NextResponse.json({ error: 'Gagal membuat transaksi' }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
