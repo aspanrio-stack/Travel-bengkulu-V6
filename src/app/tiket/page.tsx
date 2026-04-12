@@ -1,8 +1,10 @@
 'use client';
 import { useSearchParams } from 'next/navigation';
-import html2canvas from 'html2canvas'; // Import dipindah ke paling atas
+import html2canvas from 'html2canvas';
+import { Suspense } from 'react';
 
-export default function TicketPage() {
+// Komponen isi tiket
+function TicketContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get('order_id');
 
@@ -11,16 +13,11 @@ export default function TicketPage() {
     if (element) {
       html2canvas(element).then((canvas) => {
         const link = document.createElement('a');
-        link.download = `tiket-${orderId}.png`;
+        link.download = `tiket-${orderId || 'travel'}.png`;
         link.href = canvas.toDataURL();
         link.click();
       });
     }
-  };
-
-  const sendEmail = async () => {
-    alert("Fitur kirim email sedang diproses...");
-    // Logika kirim email nanti dipasang di sini
   };
 
   return (
@@ -28,7 +25,7 @@ export default function TicketPage() {
       <div id="ticket-area" className="w-full max-w-sm bg-white rounded-3xl overflow-hidden shadow-2xl border-t-8 border-primary-600">
         <div className="p-6 text-center border-b border-dashed border-slate-200">
           <div className="text-primary-600 font-bold text-xl mb-1">E-TICKET</div>
-          <div className="text-slate-400 text-xs font-mono">{orderId || 'TRV-12345'}</div>
+          <div className="text-slate-400 text-xs font-mono">{orderId || 'TRV-PENDING'}</div>
         </div>
         
         <div className="p-6 space-y-4">
@@ -49,17 +46,25 @@ export default function TicketPage() {
       <div className="mt-8 flex gap-4 w-full max-w-sm">
         <button 
           onClick={downloadTicket}
-          className="flex-1 bg-white border border-slate-200 py-3 rounded-xl font-bold text-sm shadow-sm"
+          className="flex-1 bg-white border border-slate-200 py-3 rounded-xl font-bold text-sm shadow-sm hover:bg-slate-50 transition-colors"
         >
           📸 Simpan Gambar
         </button>
         <button 
-          onClick={sendEmail}
-          className="flex-1 bg-primary-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg shadow-primary-600/20"
+          className="flex-1 bg-primary-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-colors"
         >
           📧 Kirim Email
         </button>
       </div>
     </div>
+  );
+}
+
+// Halaman utama dengan Suspense
+export default function TicketPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading Tiket...</div>}>
+      <TicketContent />
+    </Suspense>
   );
 }
