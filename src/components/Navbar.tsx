@@ -100,7 +100,7 @@ export default function Navbar() {
             href="/pesan"
             className="inline-flex items-center gap-1.5 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-3 py-2 md:px-4 md:py-2 rounded-xl transition-all"
           >
-            🎫 <span className="hidden sm:inline">Pesan Tiket</span><span className="sm:hidden">Pesan</span>
+            🎫 <span className="hidden sm:inline">Pesan Tiket</span><span className="sm:hidden">Tiket</span>
           </Link>
 
           {/* WhatsApp - tampil di semua ukuran */}
