@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Bengkulu ke Palembang Berapa Jam? Jarak & Rute Lengkap 2025',
+  title: 'Bengkulu ke Palembang Berapa Jam? Jarak & Rute Lengkap',
   description:
     'Bengkulu ke Palembang berapa jam perjalanannya? Jarak sekitar 460 km, waktu tempuh 8–10 jam via darat. Info rute, tips, dan travel door to door Rp 250.000.',
   alternates: { canonical: 'https://www.bengkulutravel.com/bengkulu-ke-palembang-berapa-jam' },
