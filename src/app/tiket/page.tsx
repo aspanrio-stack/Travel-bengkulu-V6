@@ -4,6 +4,19 @@ import { useSearchParams } from 'next/navigation';
 export default function TicketPage() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get('order_id');
+  import html2canvas from 'html2canvas';
+
+const downloadTicket = () => {
+  const element = document.getElementById('ticket-area');
+  if (element) {
+    html2canvas(element).then((canvas) => {
+      const link = document.createElement('a');
+      link.download = 'tiket-travel-bengkulu.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  }
+};
 
   return (
     <div className="min-h-screen bg-slate-100 pt-28 pb-12 px-4 flex flex-col items-center">
