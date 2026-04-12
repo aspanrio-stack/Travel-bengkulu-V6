@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const navLinks = [
   {
-    label: 'Layanan',
+    label: 'Jurusan',
     children: [
       { href: '/travel-bengkulu-palembang', label: 'Bengkulu ↔ Palembang' },
       { href: '/travel-bengkulu-jambi', label: 'Bengkulu ↔ Jambi' },
