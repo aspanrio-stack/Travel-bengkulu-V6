@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
@@ -17,6 +18,16 @@ export default function AntarJemputBandaraCurup() {
       badge="✈️ Airport Transfer"
       price="Rp 100.000"
     >
+      {/* Tombol Pesan Cepat */}
+      <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p className="text-primary-800 font-semibold text-sm">Siap memesan? Klik tombol di bawah untuk langsung ke form pemesanan.</p>
+        <Link
+          href="/pesan?rute=bnd-crp"
+          className="shrink-0 bg-primary-600 hover:bg-primary-700 text-white font-bold px-6 py-2.5 rounded-xl transition-colors flex items-center gap-2 text-sm"
+        >
+          🎫 Pesan Sekarang
+        </Link>
+      </div>
       <p>
         Kami menyediakan layanan <strong>antar jemput bandara Curup</strong> yang khusus dirancang untuk penumpang pesawat yang membutuhkan transportasi dari/ke bandara secara on-time dan nyaman. Dengan tarif flat hanya <strong>Rp 100.000</strong>, Anda tidak perlu khawatir soal transportasi dari atau ke bandara.
       </p>
