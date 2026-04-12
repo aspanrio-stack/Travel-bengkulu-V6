@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
@@ -17,6 +18,16 @@ export default function TravelBengkuluPalembang() {
       badge="🚗 Rute Populer"
       price="Rp 250.000"
     >
+      {/* Tombol Pesan Cepat */}
+      <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p className="text-primary-800 font-semibold text-sm">Siap memesan? Klik tombol di bawah untuk langsung ke form pemesanan.</p>
+        <Link
+          href="/pesan?rute=bkl-plm"
+          className="shrink-0 bg-primary-600 hover:bg-primary-700 text-white font-bold px-6 py-2.5 rounded-xl transition-colors flex items-center gap-2 text-sm"
+        >
+          🎫 Pesan Sekarang
+        </Link>
+      </div>
       <p>
         <strong>Travel Bengkulu Palembang</strong> adalah layanan transportasi antar kota yang melayani rute Bengkulu menuju Palembang (dan sebaliknya) dengan sistem <em>door to door</em>. Artinya, kami akan menjemput Anda langsung dari rumah, kantor, atau hotel Anda, kemudian mengantarkan ke tujuan di Palembang tanpa perlu berpindah kendaraan.
       </p>
