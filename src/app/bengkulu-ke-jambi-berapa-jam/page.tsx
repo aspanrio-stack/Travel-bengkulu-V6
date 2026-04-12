@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Bengkulu ke Jambi Berapa Jam? Jarak & Rute Lengkap 2025',
+  title: 'Bengkulu ke Jambi Berapa Jam? Jarak & Rute Lengkap',
   description:
     'Bengkulu ke Jambi berapa jam? Jaraknya ±540 km, waktu tempuh 9–12 jam via darat. Info rute, kondisi jalan, tips perjalanan & travel door to door Rp 250.000.',
   alternates: { canonical: 'https://www.bengkulutravel.com/bengkulu-ke-jambi-berapa-jam' },
