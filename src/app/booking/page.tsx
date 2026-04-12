@@ -3,8 +3,8 @@
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useState, useEffect } from 'react';
 
-// 1. Pisahkan komponen Form agar bisa dibungkus Suspense dengan benar
-function BookingFormContent() {
+// 1. Komponen Form Utama
+function BookingForm() {
   const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     name: '',
@@ -157,7 +157,7 @@ function BookingFormContent() {
   );
 }
 
-// 2. Export default harus berupa fungsi komponen yang bersih
+// 2. Export Page (Fungsi utama harus sangat simpel agar tidak error type)
 export default function BookingPage() {
   return (
     <main className="min-h-screen bg-slate-50 pt-28 pb-20 px-4">
@@ -166,14 +166,8 @@ export default function BookingPage() {
         <p className="text-slate-500 text-lg">Layanan antar jemput door-to-door Bengkulu.</p>
       </div>
       
-      {/* Penting: useSearchParams HARUS di dalam Suspense di Next.js 13/14 */}
-      <Suspense fallback={
-        <div className="max-w-2xl mx-auto p-10 text-center bg-white rounded-2xl shadow-sm">
-          <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-slate-500 font-medium">Memuat formulir...</p>
-        </div>
-      }>
-        <BookingFormContent />
+      <Suspense fallback={<div className="text-center p-10">Memuat Formulir...</div>}>
+        <BookingForm />
       </Suspense>
     </main>
   );
