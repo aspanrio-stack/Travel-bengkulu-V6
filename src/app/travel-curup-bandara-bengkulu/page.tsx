@@ -16,7 +16,7 @@ export default function TravelCurupBandaraBengkulu() {
       description="Layanan antar jemput khusus dari Curup ke Bandara Fatmawati Soekarno Bengkulu. On-time guarantee, siap 24 jam."
       breadcrumbs={[{ label: 'Travel Curup ke Bandara Bengkulu' }]}
       badge="✈️ Airport Transfer"
-      price="Rp 100.000"
+      price="Rp 125.000"
     >
       <p>
         Kami menyediakan layanan <strong>antar jemput khusus dari Curup ke Bandara Fatmawati Soekarno Bengkulu</strong> yang dirancang khusus untuk penumpang pesawat. Ketepatan waktu adalah prioritas utama kami — driver kami selalu hadir sebelum waktu penjemputan dan memantau jadwal penerbangan Anda.
@@ -34,12 +34,12 @@ export default function TravelCurupBandaraBengkulu() {
         <tbody>
           <tr>
             <td>Curup → Bandara Bengkulu</td>
-            <td><strong>Rp 100.000</strong></td>
+            <td><strong>Rp 125.000</strong></td>
             <td>Per orang, door to door</td>
           </tr>
           <tr>
             <td>Bandara Bengkulu → Curup</td>
-            <td><strong>Rp 100.000</strong></td>
+            <td><strong>Rp 125.000</strong></td>
             <td>Per orang, door to door</td>
           </tr>
           <tr>
@@ -175,7 +175,7 @@ export default function TravelCurupBandaraBengkulu() {
       <h2>Layanan Terkait dari Curup</h2>
       <ul>
         <li><Link href="/travel-curup-bengkulu" className="text-primary-600 hover:underline">Travel Curup Bengkulu – Rp 80.000 Door to Door</Link></li>
-        <li><Link href="/antar-jemput-bandara-curup" className="text-primary-600 hover:underline">Antar Jemput Bandara Curup (FAK) – Rp 100.000</Link></li>
+        <li><Link href="/antar-jemput-bandara-curup" className="text-primary-600 hover:underline">Antar Jemput Bandara Curup (FAK) – Rp 125.000</Link></li>
         <li><Link href="/rental-mobil-curup" className="text-primary-600 hover:underline">Rental Mobil Curup – Lepas Kunci Mulai Rp 300.000</Link></li>
         <li><Link href="/travel-bengkulu-curup" className="text-primary-600 hover:underline">Travel Bengkulu ke Curup – Rp 80.000</Link></li>
       </ul>
