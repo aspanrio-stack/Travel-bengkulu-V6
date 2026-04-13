@@ -41,10 +41,10 @@ export async function POST(req: NextRequest) {
           category: 'Travel',
         },
       ],
-      // Hanya aktifkan QRIS dan Transfer Bank sesuai pilihan
+      // Aktifkan metode pembayaran sesuai pilihan
       enabled_payments: paymentMethod === 'bank_transfer'
         ? ['bca_va', 'bni_va', 'bri_va', 'mandiri_bill', 'permata_va', 'other_va']
-        : ['gopay', 'qris'],
+        : ['qris', 'gopay', 'shopeepay', 'dana', 'ovo'],
       custom_field1: `${route.from} ke ${route.to}`,
       custom_field2: date,
       custom_field3: `${pickupAddress} | ${dropoffAddress || '-'}`,
