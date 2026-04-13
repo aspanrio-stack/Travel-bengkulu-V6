@@ -3,9 +3,9 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Antar Jemput Bandara Curup – Tarif Rp 100.000',
+  title: 'Antar Jemput Bandara Curup – Tarif Rp 125.000',
   description:
-    'Layanan antar jemput bandara Curup (Bandara Fatmawati Curup). Tarif Rp 100.000. On-time guarantee. Armada nyaman. Pesan via WhatsApp 0852-6864-5461!',
+    'Layanan antar jemput bandara Curup (Bandara Fatmawati Curup). Tarif Rp 125.000. On-time guarantee. Armada nyaman. Pesan via WhatsApp 0852-6864-5461!',
   alternates: { canonical: 'https://bengkulutravel.com/antar-jemput-bandara-curup' },
 };
 
@@ -16,7 +16,7 @@ export default function AntarJemputBandaraCurup() {
       description="Layanan khusus antar jemput ke dan dari Bandara di Curup. Tepat waktu, nyaman, dan terjangkau."
       breadcrumbs={[{ label: 'Antar Jemput Bandara Curup' }]}
       badge="✈️ Airport Transfer"
-      price="Rp 100.000"
+      price="Rp 125.000"
     >
       {/* Tombol Pesan Cepat */}
       <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -29,7 +29,7 @@ export default function AntarJemputBandaraCurup() {
         </Link>
       </div>
       <p>
-        Kami menyediakan layanan <strong>antar jemput bandara Curup</strong> yang khusus dirancang untuk penumpang pesawat yang membutuhkan transportasi dari/ke bandara secara on-time dan nyaman. Dengan tarif flat hanya <strong>Rp 100.000</strong>, Anda tidak perlu khawatir soal transportasi dari atau ke bandara.
+        Kami menyediakan layanan <strong>antar jemput bandara Curup</strong> yang khusus dirancang untuk penumpang pesawat yang membutuhkan transportasi dari/ke bandara secara on-time dan nyaman. Dengan tarif flat hanya <strong>Rp 125.000</strong>, Anda tidak perlu khawatir soal transportasi dari atau ke bandara.
       </p>
 
       <h2>Tarif Antar Jemput Bandara</h2>
@@ -44,12 +44,12 @@ export default function AntarJemputBandaraCurup() {
         <tbody>
           <tr>
             <td>Jemput dari Bandara</td>
-            <td><strong>Rp 100.000</strong></td>
+            <td><strong>Rp 125.000</strong></td>
             <td>Ke seluruh area Curup</td>
           </tr>
           <tr>
             <td>Antar ke Bandara</td>
-            <td><strong>Rp 100.000</strong></td>
+            <td><strong>Rp 125.000</strong></td>
             <td>Dari seluruh area Curup</td>
           </tr>
         </tbody>
