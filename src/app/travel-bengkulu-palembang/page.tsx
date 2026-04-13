@@ -5,7 +5,7 @@ import ArticleLayout from '@/components/ArticleLayout';
 export const metadata: Metadata = {
   title: 'Travel Bengkulu Palembang – Antar Jemput Door to Door Rp 250.000',
   description:
-    'Jasa travel Bengkulu Palembang door to door. Tarif Rp 250.000/orang. Armada Toyota Avanza, Innova, HiAce. Berangkat setiap hari. Pesan via WhatsApp!',
+    'Jasa travel Bengkulu Palembang door to door. Tarif Rp 250.000/orang. Armada Innova, HiAce. Berangkat setiap hari. Pesan via WhatsApp!',
   alternates: { canonical: 'https://bengkulutravel.com/travel-bengkulu-palembang' },
 };
 
@@ -60,7 +60,6 @@ export default function TravelBengkuluPalembang() {
         Untuk kenyamanan perjalanan Bengkulu–Palembang, kami menyediakan armada:
       </p>
       <ul>
-        <li><strong>Toyota Avanza</strong> – Cocok untuk 4–6 penumpang. Irit dan nyaman untuk perjalanan jauh.</li>
         <li><strong>Toyota Innova</strong> – Pilihan premium untuk keluarga. Suspensi lebih halus dan kabin lebih lapang.</li>
         <li><strong>Toyota HiAce</strong> – Ideal untuk rombongan besar 10–13 orang. Bisa disewa secara khusus.</li>
       </ul>
