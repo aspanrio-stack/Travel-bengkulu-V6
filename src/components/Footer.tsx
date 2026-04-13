@@ -79,7 +79,7 @@ export default function Footer() {
               <div>
                 <span className="block font-semibold text-white mb-1">Head Office:</span>
                 <span className="leading-relaxed">
-                  Prumahan Idaman Permai/BTN Lama, Air Bang - Air Meles Bawah Blk. D No.14, Kec. Curup Tengah, Kabupaten Rejang Lebong, Bengkulu 39114.
+                  Perum Idaman Permai/BTN Lama, Air Bang - Air Meles Bawah Blk. D No.14, Kec. Curup Tengah, Rejang Lebong, Bengkulu 39114.
                 </span>
               </div>
             </li>
