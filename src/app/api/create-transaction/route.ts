@@ -29,7 +29,8 @@ export async function POST(req: NextRequest) {
       customer_details: {
         first_name: name,
         phone: phone,
-        email: email || '',
+        // Hanya kirim email jika diisi — Midtrans tolak string kosong
+        ...(email && email.trim() ? { email: email.trim() } : {}),
       },
       item_details: [
         {
