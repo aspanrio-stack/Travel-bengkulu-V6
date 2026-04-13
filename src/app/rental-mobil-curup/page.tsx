@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Rental Mobil Curup – Lepas Kunci Mulai Rp 300.000',
+  title: 'Rental Mobil Curup – Lepas Kunci Mulai Rp 350.000',
   description:
-    'Sewa mobil di Curup lepas kunci mulai Rp 300.000/hari. Tersedia Toyota Avanza, Innova, HiAce. Cocok untuk wisata, bisnis, dan acara. Pesan via WA!',
+    'Sewa mobil di Curup lepas kunci mulai Rp 350.000/hari. Tersedia Toyota Avanza, Innova, HiAce. Cocok untuk wisata, bisnis, dan acara. Pesan via WA!',
   alternates: { canonical: 'https://bengkulutravel.com/rental-mobil-curup' },
 };
 
@@ -15,7 +15,7 @@ export default function RentalMobilCurup() {
       description="Sewa mobil di Curup dengan sistem lepas kunci. Bebas kemana saja dengan harga terjangkau."
       breadcrumbs={[{ label: 'Rental Mobil Curup' }]}
       badge="🔑 Lepas Kunci"
-      price="Rp 300.000"
+      price="Rp 350.000"
     >
       <p>
         <strong>Rental Mobil Curup</strong> menyediakan layanan sewa kendaraan dengan sistem <em>lepas kunci</em> — Anda bisa menggunakan mobil sesuka hati tanpa harus ditemani driver. Cocok untuk liburan keluarga, keperluan bisnis, atau acara-acara khusus di Curup dan Rejang Lebong.
@@ -33,7 +33,7 @@ export default function RentalMobilCurup() {
         <tbody>
           <tr>
             <td>Toyota Avanza</td>
-            <td><strong>Rp 300.000</strong></td>
+            <td><strong>Rp 350.000</strong></td>
             <td>Lepas kunci, BBM sendiri</td>
           </tr>
           <tr>
