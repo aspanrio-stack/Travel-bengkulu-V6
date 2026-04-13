@@ -15,7 +15,7 @@ export const ROUTES: Route[] = [
   { id: 'bkl-crp', from: 'Bengkulu', to: 'Curup', price: 80000, duration: '2–2,5 jam' },
   { id: 'crp-bkl', from: 'Curup', to: 'Bengkulu', price: 80000, duration: '2–2,5 jam' },
   { id: 'crp-bnd', from: 'Curup', to: 'Bandara Bengkulu', price: 125000, duration: '2–2,5 jam' },
-  { id: 'bnd-crp', from: 'Bandara Bengkulu', to: 'Curup', price: 100000, duration: '2–2,5 jam' },
+  { id: 'bnd-crp', from: 'Bandara Bengkulu', to: 'Curup', price: 125000, duration: '2–2,5 jam' },
   { id: 'bkl-lbg', from: 'Bengkulu', to: 'Lebong', price: 100000, duration: '3–4 jam', via: 'Bengkulu Utara' },
   { id: 'lbg-bkl', from: 'Lebong', to: 'Bengkulu', price: 100000, duration: '3–4 jam', via: 'Bengkulu Utara' },
   { id: 'bkl-lmp', from: 'Bengkulu', to: 'Lampung', price: 300000, duration: '11–13 jam', via: 'Liwa' },
