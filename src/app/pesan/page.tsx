@@ -3,8 +3,8 @@ import BookingForm from '@/components/BookingForm';
 import { ROUTES } from '@/lib/routes';
 
 export const metadata: Metadata = {
-  title: 'Pesan Tiket Travel Bengkulu – Bayar QRIS & Transfer Bank',
-  description: 'Pesan tiket travel Bengkulu secara online. Pilih rute, isi data, bayar via QRIS atau transfer bank. Tiket muncul langsung di layar setelah bayar.',
+  title: 'Pesan Tiket Travel Bengkulu – Konfirmasi via WhatsApp',
+  description: 'Pesan tiket travel Bengkulu secara online. Isi form, konfirmasi via WhatsApp, bayar tunai ke driver. Mudah dan cepat!',
 };
 
 export default function PesanPage({
@@ -25,10 +25,15 @@ export default function PesanPage({
               : 'Pesan Tiket Travel Bengkulu'}
           </h1>
           <p className="text-primary-100 text-lg">
-            Isi data, bayar via QRIS atau Transfer Bank, tiket langsung muncul di layar.
+            Isi form, kirim via WhatsApp, driver kami segera konfirmasi keberangkatan Anda.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mt-5 text-sm">
-            {['✅ Booking 24 Jam', '🎫 Tiket Langsung Muncul', '🔒 Pembayaran Aman', '🚗 Door to Door'].map(f => (
+            {[
+              '✅ Mudah & Cepat',
+              '💬 Konfirmasi via WhatsApp',
+              '💵 Bayar Tunai ke Driver',
+              '🚗 Door to Door',
+            ].map(f => (
               <span key={f} className="bg-white/20 px-3 py-1.5 rounded-full font-medium">{f}</span>
             ))}
           </div>
