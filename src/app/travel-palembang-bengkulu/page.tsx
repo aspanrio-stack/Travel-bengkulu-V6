@@ -69,7 +69,6 @@ export default function TravelPalembangBengkulu() {
 
       <h2>Armada Tersedia</h2>
       <ul>
-        <li><strong>Toyota Avanza</strong> – Kapasitas 5–6 penumpang + bagasi</li>
         <li><strong>Toyota Innova</strong> – Lebih lapang dan nyaman untuk perjalanan jauh</li>
         <li><strong>Toyota HiAce</strong> – Untuk rombongan besar 10–13 orang</li>
       </ul>
