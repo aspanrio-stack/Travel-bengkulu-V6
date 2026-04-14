@@ -45,6 +45,14 @@ export async function POST(req: NextRequest) {
       enabled_payments: paymentMethod === 'bank_transfer'
         ? ['bca_va', 'bni_va', 'bri_va', 'mandiri_bill', 'permata_va', 'other_va']
         : ['qris', 'gopay', 'shopeepay', 'dana', 'ovo'],
+
+      // Paksa QRIS muncul di semua device termasuk mobile
+      qris: {
+        acquire_bank: 'airpay shopee',
+      },
+      gopay: {
+        enable_callback: true,
+      },
       custom_field1: `${route.from} ke ${route.to}`,
       custom_field2: date,
       custom_field3: `${pickupAddress} | ${dropoffAddress || '-'}`,
