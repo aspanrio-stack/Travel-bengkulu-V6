@@ -62,7 +62,7 @@ export default function TravelJambiBengkulu() {
       <ul>
         <li><strong>Toyota Avanza</strong> – Ideal untuk 4–5 penumpang beserta bagasi</li>
         <li><strong>Toyota Innova</strong> – Lebih lega dan nyaman untuk perjalanan antar provinsi</li>
-        <li><strong>Toyota HiAce</strong> – Untuk rombongan hingga 13 penumpang</li>
+        
       </ul>
 
       <h2>Area Penjemputan di Jambi</h2>
