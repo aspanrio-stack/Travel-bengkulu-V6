@@ -4,7 +4,7 @@ import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
   title: 'Travel Curup ke Bandara Bengkulu – Antar Jemput Tepat Waktu',
-  description: 'Layanan antar jemput Curup ke Bandara Fatmawati Bengkulu. Tepat waktu, nyaman, Rp 100.000/orang. Pesan via WhatsApp 0852-6864-5461!',
+  description: 'Layanan antar jemput Curup ke Bandara Fatmawati Bengkulu. Tepat waktu, nyaman, Rp 125.000/orang. Pesan via WhatsApp 0852-6864-5461!',
   alternates: { canonical: 'https://bengkulutravel.com/travel-curup-bandara-bengkulu' },
 };
 
@@ -15,7 +15,7 @@ export default function Page() {
       description="Layanan khusus antar jemput dari Curup ke Bandara Fatmawati Soekarno Bengkulu. On-time guarantee, siap 24 jam."
       breadcrumbs={[{ label: 'Travel Curup ke Bandara Bengkulu' }]}
       badge="✈️ Airport Transfer"
-      price="Rp 100.000"
+      price="Rp 125.000"
     >
       {/* Tombol Pesan */}
       <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -30,7 +30,7 @@ export default function Page() {
 
       <p>
         <strong>Travel Curup Bandara Bengkulu</strong> melayani perjalanan dengan sistem antar jemput <em>door to door</em>.
-        Dengan tarif <strong>Rp 100.000 per orang</strong>, kami menjemput langsung dari lokasi Anda
+        Dengan tarif <strong>Rp 125.000 per orang</strong>, kami menjemput langsung dari lokasi Anda
         dan mengantarkan ke tujuan tanpa perlu berganti kendaraan.
       </p>
 
@@ -65,7 +65,7 @@ export default function Page() {
       <h2>Keunggulan Layanan Kami</h2>
       <ul>
         <li><strong>Door to Door</strong> — dijemput dari rumah, diantar ke tujuan</li>
-        <li><strong>Tarif Flat</strong> — Rp 100.000/orang, tidak ada biaya tersembunyi</li>
+        <li><strong>Tarif Flat</strong> — Rp 125.000/orang, tidak ada biaya tersembunyi</li>
         <li><strong>Armada Terawat</strong> — Avanza, Innova, HiAce ber-AC</li>
         <li><strong>Pengemudi Berpengalaman</strong> — hafal rute Curup–Bandara Bengkulu</li>
         <li><strong>Pesan 24 Jam</strong> — via WhatsApp kapan saja</li>
