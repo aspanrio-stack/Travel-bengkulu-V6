@@ -67,7 +67,7 @@ export default function TravelBengkuluJambi() {
       <ul>
         <li><strong>Toyota Avanza</strong> – Efisien dan nyaman untuk perjalanan antar provinsi</li>
         <li><strong>Toyota Innova</strong> – Suspensi halus, kabin lega, ideal untuk perjalanan 10+ jam</li>
-        <li><strong>Toyota HiAce</strong> – Untuk rombongan keluarga atau grup hingga 13 orang</li>
+        
       </ul>
 
       <h2>Fasilitas Perjalanan</h2>
