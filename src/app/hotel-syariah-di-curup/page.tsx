@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Hotel Syariah di Curup – Penginapan Halal Terbaik di Rejang Lebong 2025',
+  title: 'Hotel Syariah di Curup – Penginapan Halal Terbaik di Rejang Lebong 2026',
   description:
     'Rekomendasi hotel syariah di Curup Rejang Lebong. Penginapan halal, bersih, nyaman dengan konsep islami. Cocok untuk keluarga muslim. Info lengkap dan harga di sini!',
   alternates: { canonical: 'https://bengkulutravel.com/hotel-syariah-di-curup' },
