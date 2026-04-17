@@ -19,6 +19,8 @@ const navLinks = [
   {
     label: 'Artikel',
     children: [
+      { href: '/hotel-syariah-di-curup', label: 'Hotel Syariah Curup' },
+      { href: '/hotel-di-curup', label: 'Hotel di Curup' },
       { href: '/tempat-wisata-bengkulu', label: 'Wisata Bengkulu' },
       { href: '/wisata-pantai-panjang-bengkulu', label: 'Pantai Panjang' },
       { href: '/jarak-jambi-bengkulu', label: 'Jarak Jambi–Bengkulu' },
