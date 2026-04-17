@@ -25,6 +25,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/jambi-bengkulu-berapa-jam-naik-mobil`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/bengkulu-ke-palembang`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     // Artikel
+    { url: `${baseUrl}/hotel-di-curup`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+     { url: `${baseUrl}/hotel-syariah-di-curup`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/jarak-jambi-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/tempat-wisata-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/wisata-pantai-panjang-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
