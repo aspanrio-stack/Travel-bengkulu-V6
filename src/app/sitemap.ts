@@ -1,14 +1,12 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://bengkulutravel.com';
+  const baseUrl = 'https://www.bengkulutravel.com';
   const lastModified = new Date();
 
   return [
-    // ── Homepage ─────────────────────────────────────────────
     { url: baseUrl, lastModified, changeFrequency: 'weekly', priority: 1 },
-
-    // ── Halaman Travel Utama ──────────────────────────────────
+    // Halaman layanan utama
     { url: `${baseUrl}/travel-bengkulu`, lastModified, changeFrequency: 'weekly', priority: 1 },
     { url: `${baseUrl}/travel-bengkulu-palembang`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/travel-palembang-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
@@ -18,24 +16,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/rental-mobil-curup`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/antar-jemput-bandara-curup`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/kirim-paket-bengkulu-palembang`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
-    
-
-    // ── Rute Baru ─────────────────────────────────────────────
-    { url: `${baseUrl}/travel-bengkulu-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${baseUrl}/travel-lebong-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${baseUrl}/travel-bengkulu-lampung`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${baseUrl}/travel-lampung-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${baseUrl}/travel-curup-bandara-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${baseUrl}/travel-curup-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
-
-    // ── Artikel "Berapa Jam" ───────────────────────────────────
+    // Halaman "berapa jam" — keyword volume tinggi
     { url: `${baseUrl}/bengkulu-ke-palembang-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/bengkulu-palembang-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/bengkulu-ke-jambi-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/bengkulu-jambi-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/jambi-bengkulu-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/jambi-bengkulu-berapa-jam-naik-mobil`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/bengkulu-ke-palembang`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+    // Artikel
     { url: `${baseUrl}/jarak-jambi-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
-
-    // ── Artikel Wisata ────────────────────────────────────────
     { url: `${baseUrl}/tempat-wisata-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/wisata-pantai-panjang-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
   ];
