@@ -13,8 +13,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/travel-bengkulu-jambi`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/travel-jambi-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/travel-bengkulu-curup`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/travel-curup-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/rental-mobil-curup`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/antar-jemput-bandara-curup`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/travel-curup-bandara-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/kirim-paket-bengkulu-palembang`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
     // Halaman "berapa jam" — keyword volume tinggi
     { url: `${baseUrl}/bengkulu-ke-palembang-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
