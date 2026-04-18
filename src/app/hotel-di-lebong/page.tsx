@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Hotel di Lebong – Rekomendasi Penginapan Terbaik di Muara Aman 2025',
+  title: 'Hotel di Lebong – Rekomendasi Penginapan Terbaik di Muara Aman 2026',
   description:
     'Daftar hotel terbaik di Lebong Muara Aman Rejang Lebong. Penginapan nyaman, harga terjangkau, lokasi strategis. Cocok untuk wisata dan bisnis di Kabupaten Lebong.',
   alternates: { canonical: 'https://bengkulutravel.com/hotel-di-lebong' },
