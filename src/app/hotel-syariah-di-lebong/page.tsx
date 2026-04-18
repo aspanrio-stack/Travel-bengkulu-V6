@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Hotel Syariah di Lebong – Penginapan Halal Terbaik di Muara Aman 2025',
+  title: 'Hotel Syariah di Lebong – Penginapan Halal Terbaik di Muara Aman 2026',
   description:
     'Rekomendasi hotel syariah di Lebong Muara Aman. Penginapan halal, islami, bersih dan nyaman untuk keluarga muslim. Cocok untuk wisata alam dan religi di Kabupaten Lebong.',
   alternates: { canonical: 'https://bengkulutravel.com/hotel-syariah-di-lebong' },
