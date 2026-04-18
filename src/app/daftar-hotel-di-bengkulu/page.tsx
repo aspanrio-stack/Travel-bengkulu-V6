@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Daftar Hotel di Bengkulu – Panduan Penginapan Lengkap 2025',
+  title: 'Daftar Hotel di Bengkulu – Panduan Penginapan Lengkap 2026',
   description:
     'Panduan lengkap hotel di Bengkulu. Temukan penginapan terbaik di Kota Bengkulu, Curup, dan Lebong. Hotel budget hingga bintang, syariah hingga konvensional. Info lengkap!',
   alternates: { canonical: 'https://bengkulutravel.com/daftar-hotel-di-bengkulu' },
