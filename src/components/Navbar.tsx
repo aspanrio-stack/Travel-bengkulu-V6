@@ -17,6 +17,17 @@ const navLinks = [
     ],
   },
   {
+    label: 'Hotel',
+    children: [
+      { href: '/daftar-hotel-di-bengkulu', label: '🏨 Semua Hotel di Bengkulu' },
+      { href: '/hotel-di-kota-bengkulu', label: 'Hotel di Kota Bengkulu' },
+      { href: '/hotel-di-curup', label: 'Hotel di Curup' },
+      { href: '/hotel-syariah-di-curup', label: 'Hotel Syariah di Curup' },
+      { href: '/hotel-di-lebong', label: 'Hotel di Lebong' },
+      { href: '/hotel-syariah-di-lebong', label: 'Hotel Syariah di Lebong' },
+    ],
+  },
+  {
     label: 'Artikel',
     children: [
       { href: '/hotel-syariah-di-curup', label: 'Hotel Syariah Curup' },
