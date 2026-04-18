@@ -31,6 +31,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/tempat-wisata-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/wisata-pantai-panjang-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     // ── Artikel Hotel ────────────────────────────────────────────────
+    { url: `${baseUrl}/daftar-hotel-di-bengkulu', lastModified, changeFrequency: 'monthly', priority: 0.7 },
+   { url: `${baseUrl}/hotel-di-kota-bengkulu', lastModified, changeFrequency: 'monthly', priority: 0.7 },  
     { url: `${baseUrl}/hotel-di-curup`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/hotel-syariah-di-curup`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/hotel-di-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
