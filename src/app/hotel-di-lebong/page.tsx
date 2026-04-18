@@ -198,7 +198,7 @@ export default function HotelDiLebong() {
 
       <h3>Apa oleh-oleh khas dari Lebong?</h3>
       <p>
-        Kopi robusta Lebong adalah oleh-oleh paling populer. Selain itu ada madu hutan Lebong, kerajinan anyaman bambu, dan berbagai produk pertanian organik khas dataran tinggi Rejang Lebong.
+        Kopi robusta Lebong adalah oleh-oleh paling populer. Selain itu ada madu hutan Lebong, kerajinan anyaman bambu, dan berbagai produk pertanian organik khas dataran tinggi Lebong.
       </p>
     </ArticleLayout>
   );
