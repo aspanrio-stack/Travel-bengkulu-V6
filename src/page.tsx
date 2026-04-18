@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Hotel di Kota Bengkulu – Rekomendasi Penginapan Terbaik 2025',
+  title: 'Hotel di Kota Bengkulu – Rekomendasi Penginapan Terbaik 2026',
   description:
     'Daftar hotel terbaik di Kota Bengkulu. Dari hotel budget hingga bintang 4. Lokasi strategis dekat Pantai Panjang, Benteng Marlborough, dan pusat kota. Info lengkap!',
   alternates: { canonical: 'https://bengkulutravel.com/hotel-di-kota-bengkulu' },
