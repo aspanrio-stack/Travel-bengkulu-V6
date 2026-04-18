@@ -17,7 +17,7 @@ const navLinks = [
     ],
   },
   {
-    label: 'Hotel',
+    label: 'INFO Hotel',
     children: [
       { href: '/daftar-hotel-di-bengkulu', label: '🏨 Semua Hotel di Bengkulu' },
       { href: '/hotel-di-kota-bengkulu', label: 'Hotel di Kota Bengkulu' },
