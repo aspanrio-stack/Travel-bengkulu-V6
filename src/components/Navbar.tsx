@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const navLinks = [
   {
-    label: 'Jurusan',
+    label: 'Layanan',
     children: [
       { href: '/travel-bengkulu-palembang', label: 'Bengkulu ↔ Palembang' },
       { href: '/travel-bengkulu-jambi', label: 'Bengkulu ↔ Jambi' },
@@ -17,7 +17,16 @@ const navLinks = [
     ],
   },
   {
-    label: 'INFO Hotel',
+    label: 'Artikel',
+    children: [
+      { href: '/tempat-wisata-bengkulu', label: 'Wisata Bengkulu' },
+      { href: '/wisata-pantai-panjang-bengkulu', label: 'Pantai Panjang' },
+      { href: '/jarak-jambi-bengkulu', label: 'Jarak Jambi–Bengkulu' },
+      { href: '/bengkulu-ke-palembang-berapa-jam', label: 'Bengkulu–Palembang Berapa Jam' },
+    ],
+  },
+  {
+    label: 'Hotel',
     children: [
       { href: '/daftar-hotel-di-bengkulu', label: '🏨 Semua Hotel di Bengkulu' },
       { href: '/hotel-di-kota-bengkulu', label: 'Hotel di Kota Bengkulu' },
@@ -28,14 +37,12 @@ const navLinks = [
     ],
   },
   {
-    label: 'Artikel',
+    label: 'Kuliner',
     children: [
-      { href: '/hotel-syariah-di-curup', label: 'Hotel Syariah Curup' },
-      { href: '/hotel-di-curup', label: 'Hotel di Curup' },
-      { href: '/tempat-wisata-bengkulu', label: 'Wisata Bengkulu' },
-      { href: '/wisata-pantai-panjang-bengkulu', label: 'Pantai Panjang' },
-      { href: '/jarak-jambi-bengkulu', label: 'Jarak Jambi–Bengkulu' },
-      { href: '/bengkulu-ke-palembang-berapa-jam', label: 'Bengkulu–Palembang Berapa Jam' },
+      { href: '/makanan-khas-bengkulu', label: '🍽️ Semua Makanan Khas Bengkulu' },
+      { href: '/makanan-khas-kota-bengkulu', label: 'Makanan Khas Kota Bengkulu' },
+      { href: '/makanan-khas-curup', label: 'Makanan Khas Curup' },
+      { href: '/makanan-khas-lebong', label: 'Makanan Khas Lebong' },
     ],
   },
   { href: '/#kontak', label: 'Kontak' },
@@ -113,7 +120,7 @@ export default function Navbar() {
             href="/pesan"
             className="inline-flex items-center gap-1.5 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-3 py-2 md:px-4 md:py-2 rounded-xl transition-all"
           >
-            🎫 <span className="hidden sm:inline">Pesan Tiket</span><span className="sm:hidden">Tiket</span>
+            🎫 <span className="hidden sm:inline">Pesan Tiket</span><span className="sm:hidden">Pesan</span>
           </Link>
 
           {/* WhatsApp - tampil di semua ukuran */}
