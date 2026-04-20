@@ -32,10 +32,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/wisata-pantai-panjang-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     // ── Artikel Hotel ────────────────────────────────────────────────
     { url: `${baseUrl}/daftar-hotel-di-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
-   { url: `${baseUrl}/hotel-di-kota-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.7 },  
-    { url: `${baseUrl}/hotel-di-curup`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${baseUrl}/hotel-syariah-di-curup`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${baseUrl}/hotel-di-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${baseUrl}/hotel-syariah-di-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
+   { url: `${baseUrl}/hotel-di-kota-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },  
+    { url: `${baseUrl}/hotel-di-curup`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/hotel-syariah-di-curup`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/hotel-di-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/hotel-syariah-di-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
+    // ── Artikel Kuliner ────────────────────────────────────────────────
+    { url: `${baseUrl}/makanan-khas-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
+   { url: `${baseUrl}/makanan-khas-kota-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },  
+    { url: `${baseUrl}/makanan-khas-curup`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/makanan-khas-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
   ];
 }
