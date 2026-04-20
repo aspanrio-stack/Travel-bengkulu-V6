@@ -103,7 +103,7 @@ const routes = [
   {
     from: 'Curup',
     to: 'Bandara Bengkulu',
-    price: 100000,
+    price: 125000,
     duration: '2–2,5 jam',
     via: null,
     href: '/travel-curup-bandara-bengkulu',
@@ -112,7 +112,7 @@ const routes = [
   {
     from: 'Bandara Bengkulu',
     to: 'Curup',
-    price: 100000,
+    price: 125000,
     duration: '2–2,5 jam',
     via: null,
     href: '/antar-jemput-bandara-curup',
