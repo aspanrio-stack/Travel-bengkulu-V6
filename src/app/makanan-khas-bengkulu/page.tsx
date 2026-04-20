@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Makanan Khas Bengkulu – Panduan Kuliner Lengkap 2025',
+  title: 'Makanan Khas Bengkulu – Panduan Kuliner Lengkap 2026',
   description:
     'Panduan lengkap makanan khas Bengkulu. Temukan kuliner otentik dari Kota Bengkulu, Curup Rejang Lebong, dan Lebong. Dari Pendap, Tempoyak, Lemea, hingga Kopi Robusta Lebong!',
   alternates: { canonical: 'https://bengkulutravel.com/makanan-khas-bengkulu' },
