@@ -49,6 +49,7 @@ const nextConfig = {
 
       // [GSC-3] Label Bengkulu Palembang
       { source: '/search/label/Bengkulu Palembang', destination: '/travel-bengkulu-palembang', permanent: true },
+      { source: '/bengkulu-ke-palembang', destination: '/travel-bengkulu-palembang', permanent: true },
       { source: '/search/label/Bengkulu%20Palembang', destination: '/travel-bengkulu-palembang', permanent: true },
 
       // [GSC-4] Travel Bengkulu ke Curup
