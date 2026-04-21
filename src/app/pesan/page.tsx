@@ -3,8 +3,8 @@ import BookingForm from '@/components/BookingForm';
 import { ROUTES } from '@/lib/routes';
 
 export const metadata: Metadata = {
-  title: 'Pesan Tiket Travel Bengkulu – Konfirmasi via WhatsApp',
-  description: 'Pesan tiket travel Bengkulu secara online. Isi form, konfirmasi via WhatsApp, bayar tunai ke driver. Mudah dan cepat!',
+  title: 'Pesan Tiket Travel Bengkulu – Konfirmasi via WhatsApp Bisa Tunai & QRIS',
+  description: 'Pesan tiket travel Bengkulu secara online. Isi form, konfirmasi via WhatsApp, bayar tunai ke driver. atau bayar online Mudah dan cepat!',
 };
 
 // Next.js 15: searchParams harus di-await sebagai Promise
