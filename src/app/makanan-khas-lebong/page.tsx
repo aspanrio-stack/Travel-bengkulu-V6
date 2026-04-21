@@ -4,7 +4,7 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Makanan Khas Lebong – Kuliner Unik Muara Aman Wajib Dicoba 2025',
+  title: 'Makanan Khas Lebong – Kuliner Unik Muara Aman Wajib Dicoba 2026',
   description:
     'Daftar makanan khas Lebong Muara Aman yang wajib dicoba. Kopi Robusta Lebong, Madu Hutan, Gulai Ikan Sungai, dan kuliner otentik suku Rejang. Info lengkap di sini!',
   alternates: { canonical: 'https://bengkulutravel.com/makanan-khas-lebong' },
