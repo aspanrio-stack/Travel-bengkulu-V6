@@ -4,7 +4,7 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Makanan Khas Curup Rejang Lebong – Kuliner Wajib Dicoba 2025',
+  title: 'Makanan Khas Curup Rejang Lebong – Kuliner Wajib Dicoba 2026',
   description:
     'Daftar makanan khas Curup Rejang Lebong yang wajib dicoba. Tempoyak, Lemea, Gulai Kemba Bawang, Pindang Patin, Kopi Arabika Curup. Panduan kuliner lengkap!',
   alternates: { canonical: 'https://bengkulutravel.com/makanan-khas-curup' },
