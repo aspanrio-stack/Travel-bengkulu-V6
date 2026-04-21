@@ -5,7 +5,7 @@ import ArticleLayout from '@/components/ArticleLayout';
 export const metadata: Metadata = {
   title: 'Travel Bengkulu Jambi – Door to Door Rp 250.000 hari ini 2026',
   description:
-    'travel Bengkulu Jambi door to door. Tarif Rp 250.000/orang. Armada nyaman Innova, HiAce. ongkos paling murah',
+    'travel Bengkulu Jambi + jemput Gratis. Tarif Rp 250.000/orang, bisa lakai Qris, mobil nyaman nyaman ongkos paling murah Hiace, Innova',
   alternates: { canonical: 'https://bengkulutravel.com/travel-bengkulu-jambi' },
 };
 
