@@ -7,12 +7,14 @@ export const metadata: Metadata = {
   description: 'Pesan tiket travel Bengkulu secara online. Isi form, konfirmasi via WhatsApp, bayar tunai ke driver. Mudah dan cepat!',
 };
 
-export default function PesanPage({
+// Next.js 15: searchParams harus di-await sebagai Promise
+export default async function PesanPage({
   searchParams,
 }: {
-  searchParams: { rute?: string };
+  searchParams: Promise<{ rute?: string }>;
 }) {
-  const routeId = searchParams.rute || '';
+  const params = await searchParams;
+  const routeId = params.rute || '';
   const selectedRoute = ROUTES.find(r => r.id === routeId);
 
   return (
@@ -31,7 +33,7 @@ export default function PesanPage({
             {[
               '✅ Mudah & Cepat',
               '💬 Konfirmasi via WhatsApp',
-              '💵 Bayar Tunai ke Driver',
+              '📱 Bayar via QRIS',
               '🚗 Door to Door',
             ].map(f => (
               <span key={f} className="bg-white/20 px-3 py-1.5 rounded-full font-medium">{f}</span>
