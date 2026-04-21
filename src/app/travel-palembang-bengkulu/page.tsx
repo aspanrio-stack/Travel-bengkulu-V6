@@ -3,9 +3,9 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Travel Palembang Bengkulu – Antar Jemput Door to Door Rp 250.000',
+  title: 'Travel Palembang - Bengkulu Murah 2026 | Door to Door + Jemput Gratis',
   description:
-    'Jasa travel Palembang Bengkulu door to door. Tarif Rp 250.000/orang. Berangkat setiap hari. Armada nyaman, pengemudi berpengalaman. Pesan via WA!',
+    'travel Palembang Bengkulu door to door. Tarif Rp 250.000/orang. Berangkat setiap hari. Mobil Hiace, Innova bisa bayar pakai QRIS!',
   alternates: { canonical: 'https://bengkulutravel.com/travel-palembang-bengkulu' },
 };
 
