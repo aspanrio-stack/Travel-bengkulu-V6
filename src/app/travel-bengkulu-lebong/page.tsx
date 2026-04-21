@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Travel Bengkulu Lebong – Antar Jemput Door to Door Rp 100.000',
+  title: 'Travel Bengkulu Lebong – Antar Jemput Door to Door Rp 100.000 | 2026',
   description: 'Jasa travel Bengkulu Lebong via Bengkulu Utara. Tarif Rp 100.000/orang, door to door. Armada nyaman, berangkat setiap hari. Pesan via WhatsApp!',
   alternates: { canonical: 'https://bengkulutravel.com/travel-bengkulu-lebong' },
 };
