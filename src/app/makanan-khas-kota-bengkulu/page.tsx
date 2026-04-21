@@ -4,7 +4,7 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Makanan Khas Kota Bengkulu – 10 Kuliner Wajib Dicoba 2025',
+  title: 'Makanan Khas Kota Bengkulu – 10 Kuliner Wajib Dicoba 2026',
   description:
     'Daftar makanan khas Kota Bengkulu yang wajib dicoba. Pendap, Bagar Hiu, Lempuk Durian, Bay Tat, dan kuliner legendaris lainnya. Panduan kuliner lengkap Bengkulu!',
   alternates: { canonical: 'https://bengkulutravel.com/makanan-khas-kota-bengkulu' },
