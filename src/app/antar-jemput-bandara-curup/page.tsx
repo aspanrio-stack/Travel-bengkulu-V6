@@ -3,9 +3,9 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Antar Jemput Bandara Curup – Tarif Rp 125.000',
+  title: 'Antar Jemput Bandara Curup – Tarif Rp 125.000 Bisa Pakai QRIS',
   description:
-    'Layanan antar jemput bandara Curup (Bandara Fatmawati Curup). Tarif Rp 125.000. On-time guarantee. Armada nyaman. Pesan via WhatsApp 0852-6864-5461!',
+    'Layanan antar jemput bandara Curup (Bandara Fatmawati Curup). Tarif Rp 125.000. On-time guarantee. Armada nyaman. mengikuti jadwal pesawat',
   alternates: { canonical: 'https://bengkulutravel.com/antar-jemput-bandara-curup' },
 };
 
