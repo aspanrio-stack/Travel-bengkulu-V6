@@ -26,5 +26,10 @@
     "@types/react-dom": "^19.0.0",
     "@types/uuid": "^9.0.0",
     "typescript": "^5"
+  },
+  "overrides": {
+    "qrcode.react": {
+      "react": "$react"
+    }
   }
 }
