@@ -7,7 +7,7 @@ function getSecret(): Uint8Array {
   return new TextEncoder().encode(secret);
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname, search, searchParams } = request.nextUrl;
 
   // ── PROTEKSI /admin (kecuali /admin/login) ──
