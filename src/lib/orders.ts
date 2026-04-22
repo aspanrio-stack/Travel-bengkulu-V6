@@ -25,6 +25,7 @@ export interface Order {
   kodeUnik: number;
   total: number;
   status: 'pending' | 'success' | 'cancelled';
+  paymentMethod: 'qris' | 'tunai';
   createdAt: string;
   confirmedAt?: string;
 }
