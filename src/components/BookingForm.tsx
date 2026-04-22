@@ -74,7 +74,6 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     params.set('passengers', form.passengers);
     params.set('pickup', form.pickupAddress);
     if (form.dropoffAddress) params.set('dropoff', form.dropoffAddress);
-    if (form.email) params.set('email', form.email);
 
     window.location.href = `/pembayaran?${params.toString()}`;
   };
