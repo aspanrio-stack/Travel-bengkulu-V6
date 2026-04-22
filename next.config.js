@@ -6,7 +6,7 @@ const nextConfig = {
 
   async redirects() {
     return [
-      // 1. URL EKSAK
+      // 1. URL EKSAK (Aman)
       { source: '/index.html', destination: '/', permanent: true },
       { source: '/p/bengkulutravelcom-layanan-travel-antar.html', destination: '/', permanent: true },
       { source: '/2026/02/travel-bengkulu-jambi.html', destination: '/travel-bengkulu-jambi', permanent: true },
@@ -22,29 +22,30 @@ const nextConfig = {
       { source: '/2026/02/travel-palembang-ke-bengkulu-door-to-door-tanpa-transit.html', destination: '/travel-palembang-bengkulu', permanent: true },
       { source: '/2026/02/travel-bengkulu-ke-kota-jambi-door-to-door.html', destination: '/travel-bengkulu-jambi', permanent: true },
 
-      // 2. SEARCH & LABEL
+      // 2. SEARCH & LABEL (Aman)
       { source: '/search/label/:label*', destination: '/', permanent: true },
       { source: '/search/:path*', destination: '/', permanent: true },
       { source: '/p/:slug.html', destination: '/', permanent: true },
 
-      // 3. POLA DINAMIS (MENGGUNAKAN SUFFIX UNTUK MENGGANTIKAN R*)
-      { source: '/:y(\\d{4})/:m(\\d{2})/travel-palembang-bengkulu:suffix*.html', destination: '/travel-palembang-bengkulu', permanent: true },
-      { source: '/:y(\\d{4})/:m(\\d{2})/travel-bengkulu-palembang:suffix*.html', destination: '/travel-bengkulu-palembang', permanent: true },
-      { source: '/:y(\\d{4})/:m(\\d{2})/travel-jambi-bengkulu:suffix*.html', destination: '/travel-jambi-bengkulu', permanent: true },
-      { source: '/:y(\\d{4})/:m(\\d{2})/travel-bengkulu-jambi:suffix*.html', destination: '/travel-bengkulu-jambi', permanent: true },
-      { source: '/:y(\\d{4})/:m(\\d{2})/travel-bengkulu-ke-kota-jambi:suffix*.html', destination: '/travel-bengkulu-jambi', permanent: true },
-      { source: '/:y(\\d{4})/:m(\\d{2})/bengkulu-ke-jambi:suffix*.html', destination: '/jarak-jambi-bengkulu', permanent: true },
-      { source: '/:y(\\d{4})/:m(\\d{2})/jarak-jambi:suffix*.html', destination: '/jarak-jambi-bengkulu', permanent: true },
-      { source: '/:y(\\d{4})/:m(\\d{2})/travel-bengkulu-ke-curup:suffix*.html', destination: '/travel-bengkulu-curup', permanent: true },
-      { source: '/:y(\\d{4})/:m(\\d{2})/travel-bengkulu-curup:suffix*.html', destination: '/travel-bengkulu-curup', permanent: true },
-      { source: '/:y(\\d{4})/:m(\\d{2})/rental-mobil:suffix*.html', destination: '/rental-mobil-curup', permanent: true },
-      { source: '/:y(\\d{4})/:m(\\d{2})/antar-jemput:suffix*.html', destination: '/antar-jemput-bandara-curup', permanent: true },
-      { source: '/:y(\\d{4})/:m(\\d{2})/kirim-paket:suffix*.html', destination: '/kirim-paket-bengkulu-palembang', permanent: true },
-      { source: '/:y(\\d{4})/:m(\\d{2})/tempat-wisata:suffix*.html', destination: '/tempat-wisata-bengkulu', permanent: true },
-      { source: '/:y(\\d{4})/:m(\\d{2})/wisata-pantai:suffix*.html', destination: '/wisata-pantai-panjang-bengkulu', permanent: true },
-      { source: '/:y(\\d{4})/:m(\\d{2})/pantai-panjang:suffix*.html', destination: '/wisata-pantai-panjang-bengkulu', permanent: true },
+      // 3. POLA DINAMIS (DIPERBAIKI UNTUK TURBOPACK)
+      // Menggunakan Regex (.*) untuk menangkap sisa slug agar tidak dianggap parameter "repeat"
+      { source: '/:y(\\d{4})/:m(\\d{2})/travel-palembang-bengkulu:suffix((?:-.*)?) .html', destination: '/travel-palembang-bengkulu', permanent: true },
+      { source: '/:y(\\d{4})/:m(\\d{2})/travel-bengkulu-palembang:suffix((?:-.*)?) .html', destination: '/travel-bengkulu-palembang', permanent: true },
+      { source: '/:y(\\d{4})/:m(\\d{2})/travel-jambi-bengkulu:suffix((?:-.*)?) .html', destination: '/travel-jambi-bengkulu', permanent: true },
+      { source: '/:y(\\d{4})/:m(\\d{2})/travel-bengkulu-jambi:suffix((?:-.*)?) .html', destination: '/travel-bengkulu-jambi', permanent: true },
+      { source: '/:y(\\d{4})/:m(\\d{2})/travel-bengkulu-ke-kota-jambi:suffix((?:-.*)?) .html', destination: '/travel-bengkulu-jambi', permanent: true },
+      { source: '/:y(\\d{4})/:m(\\d{2})/bengkulu-ke-jambi:suffix((?:-.*)?) .html', destination: '/jarak-jambi-bengkulu', permanent: true },
+      { source: '/:y(\\d{4})/:m(\\d{2})/jarak-jambi:suffix((?:-.*)?) .html', destination: '/jarak-jambi-bengkulu', permanent: true },
+      { source: '/:y(\\d{4})/:m(\\d{2})/travel-bengkulu-ke-curup:suffix((?:-.*)?) .html', destination: '/travel-bengkulu-curup', permanent: true },
+      { source: '/:y(\\d{4})/:m(\\d{2})/travel-bengkulu-curup:suffix((?:-.*)?) .html', destination: '/travel-bengkulu-curup', permanent: true },
+      { source: '/:y(\\d{4})/:m(\\d{2})/rental-mobil:suffix((?:-.*)?) .html', destination: '/rental-mobil-curup', permanent: true },
+      { source: '/:y(\\d{4})/:m(\\d{2})/antar-jemput:suffix((?:-.*)?) .html', destination: '/antar-jemput-bandara-curup', permanent: true },
+      { source: '/:y(\\d{4})/:m(\\d{2})/kirim-paket:suffix((?:-.*)?) .html', destination: '/kirim-paket-bengkulu-palembang', permanent: true },
+      { source: '/:y(\\d{4})/:m(\\d{2})/tempat-wisata:suffix((?:-.*)?) .html', destination: '/tempat-wisata-bengkulu', permanent: true },
+      { source: '/:y(\\d{4})/:m(\\d{2})/wisata-pantai:suffix((?:-.*)?) .html', destination: '/wisata-pantai-panjang-bengkulu', permanent: true },
+      { source: '/:y(\\d{4})/:m(\\d{2})/pantai-panjang:suffix((?:-.*)?) .html', destination: '/wisata-pantai-panjang-bengkulu', permanent: true },
 
-      // 4. CATCH-ALL BLOGGER
+      // 4. CATCH-ALL BLOGGER (Aman)
       { source: '/:y(\\d{4})/:m(\\d{2})/:slug.html', destination: '/', permanent: true }
     ];
   }
