@@ -102,6 +102,8 @@ export default function AdminDashboard() {
     pending: orders.filter(o => o.status === 'pending').length,
     success: orders.filter(o => o.status === 'success').length,
     revenue: orders.filter(o => o.status === 'success').reduce((s, o) => s + o.harga, 0),
+    qris:    orders.filter(o => o.paymentMethod === 'qris').length,
+    tunai:   orders.filter(o => o.paymentMethod === 'tunai').length,
   };
 
   return (
@@ -140,12 +142,14 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto px-4 py-6">
 
         {/* ── STATS CARDS ── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
           {[
             { label: 'Total Pesanan', value: stats.total, icon: '📋', color: 'text-slate-800' },
-            { label: 'Menunggu Konfirmasi', value: stats.pending, icon: '⏳', color: 'text-amber-600' },
+            { label: 'Menunggu', value: stats.pending, icon: '⏳', color: 'text-amber-600' },
             { label: 'Terkonfirmasi', value: stats.success, icon: '✅', color: 'text-green-600' },
             { label: 'Pendapatan', value: formatRp(stats.revenue), icon: '💰', color: 'text-primary-600' },
+            { label: 'Via QRIS', value: stats.qris, icon: '📱', color: 'text-blue-600' },
+            { label: 'Via Tunai', value: stats.tunai, icon: '💵', color: 'text-amber-600' },
           ].map(s => (
             <div key={s.label} className="bg-white rounded-xl border border-slate-100 p-4 shadow-sm">
               <p className="text-2xl mb-1">{s.icon}</p>
@@ -254,7 +258,13 @@ export default function AdminDashboard() {
                         <td className="px-4 py-3 text-slate-600 text-xs">{order.date}</td>
                         <td className="px-4 py-3">
                           <p className="font-bold text-primary-700">{formatRp(order.total)}</p>
-                          <p className="text-slate-400 text-xs">+{order.kodeUnik} unik</p>
+                          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                            order.paymentMethod === 'tunai'
+                              ? 'bg-amber-100 text-amber-700'
+                              : 'bg-blue-100 text-blue-700'
+                          }`}>
+                            {order.paymentMethod === 'tunai' ? '💵 Tunai' : '📱 QRIS'}
+                          </span>
                         </td>
                         <td className="px-4 py-3">
                           <StatusBadge status={order.status} />
@@ -356,7 +366,8 @@ export default function AdminDashboard() {
                 { label: 'Harga', value: formatRp(selected.harga) },
                 { label: 'Kode Unik', value: `+${selected.kodeUnik}` },
                 { label: 'Total Bayar', value: formatRp(selected.total) },
-                { label: 'Waktu Pesan', value: new Date(selected.createdAt).toLocaleString('id-ID') },
+                { label: 'Metode Bayar', value: selected.paymentMethod === 'tunai' ? '💵 Tunai' : '📱 QRIS' },
+              { label: 'Waktu Pesan', value: new Date(selected.createdAt).toLocaleString('id-ID') },
               ].map(row => (
                 <div key={row.label} className="flex justify-between text-sm py-1 border-b border-slate-50 last:border-0">
                   <span className="text-slate-500">{row.label}</span>
