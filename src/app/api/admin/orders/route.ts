@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     const {
       name, phone, email, routeId, route,
       date, passengers, pickup, dropoff,
-      harga, kodeUnik, total,
+      harga, kodeUnik, total, paymentMethod,
     } = body;
 
     if (!name || !phone || !route || !total) {
@@ -52,6 +52,7 @@ export async function POST(req: NextRequest) {
       kodeUnik: parseInt(kodeUnik) || 0,
       total: parseInt(total) || 0,
       status: 'pending',
+      paymentMethod: (paymentMethod === 'tunai' ? 'tunai' : 'qris') as 'qris' | 'tunai',
       createdAt: new Date().toISOString(),
     };
 
