@@ -15,8 +15,8 @@ export function middleware(request: NextRequest) {
   // 2. Redirect semua ?m=1 (versi mobile Blogger)
   // ============================================================
   if (searchParams.has('m')) {
-    const url = request.nextUrl.clone();
-    url.search = '';
+    const url = new URL(request.url);
+    url.searchParams.delete('m');
     return NextResponse.redirect(url, { status: 301 });
   }
 
@@ -50,7 +50,11 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
+  /*
+   * Matcher ini telah diperbaiki untuk kompatibilitas Turbopack.
+   * Mengabaikan file statis, api, dan aset gambar agar tidak membebani build.
+   */
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|images/).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|images|.*\\..*).*)',
   ],
 };
