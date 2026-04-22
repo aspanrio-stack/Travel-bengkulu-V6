@@ -79,14 +79,41 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     params.set('pickup', form.pickupAddress);
     if (form.dropoffAddress) params.set('dropoff', form.dropoffAddress);
     if (wantEmail && form.email) params.set('email', form.email);
+    params.set('paymentMethod', 'qris');
 
     window.location.href = `/pembayaran?${params.toString()}`;
   };
 
-  const handleKirimWA = () => {
+  const handleKirimWA = async () => {
     const err = validateStep2();
     if (err) { setError(err); return; }
     if (!selectedRoute) return;
+
+    // Simpan pesanan tunai ke Redis untuk rekap admin
+    try {
+      await fetch('/api/admin/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          email: wantEmail ? form.email : '',
+          routeId: form.routeId,
+          route: `${selectedRoute.from} → ${selectedRoute.to}`,
+          date: form.date,
+          passengers: form.passengers,
+          pickup: form.pickupAddress,
+          dropoff: form.dropoffAddress,
+          harga: selectedRoute.price,
+          kodeUnik: 0,
+          total: totalPrice,
+          paymentMethod: 'tunai',
+        }),
+      });
+    } catch (e) {
+      console.error('Gagal simpan pesanan tunai:', e);
+      // Tetap lanjut buka WhatsApp meski simpan gagal
+    }
 
     const msg = [
       '🚗 *PEMESANAN TRAVEL BENGKULU*',
