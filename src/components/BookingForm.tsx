@@ -65,15 +65,17 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     if (err) { setError(err); return; }
     if (!selectedRoute) return;
 
-    const params = new URLSearchParams({
-      rute: form.routeId,
-      name: form.name,
-      phone: form.phone,
-      date: form.date,
-      passengers: form.passengers,
-      pickup: form.pickupAddress,
-      dropoff: form.dropoffAddress,
-    });
+    // Kirim semua data ke halaman pembayaran via URL params
+    const params = new URLSearchParams();
+    params.set('rute', form.routeId);
+    params.set('name', form.name);
+    params.set('phone', form.phone);
+    params.set('date', form.date);
+    params.set('passengers', form.passengers);
+    params.set('pickup', form.pickupAddress);
+    if (form.dropoffAddress) params.set('dropoff', form.dropoffAddress);
+    if (form.email) params.set('email', form.email);
+
     window.location.href = `/pembayaran?${params.toString()}`;
   };
 
