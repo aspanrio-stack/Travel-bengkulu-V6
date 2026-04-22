@@ -34,6 +34,11 @@ export default function AdminDashboard() {
   const [filter, setFilter]         = useState<'all' | 'pending' | 'success'>('all');
   const [search, setSearch]         = useState('');
   const [selected, setSelected]     = useState<Order | null>(null);
+  const [showReset, setShowReset]   = useState(false);
+  const [resetMode, setResetMode]   = useState<'archive' | 'clear'>('archive');
+  const [resetText, setResetText]   = useState('');
+  const [resetting, setResetting]   = useState(false);
+  const [storage, setStorage]       = useState<{ totalOrders: number; usedMemory: string; archives: Record<string, number> } | null>(null);
 
   // ── Ambil semua pesanan ──
   const fetchOrders = useCallback(async () => {
@@ -51,7 +56,49 @@ export default function AdminDashboard() {
     }
   }, [router]);
 
-  useEffect(() => { fetchOrders(); }, [fetchOrders]);
+  useEffect(() => { fetchOrders(); fetchStorage(); }, [fetchOrders]);
+
+  // ── Ambil info storage Redis ──
+  const fetchStorage = async () => {
+    try {
+      const res = await fetch('/api/admin/reset');
+      if (res.ok) {
+        const data = await res.json();
+        setStorage(data);
+      }
+    } catch { /* abaikan error storage */ }
+  };
+
+  // ── Reset data ──
+  const handleReset = async () => {
+    if (resetText !== 'RESET KONFIRMASI') {
+      setToast('❌ Teks konfirmasi salah!');
+      setTimeout(() => setToast(''), 3000);
+      return;
+    }
+    setResetting(true);
+    try {
+      const res = await fetch('/api/admin/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode: resetMode, confirmText: resetText }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      setOrders([]);
+      setShowReset(false);
+      setResetText('');
+      fetchStorage();
+      setToast(`✅ ${data.message}`);
+      setTimeout(() => setToast(''), 5000);
+    } catch (err) {
+      setToast(`❌ ${err instanceof Error ? err.message : 'Gagal reset'}`);
+      setTimeout(() => setToast(''), 4000);
+    } finally {
+      setResetting(false);
+    }
+  };
 
   // ── Konfirmasi pembayaran ──
   const handleConfirm = async (orderId: string) => {
@@ -122,12 +169,24 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {storage && (
+              <span className="hidden sm:flex items-center gap-1 text-xs text-slate-400 bg-slate-50 px-2.5 py-1.5 rounded-lg">
+                💾 {storage.usedMemory}
+              </span>
+            )}
             <button
               onClick={fetchOrders}
               className="p-2 text-slate-500 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
               title="Refresh"
             >
               🔄
+            </button>
+            <button
+              onClick={() => { setShowReset(true); setResetText(''); }}
+              className="text-sm text-slate-500 hover:text-orange-600 px-3 py-1.5 rounded-lg hover:bg-orange-50 transition-colors font-medium"
+              title="Reset Data"
+            >
+              🗃️ Reset
             </button>
             <button
               onClick={handleLogout}
@@ -335,6 +394,102 @@ export default function AdminDashboard() {
         </div>
 
       </div>
+
+      {/* ── MODAL RESET DATA ── */}
+      {showReset && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4"
+          onClick={() => setShowReset(false)}>
+          <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
+            onClick={e => e.stopPropagation()}>
+
+            <div className="bg-orange-50 border-b border-orange-200 p-5">
+              <h3 className="font-bold text-orange-800 text-lg flex items-center gap-2">
+                🗃️ Reset Data Pesanan
+              </h3>
+              <p className="text-orange-600 text-sm mt-1">
+                Gunakan fitur ini untuk membersihkan data setiap bulan.
+              </p>
+            </div>
+
+            <div className="p-5 space-y-4">
+
+              {/* Info arsip yang ada */}
+              {storage && Object.keys(storage.archives).length > 0 && (
+                <div className="bg-slate-50 rounded-xl p-4">
+                  <p className="text-xs font-semibold text-slate-500 mb-2">📦 Arsip Tersimpan</p>
+                  {Object.entries(storage.archives).map(([key, count]) => (
+                    <div key={key} className="flex justify-between text-sm">
+                      <span className="text-slate-600 font-mono">{key}</span>
+                      <span className="text-slate-800 font-semibold">{count} pesanan</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Pilih mode */}
+              <div className="space-y-2">
+                <p className="text-sm font-semibold text-slate-700">Mode Reset:</p>
+                <label className={`flex items-start gap-3 p-4 border-2 rounded-xl cursor-pointer transition-all ${resetMode === 'archive' ? 'border-primary-500 bg-primary-50' : 'border-slate-200'}`}>
+                  <input type="radio" name="resetMode" value="archive"
+                    checked={resetMode === 'archive'}
+                    onChange={() => setResetMode('archive')}
+                    className="mt-0.5 accent-primary-600" />
+                  <div>
+                    <p className="font-semibold text-slate-800 text-sm">📦 Arsipkan & Bersihkan</p>
+                    <p className="text-slate-500 text-xs">Data dipindah ke arsip bulan ini (tersimpan 1 tahun) lalu tabel aktif dibersihkan. Direkomendasikan!</p>
+                  </div>
+                </label>
+                <label className={`flex items-start gap-3 p-4 border-2 rounded-xl cursor-pointer transition-all ${resetMode === 'clear' ? 'border-red-500 bg-red-50' : 'border-slate-200'}`}>
+                  <input type="radio" name="resetMode" value="clear"
+                    checked={resetMode === 'clear'}
+                    onChange={() => setResetMode('clear')}
+                    className="mt-0.5 accent-red-600" />
+                  <div>
+                    <p className="font-semibold text-red-700 text-sm">🗑️ Hapus Permanen</p>
+                    <p className="text-slate-500 text-xs">Data dihapus selamanya, tidak bisa dikembalikan. Gunakan hanya jika perlu.</p>
+                  </div>
+                </label>
+              </div>
+
+              {/* Konfirmasi teks */}
+              <div>
+                <p className="text-sm font-semibold text-slate-700 mb-1.5">
+                  Ketik <span className="font-mono bg-slate-100 px-1.5 py-0.5 rounded text-red-600">RESET KONFIRMASI</span> untuk lanjut:
+                </p>
+                <input
+                  type="text"
+                  value={resetText}
+                  onChange={e => setResetText(e.target.value)}
+                  placeholder="RESET KONFIRMASI"
+                  className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-orange-400"
+                />
+              </div>
+
+              {/* Total pesanan yang akan direset */}
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-center">
+                <p className="text-amber-800 text-sm">
+                  ⚠️ <strong>{orders.length} pesanan</strong> akan {resetMode === 'archive' ? 'diarsipkan dan dibersihkan' : 'dihapus permanen'}
+                </p>
+              </div>
+            </div>
+
+            <div className="px-5 pb-5 flex gap-3">
+              <button onClick={() => setShowReset(false)}
+                className="flex-1 border border-slate-200 text-slate-600 font-semibold py-3 rounded-xl hover:bg-slate-50 transition-colors text-sm">
+                Batal
+              </button>
+              <button
+                onClick={handleReset}
+                disabled={resetting || resetText !== 'RESET KONFIRMASI'}
+                className={`flex-1 font-bold py-3 rounded-xl transition-colors text-sm text-white disabled:opacity-50 ${
+                  resetMode === 'clear' ? 'bg-red-600 hover:bg-red-700' : 'bg-orange-500 hover:bg-orange-600'
+                }`}>
+                {resetting ? '⏳ Memproses...' : resetMode === 'archive' ? '📦 Arsipkan & Bersihkan' : '🗑️ Hapus Permanen'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── MODAL DETAIL PESANAN ── */}
       {selected && (
