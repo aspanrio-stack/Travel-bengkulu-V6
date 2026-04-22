@@ -20,7 +20,11 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     date: '',
     pickupAddress: '',
     dropoffAddress: '',
+    email: '',
   });
+
+  // Toggle checkbox email
+  const [wantEmail, setWantEmail] = useState(false);
 
   useEffect(() => {
     if (preselectedRouteId) {
@@ -74,6 +78,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     params.set('passengers', form.passengers);
     params.set('pickup', form.pickupAddress);
     if (form.dropoffAddress) params.set('dropoff', form.dropoffAddress);
+    if (wantEmail && form.email) params.set('email', form.email);
 
     window.location.href = `/pembayaran?${params.toString()}`;
   };
@@ -92,6 +97,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
       '─────────────────────────',
       `*Nama:* ${form.name}`,
       `*No. HP:* ${form.phone}`,
+      wantEmail && form.email ? `*Email:* ${form.email}` : '',
       `*Jemput di:* ${form.pickupAddress}`,
       form.dropoffAddress ? `*Antar ke:* ${form.dropoffAddress}` : '',
       '─────────────────────────',
@@ -298,6 +304,48 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
                 placeholder="Alamat tujuan di kota tujuan (kosongkan jika belum tahu)"
                 className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
               />
+            </div>
+
+            {/* Email opsional dengan checkbox */}
+            <div className="border border-slate-200 rounded-xl overflow-hidden">
+              {/* Checkbox toggle */}
+              <label className="flex items-start gap-3 p-4 cursor-pointer hover:bg-slate-50 transition-colors">
+                <div className="mt-0.5">
+                  <input
+                    type="checkbox"
+                    checked={wantEmail}
+                    onChange={e => setWantEmail(e.target.checked)}
+                    className="w-4 h-4 accent-primary-600 rounded cursor-pointer"
+                  />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-700 text-sm">
+                    Kirim kwitansi / tiket ke email
+                  </p>
+                  <p className="text-slate-400 text-xs mt-0.5">
+                    Opsional — bukti pembayaran akan dikirim setelah admin konfirmasi
+                  </p>
+                </div>
+              </label>
+
+              {/* Input email — muncul saat checkbox dicentang */}
+              {wantEmail && (
+                <div className="px-4 pb-4 border-t border-slate-100 pt-3">
+                  <input
+                    type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    placeholder="contoh@email.com"
+                    className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-shadow"
+                    autoFocus
+                  />
+                  <p className="text-xs text-primary-600 mt-2 flex items-center gap-1.5">
+                    <span>📧</span>
+                    Tiket perjalanan akan dikirim ke email ini setelah pembayaran dikonfirmasi admin
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Pilihan Pembayaran */}

@@ -214,7 +214,7 @@ export default function AdminDashboard() {
                 <table className="w-full text-sm">
                   <thead className="bg-slate-50 border-b border-slate-100">
                     <tr>
-                      {['ID', 'Nama & HP', 'Rute', 'Tanggal', 'Total Bayar', 'Status', 'Aksi'].map(h => (
+                      {['ID', 'Nama & HP', 'Email', 'Rute', 'Tanggal', 'Total Bayar', 'Status', 'Aksi'].map(h => (
                         <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
                           {h}
                         </th>
@@ -232,7 +232,20 @@ export default function AdminDashboard() {
                         <td className="px-4 py-3">
                           <p className="font-semibold text-slate-800">{order.name}</p>
                           <p className="text-slate-400 text-xs">{order.phone}</p>
-                          {order.email && <p className="text-slate-400 text-xs truncate max-w-[140px]">{order.email}</p>}
+                        </td>
+                        <td className="px-4 py-3">
+                          {order.email ? (
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-xs text-green-600 font-semibold bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">
+                                ✅ Ada
+                              </span>
+                              <span className="text-xs text-slate-500 truncate max-w-[120px]" title={order.email}>
+                                {order.email}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-xs text-slate-300 italic">—</span>
+                          )}
                         </td>
                         <td className="px-4 py-3">
                           <p className="font-medium text-slate-700">{order.route}</p>
