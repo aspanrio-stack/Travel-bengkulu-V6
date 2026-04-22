@@ -10,14 +10,15 @@ function PembayaranContent() {
   const params = useSearchParams();
 
   // ── Ambil semua data dari URL params ──
-  const routeId    = params.get('rute') || '';
-  const name       = params.get('name') || '';
-  const phone      = params.get('phone') || '';
-  const email      = params.get('email') || '';
-  const date       = params.get('date') || '';
-  const passengers = params.get('passengers') || '1';
-  const pickup     = params.get('pickup') || '';
-  const dropoff    = params.get('dropoff') || '';
+  const routeId       = params.get('rute') || '';
+  const name          = params.get('name') || '';
+  const phone         = params.get('phone') || '';
+  const email         = params.get('email') || '';
+  const date          = params.get('date') || '';
+  const passengers    = params.get('passengers') || '1';
+  const pickup        = params.get('pickup') || '';
+  const dropoff       = params.get('dropoff') || '';
+  const paymentMethod = params.get('paymentMethod') || 'qris';
 
   // ── Kalkulasi harga ──
   const route         = ROUTES.find(r => r.id === routeId);
@@ -51,8 +52,9 @@ function PembayaranContent() {
         pickup,
         dropoff,
         harga: hargaPerOrang,
-        kodeUnik: 0,   // akan diupdate oleh QRISCheckout saat generate
+        kodeUnik: 0,
         total: totalHarga,
+        paymentMethod,
       }),
     })
       .then(res => res.json())
