@@ -1,13 +1,14 @@
 /**
  * lib/orders.ts
- * Penyimpanan pesanan menggunakan Vercel KV (Redis) via REST API.
- * Ringan, tanpa dependency tambahan, cocok untuk Vercel Free Tier.
+ * Penyimpanan pesanan menggunakan Redis via ioredis.
+ * Menggunakan REDIS_URL dari Vercel Redis.
  *
- * Setup: tambahkan Vercel KV di dashboard Vercel (gratis hingga 256MB)
- * lalu set environment variables:
- *   KV_REST_API_URL
- *   KV_REST_API_TOKEN
+ * Struktur data di Redis:
+ *   order:{id}     → JSON string data pesanan
+ *   orders         → Sorted Set, member=id, score=timestamp
  */
+
+import Redis from 'ioredis';
 
 export interface Order {
   id: string;
@@ -29,71 +30,60 @@ export interface Order {
 }
 
 // ─────────────────────────────────────────────
-// Helper: fetch ke Vercel KV REST API
+// Singleton Redis client
+// Reuse koneksi agar tidak boros di Vercel Free
 // ─────────────────────────────────────────────
-async function kvFetch(path: string, options?: RequestInit) {
-  const url = process.env.KV_REST_API_URL;
-  const token = process.env.KV_REST_API_TOKEN;
+let redisClient: Redis | null = null;
 
-  if (!url || !token) {
-    throw new Error('Vercel KV belum dikonfigurasi. Set KV_REST_API_URL dan KV_REST_API_TOKEN.');
-  }
+function getRedis(): Redis {
+  if (redisClient) return redisClient;
 
-  const res = await fetch(`${url}${path}`, {
-    ...options,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-    // Batasi timeout agar tidak melebihi Vercel Free Tier (10 detik)
-    signal: AbortSignal.timeout(8000),
+  const url = process.env.REDIS_URL;
+  if (!url) throw new Error('REDIS_URL belum dikonfigurasi di environment variables.');
+
+  redisClient = new Redis(url, {
+    maxRetriesPerRequest: 3,
+    connectTimeout: 8000,
+    lazyConnect: true,
   });
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`KV Error ${res.status}: ${text}`);
-  }
+  redisClient.on('error', (err) => {
+    console.error('Redis connection error:', err);
+  });
 
-  return res.json();
+  return redisClient;
 }
 
 // ─────────────────────────────────────────────
 // Simpan pesanan baru
 // ─────────────────────────────────────────────
 export async function saveOrder(order: Order): Promise<void> {
-  // Simpan data order sebagai JSON dengan key: order:{id}
-  await kvFetch(`/set/order:${order.id}`, {
-    method: 'POST',
-    body: JSON.stringify(JSON.stringify(order)),
-  });
+  const redis = getRedis();
+  const pipeline = redis.pipeline();
 
-  // Tambahkan id ke list semua pesanan (sorted set by timestamp)
-  await kvFetch(`/zadd/orders`, {
-    method: 'POST',
-    body: JSON.stringify({
-      score: Date.now(),
-      member: order.id,
-    }),
-  });
+  // Simpan data order sebagai JSON string
+  pipeline.set(`order:${order.id}`, JSON.stringify(order));
+
+  // Tambah ke sorted set dengan score = timestamp
+  pipeline.zadd('orders', Date.now(), order.id);
+
+  await pipeline.exec();
 }
 
 // ─────────────────────────────────────────────
-// Ambil semua pesanan (terbaru di atas, maks 100)
+// Ambil semua pesanan (terbaru dulu, maks 100)
 // ─────────────────────────────────────────────
 export async function getAllOrders(): Promise<Order[]> {
-  // Ambil 100 ID terbaru (descending)
-  const listRes = await kvFetch('/zrange/orders/+inf/-inf?byScore=true&rev=true&limit=0,100');
-  const ids: string[] = listRes.result || [];
+  const redis = getRedis();
 
+  // Ambil semua ID dari sorted set (descending = terbaru dulu)
+  const ids = await redis.zrevrange('orders', 0, 99);
   if (ids.length === 0) return [];
 
-  // Ambil semua data order secara paralel (mget)
+  // Ambil semua data sekaligus dengan mget
   const keys = ids.map(id => `order:${id}`);
-  const mgetRes = await kvFetch('/mget/' + keys.join('/'));
-  const values: (string | null)[] = mgetRes.result || [];
+  const values = await redis.mget(...keys);
 
-  // Parse JSON, filter yang null
   return values
     .filter((v): v is string => v !== null)
     .map(v => JSON.parse(v) as Order);
@@ -103,9 +93,10 @@ export async function getAllOrders(): Promise<Order[]> {
 // Ambil 1 pesanan berdasarkan ID
 // ─────────────────────────────────────────────
 export async function getOrderById(id: string): Promise<Order | null> {
-  const res = await kvFetch(`/get/order:${id}`);
-  if (!res.result) return null;
-  return JSON.parse(res.result) as Order;
+  const redis = getRedis();
+  const data = await redis.get(`order:${id}`);
+  if (!data) return null;
+  return JSON.parse(data) as Order;
 }
 
 // ─────────────────────────────────────────────
@@ -124,16 +115,14 @@ export async function updateOrderStatus(
     confirmedAt: new Date().toISOString(),
   };
 
-  await kvFetch(`/set/order:${id}`, {
-    method: 'POST',
-    body: JSON.stringify(JSON.stringify(updated)),
-  });
+  const redis = getRedis();
+  await redis.set(`order:${id}`, JSON.stringify(updated));
 
   return updated;
 }
 
 // ─────────────────────────────────────────────
-// Format harga Rupiah
+// Format Rupiah
 // ─────────────────────────────────────────────
 export function formatRp(angka: number): string {
   return new Intl.NumberFormat('id-ID', {
