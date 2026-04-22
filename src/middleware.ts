@@ -1,28 +1,26 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname, search, searchParams } = request.nextUrl;
 
-  // ============================================================
-  // 1. URL rusak Blogger: /?m=1feeds/... /?m=1search/... /?m=1p/...
-  // ============================================================
-  if (search.includes('m=1feeds') || search.includes('m=1search') || search.includes('m=1p/')) {
+  // 1. URL rusak Blogger
+  if (
+    search.includes('m=1feeds') ||
+    search.includes('m=1search') ||
+    search.includes('m=1p/')
+  ) {
     return NextResponse.redirect(new URL('/', request.url), { status: 301 });
   }
 
-  // ============================================================
-  // 2. Redirect semua ?m=1 (versi mobile Blogger)
-  // ============================================================
+  // 2. Redirect ?m=1
   if (searchParams.has('m')) {
     const url = new URL(request.url);
     url.searchParams.delete('m');
     return NextResponse.redirect(url, { status: 301 });
   }
 
-  // ============================================================
   // 3. Redirect feeds Blogger
-  // ============================================================
   if (
     pathname.startsWith('/feeds/') ||
     search.includes('feeds/posts') ||
@@ -32,16 +30,15 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url), { status: 301 });
   }
 
-  // ============================================================
-  // 4. Redirect sitemap Blogger → sitemap Next.js
-  // ============================================================
-  if (pathname === '/p/sitemap.html' || search.includes('sitemap.html')) {
+  // 4. Redirect sitemap Blogger
+  if (
+    pathname === '/p/sitemap.html' ||
+    search.includes('sitemap.html')
+  ) {
     return NextResponse.redirect(new URL('/sitemap.xml', request.url), { status: 301 });
   }
 
-  // ============================================================
   // 5. Redirect label/search Blogger
-  // ============================================================
   if (search.includes('search/label')) {
     return NextResponse.redirect(new URL('/', request.url), { status: 301 });
   }
@@ -50,11 +47,11 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  /*
-   * Matcher ini telah diperbaiki untuk kompatibilitas Turbopack.
-   * Mengabaikan file statis, api, dan aset gambar agar tidak membebani build.
-   */
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|images|.*\\..*).*)',
+    /*
+     * Versi SAFE (tidak pakai regex kompleks)
+     * Ini yang bikin error di Vercel sebelumnya
+     */
+    '/((?!api|_next|favicon.ico).*)',
   ],
 };
