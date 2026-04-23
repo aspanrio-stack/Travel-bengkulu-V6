@@ -1,19 +1,14 @@
 'use client';
-import { trackWhatsAppClick } from '@/lib/analytics';
 
 export default function WhatsAppFloat() {
 
   const handleClick = () => {
-    // Track via GA4 (sudah ada)
-    trackWhatsAppClick('floating_button');
-
-    // Track ke Redis — fire and forget, tidak perlu await
-    // Tidak ada konfirmasi, tidak tampilkan angka ke user
+    // Track ke Redis — fire and forget, silent
     fetch('/api/track', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ source: 'wa_float' }),
-    }).catch(() => {}); // Abaikan error diam-diam
+    }).catch(() => {});
   };
 
   return (
