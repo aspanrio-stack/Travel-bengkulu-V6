@@ -39,6 +39,7 @@ export default function AdminDashboard() {
   const [resetText, setResetText]   = useState('');
   const [resetting, setResetting]   = useState(false);
   const [storage, setStorage]       = useState<{ totalOrders: number; usedMemory: string; archives: Record<string, number> } | null>(null);
+  const [waStats, setWaStats]       = useState<{ total: number; hariIni: number; bulanIni: number } | null>(null);
 
   // ── Ambil semua pesanan ──
   const fetchOrders = useCallback(async () => {
@@ -56,7 +57,7 @@ export default function AdminDashboard() {
     }
   }, [router]);
 
-  useEffect(() => { fetchOrders(); fetchStorage(); }, [fetchOrders]);
+  useEffect(() => { fetchOrders(); fetchStorage(); fetchWaStats(); }, [fetchOrders]);
 
   // ── Ambil info storage Redis ──
   const fetchStorage = async () => {
@@ -67,6 +68,14 @@ export default function AdminDashboard() {
         setStorage(data);
       }
     } catch { /* abaikan error storage */ }
+  };
+
+  // ── Ambil statistik klik WhatsApp ──
+  const fetchWaStats = async () => {
+    try {
+      const res = await fetch('/api/track');
+      if (res.ok) setWaStats(await res.json());
+    } catch { /* abaikan */ }
   };
 
   // ── Reset data ──
@@ -169,11 +178,6 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {storage && (
-              <span className="hidden sm:flex items-center gap-1 text-xs text-slate-400 bg-slate-50 px-2.5 py-1.5 rounded-lg">
-                💾 {storage.usedMemory}
-              </span>
-            )}
             <button
               onClick={fetchOrders}
               className="p-2 text-slate-500 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
@@ -181,27 +185,14 @@ export default function AdminDashboard() {
             >
               🔄
             </button>
-            <button
-              onClick={() => { setShowReset(true); setResetText(''); }}
-              className="text-sm text-slate-500 hover:text-orange-600 px-3 py-1.5 rounded-lg hover:bg-orange-50 transition-colors font-medium"
-              title="Reset Data"
-            >
-              🗃️ Reset
-            </button>
-            <button
-              onClick={handleLogout}
-              className="text-sm text-slate-500 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors font-medium"
-            >
-              Keluar
-            </button>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="max-w-7xl mx-auto px-4 pt-4 pb-6">
 
         {/* ── STATS CARDS ── */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 mb-6">
           {[
             { label: 'Total Pesanan', value: stats.total, icon: '📋', color: 'text-slate-800' },
             { label: 'Menunggu', value: stats.pending, icon: '⏳', color: 'text-amber-600' },
@@ -209,6 +200,8 @@ export default function AdminDashboard() {
             { label: 'Pendapatan', value: formatRp(stats.revenue), icon: '💰', color: 'text-primary-600' },
             { label: 'Via QRIS', value: stats.qris, icon: '📱', color: 'text-blue-600' },
             { label: 'Via Tunai', value: stats.tunai, icon: '💵', color: 'text-amber-600' },
+            { label: 'Klik WA Hari Ini', value: waStats?.hariIni ?? '—', icon: '💬', color: 'text-green-600' },
+            { label: 'Klik WA Bulan Ini', value: waStats?.bulanIni ?? '—', icon: '📲', color: 'text-green-700' },
           ].map(s => (
             <div key={s.label} className="bg-white rounded-xl border border-slate-100 p-4 shadow-sm">
               <p className="text-2xl mb-1">{s.icon}</p>
@@ -394,6 +387,38 @@ export default function AdminDashboard() {
         </div>
 
       </div>
+
+      {/* ── BOTTOM ACTION BAR ── */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 shadow-lg px-4 py-3">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+          {/* Info storage */}
+          {storage && (
+            <span className="flex items-center gap-1.5 text-xs text-slate-400">
+              <span>💾</span>
+              <span>{storage.usedMemory}</span>
+              <span className="text-slate-300">·</span>
+              <span>{orders.length} pesanan</span>
+            </span>
+          )}
+          <div className="flex items-center gap-2 ml-auto">
+            <button
+              onClick={() => { setShowReset(true); setResetText(''); }}
+              className="flex items-center gap-1.5 text-sm bg-orange-50 hover:bg-orange-100 text-orange-600 font-semibold px-4 py-2 rounded-xl transition-colors border border-orange-200"
+            >
+              🗃️ Reset
+            </button>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-1.5 text-sm bg-red-50 hover:bg-red-100 text-red-600 font-semibold px-4 py-2 rounded-xl transition-colors border border-red-200"
+            >
+              🚪 Keluar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Spacer agar konten tidak tertutup bottom bar */}
+      <div className="h-20" />
 
       {/* ── MODAL RESET DATA ── */}
       {showReset && (
