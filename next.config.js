@@ -1,9 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 1. Matikan header X-Powered-By agar response size lebih hemat sedikit
   poweredByHeader: false,
-  
-  // 2. Aktifkan optimasi kompresi (sudah Anda lakukan, bagus!)
   compress: true,
 
   images: {
@@ -11,11 +8,14 @@ const nextConfig = {
     minimumCacheTTL: 2592000,
     deviceSizes: [390, 640, 828, 1080, 1200],
     imageSizes: [16, 32, 64, 128, 256],
+    // Izinkan domain eksternal jika Anda mengambil gambar dari luar nantinya
+    remotePatterns: [],
   },
 
-  // 3. Tambahkan optimasi untuk import library (opsional jika pakai UI library seperti Lucide atau MUI)
   experimental: {
     optimizePackageImports: ['lucide-react', '@headlessui/react'],
+    // Inilah kunci untuk menghilangkan blocking CSS/Fonts
+    optimizeCss: true, 
   },
 
   async headers() {
@@ -25,7 +25,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=2592000, stale-while-revalidate=86400',
+            value: 'public, max-age=31536000, immutable', // Cache lebih agresif untuk gambar
           },
         ],
       },
@@ -34,7 +34,6 @@ const nextConfig = {
 
   async redirects() {
     return [
-      // ... (Redirect Anda sudah sangat rapi, tidak perlu diubah isinya)
       { source: '/index.html', destination: '/', permanent: true },
       { source: '/p/bengkulutravelcom-layanan-travel-antar.html', destination: '/', permanent: true },
       { source: '/2026/02/travel-bengkulu-jambi.html', destination: '/travel-bengkulu-jambi', permanent: true },
