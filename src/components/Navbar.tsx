@@ -118,9 +118,9 @@ export default function Navbar() {
           {/* Pesan Tiket - tampil di semua ukuran */}
           <Link
             href="/pesan"
-            className="inline-flex items-center gap-1.5 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-3 py-2 md:px-4 md:py-2 rounded-xl transition-all"
+            className="inline-flex items-center gap-1.5 bg-primary-700 hover:bg-primary-800 text-white text-sm font-semibold px-3 py-2 md:px-4 md:py-2 rounded-xl transition-all" aria-label="Pesan Tiket Travel Bengkulu"
           >
-            🎫 <span className="hidden sm:inline">Pesan Tiket</span><span className="sm:hidden">Pesan</span>
+            <span aria-hidden="true">🎫</span> <span className="hidden sm:inline">Pesan Tiket</span><span className="sm:hidden" aria-label="Pesan Tiket">Pesan</span>
           </Link>
 
           {/* WhatsApp - tampil di semua ukuran */}

@@ -155,7 +155,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
             }`}
           >
             <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-              step >= s.num ? 'bg-primary-600 text-white' : 'bg-slate-200 text-slate-500'
+              step >= s.num ? 'bg-primary-700 text-white' : 'bg-slate-200 text-slate-500'
             }`}>
               {step > s.num ? '✓' : s.num}
             </span>
@@ -247,7 +247,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
             <button
               onClick={goToStep2}
               disabled={!form.routeId}
-              className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-colors text-lg"
+              className="w-full bg-primary-700 hover:bg-primary-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-colors text-lg"
             >
               Lanjut Isi Data →
             </button>
