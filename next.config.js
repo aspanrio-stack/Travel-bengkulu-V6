@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 
-  // Optimasi gambar
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 2592000,
@@ -9,10 +8,8 @@ const nextConfig = {
     imageSizes: [16, 32, 64, 128, 256],
   },
 
-  // Compress response
   compress: true,
 
-  // Cache header untuk gambar saja (bukan _next/static)
   async headers() {
     return [
       {
@@ -29,11 +26,10 @@ const nextConfig = {
 
   async redirects() {
     return [
+      // ── Redirect spesifik dari Blogger lama ──
       { source: '/index.html', destination: '/', permanent: true },
       { source: '/p/bengkulutravelcom-layanan-travel-antar.html', destination: '/', permanent: true },
       { source: '/2026/02/travel-bengkulu-jambi.html', destination: '/travel-bengkulu-jambi', permanent: true },
-      { source: '/search/label/Bengkulu Palembang', destination: '/travel-bengkulu-palembang', permanent: true },
-      { source: '/search/label/Bengkulu%20Palembang', destination: '/travel-bengkulu-palembang', permanent: true },
       { source: '/2026/02/travel-bengkulu-ke-curup-door-to-door.html', destination: '/travel-bengkulu-curup', permanent: true },
       { source: '/2026/02/bengkulu-ke-jambi-berapa-jam.html', destination: '/jarak-jambi-bengkulu', permanent: true },
       { source: '/2026/02/travel-bengkulu-palembang-setiap-hari.html', destination: '/travel-bengkulu-palembang', permanent: true },
@@ -44,26 +40,15 @@ const nextConfig = {
       { source: '/2026/02/travel-bengkulu-padang.html', destination: '/', permanent: true },
       { source: '/2026/02/travel-palembang-ke-bengkulu-door-to-door-tanpa-transit.html', destination: '/travel-palembang-bengkulu', permanent: true },
       { source: '/2026/02/travel-bengkulu-ke-kota-jambi-door-to-door.html', destination: '/travel-bengkulu-jambi', permanent: true },
+
+      // ── Redirect label & search Blogger (wildcard) ──
       { source: '/search/label/:label*', destination: '/', permanent: true },
       { source: '/search/:path*', destination: '/', permanent: true },
-      { source: '/p/:slug.html', destination: '/', permanent: true },
-      // Fix regex: gunakan :rest* bukan :r*.html
-      { source: '/:year(\\d{4})/:month(\\d{2})/travel-palembang-bengkulu:rest*.html', destination: '/travel-palembang-bengkulu', permanent: true },
-      { source: '/:year(\\d{4})/:month(\\d{2})/travel-bengkulu-palembang:rest*.html', destination: '/travel-bengkulu-palembang', permanent: true },
-      { source: '/:year(\\d{4})/:month(\\d{2})/travel-jambi-bengkulu:rest*.html', destination: '/travel-jambi-bengkulu', permanent: true },
-      { source: '/:year(\\d{4})/:month(\\d{2})/travel-bengkulu-jambi:rest*.html', destination: '/travel-bengkulu-jambi', permanent: true },
-      { source: '/:year(\\d{4})/:month(\\d{2})/travel-bengkulu-ke-kota-jambi:rest*.html', destination: '/travel-bengkulu-jambi', permanent: true },
-      { source: '/:year(\\d{4})/:month(\\d{2})/bengkulu-ke-jambi:rest*.html', destination: '/jarak-jambi-bengkulu', permanent: true },
-      { source: '/:year(\\d{4})/:month(\\d{2})/jarak-jambi:rest*.html', destination: '/jarak-jambi-bengkulu', permanent: true },
-      { source: '/:year(\\d{4})/:month(\\d{2})/travel-bengkulu-ke-curup:rest*.html', destination: '/travel-bengkulu-curup', permanent: true },
-      { source: '/:year(\\d{4})/:month(\\d{2})/travel-bengkulu-curup:rest*.html', destination: '/travel-bengkulu-curup', permanent: true },
-      { source: '/:year(\\d{4})/:month(\\d{2})/rental-mobil:rest*.html', destination: '/rental-mobil-curup', permanent: true },
-      { source: '/:year(\\d{4})/:month(\\d{2})/antar-jemput:rest*.html', destination: '/antar-jemput-bandara-curup', permanent: true },
-      { source: '/:year(\\d{4})/:month(\\d{2})/kirim-paket:rest*.html', destination: '/kirim-paket-bengkulu-palembang', permanent: true },
-      { source: '/:year(\\d{4})/:month(\\d{2})/tempat-wisata:rest*.html', destination: '/tempat-wisata-bengkulu', permanent: true },
-      { source: '/:year(\\d{4})/:month(\\d{2})/wisata-pantai:rest*.html', destination: '/wisata-pantai-panjang-bengkulu', permanent: true },
-      { source: '/:year(\\d{4})/:month(\\d{2})/pantai-panjang:rest*.html', destination: '/wisata-pantai-panjang-bengkulu', permanent: true },
-      { source: '/:year(\\d{4})/:month(\\d{2})/:slug.html', destination: '/', permanent: true },
+      { source: '/p/:slug', destination: '/', permanent: true },
+
+      // ── Redirect semua URL Blogger format tahun/bulan/slug.html ──
+      // Gunakan wildcard :path* yang valid di Next.js (tanpa regex repeat)
+      { source: '/:year(\\d{4})/:month(\\d{2})/:slug', destination: '/', permanent: true },
     ];
   },
 };
