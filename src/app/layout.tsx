@@ -5,21 +5,24 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
 
-// ── Optimized Fonts (lebih ringan & cepat) ──
+// ── Optimized Fonts ──
+// Playfair: Gunakan preload true karena kemungkinan besar dipakai di judul (LCP)
 const fontDisplay = Playfair_Display({
   subsets: ['latin'],
-  weight: ['600', '700'], // dikurangi biar ringan
+  weight: ['600', '700'],
   variable: '--font-display',
   display: 'swap',
-  preload: false, // tidak perlu preload
+  preload: true, // Diubah ke true agar judul tidak "berkedip" saat dimuat
+  adjustFontFallback: false, // Mematikan penyesuaian otomatis untuk stabilitas layout
 });
 
+// Body Font: Jakarta Sans
 const fontBody = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  weight: ['400', '500'], // cukup untuk body
+  weight: ['400', '500'],
   variable: '--font-body',
   display: 'swap',
-  preload: true, // preload hanya font utama
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -34,18 +37,10 @@ export const metadata: Metadata = {
   description:
     'Jasa travel Bengkulu terpercaya. Melayani rute Bengkulu-Palembang, Bengkulu-Jambi, Bengkulu-Curup. Antar jemput door to door. Hubungi kami sekarang!',
   keywords: [
-    'travel bengkulu',
-    'travel bengkulu palembang',
-    'travel palembang bengkulu',
-    'travel bengkulu jambi',
-    'travel jambi bengkulu',
-    'travel bengkulu curup',
-    'travel curup bengkulu',
-    'rental mobil curup',
-    'travel bengkulu lebong',
-    'travel lebong bengkulu',
-    'travel bengkulu lampung',
-    'antar jemput bandara curup',
+    'travel bengkulu', 'travel bengkulu palembang', 'travel palembang bengkulu',
+    'travel bengkulu jambi', 'travel jambi bengkulu', 'travel bengkulu curup',
+    'travel curup bengkulu', 'rental mobil curup', 'travel bengkulu lebong',
+    'travel lebong bengkulu', 'travel bengkulu lampung', 'antar jemput bandara curup',
     'bengkulu ke palembang berapa jam',
   ],
   openGraph: {
@@ -69,8 +64,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className={`${fontDisplay.variable} ${fontBody.variable}`}>
-      <body>
+    // Tambahkan antialiasing di body untuk teks yang lebih tajam tanpa beban berat
+    <html lang="id" className={`${fontDisplay.variable} ${fontBody.variable} scroll-smooth`}>
+      <body className="antialiased font-body">
         <Navbar />
         <main>{children}</main>
         <Footer />
