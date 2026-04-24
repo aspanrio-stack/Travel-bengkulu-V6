@@ -1,16 +1,6 @@
-# Target browser modern saja — kurangi polyfill yang tidak perlu
-# Fix: "JavaScript Versi Lama" di PageSpeed Insights
-
-[production]
-chrome >= 100
-firefox >= 100
-safari >= 15
-edge >= 100
+# Target browser yang benar-benar modern untuk menghapus legacy polyfills
+defaults and supports es6-module
+last 2 versions
 not dead
 not ie 11
 not op_mini all
-
-[development]
-last 1 chrome version
-last 1 firefox version
-last 1 safari version
