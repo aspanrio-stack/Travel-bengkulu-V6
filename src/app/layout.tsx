@@ -1,1 +1,81 @@
-import type { Metadata } from 'next'; import { Playfair_Display, Plus_Jakarta_Sans } from 'next/font/google'; import './globals.css'; import Navbar from '@/components/Navbar'; import Footer from '@/components/Footer'; import WhatsAppFloat from '@/components/WhatsAppFloat'; // ── Load font via next/font — otomatis self-hosted, tidak blokir render ── const fontDisplay = Playfair_Display({ subsets: ['latin'], weight: ['400', '600', '700', '800'], variable: '--font-display', display: 'swap', preload: true, }); const fontBody = Plus_Jakarta_Sans({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], variable: '--font-body', display: 'swap', preload: true, }); export const metadata: Metadata = { metadataBase: new URL('https://www.bengkulutravel.com'), alternates: { canonical: 'https://www.bengkulutravel.com', }, title: { default: 'Travel Bengkulu | Antar Jemput Door to Door Terpercaya', template: '%s | Travel Bengkulu', }, description: 'Jasa travel Bengkulu terpercaya. Melayani rute Bengkulu-Palembang, Bengkulu-Jambi, Bengkulu-Curup. Antar jemput door to door. Hubungi kami sekarang!', keywords: [ 'travel bengkulu', 'travel bengkulu palembang', 'travel palembang bengkulu', 'travel bengkulu jambi', 'travel jambi bengkulu', 'travel bengkulu curup', 'rental mobil curup', 'antar jemput bandara curup', 'bengkulu ke palembang berapa jam', ], openGraph: { type: 'website', locale: 'id_ID', url: 'https://www.bengkulutravel.com', siteName: 'Travel Bengkulu', title: 'Travel Bengkulu | Antar Jemput Door to Door Terpercaya', description: 'Jasa travel Bengkulu terpercaya. Rute Bengkulu-Palembang, Bengkulu-Jambi, Bengkulu-Curup.', }, robots: { index: true, follow: true }, }; export default function RootLayout({ children }: { children: React.ReactNode }) { return ( <html lang="id" className={${fontDisplay.variable} ${fontBody.variable}} > <head /> <body> <Navbar /> <main>{children}</main> <Footer /> <WhatsAppFloat /> </body> </html> ); } EOF echo "layout.tsx updated!"
+import type { Metadata } from 'next';
+import { Playfair_Display, Plus_Jakarta_Sans } from 'next/font/google';
+import './globals.css';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import WhatsAppFloat from '@/components/WhatsAppFloat';
+
+// ── Optimized Fonts (lebih ringan & cepat) ──
+const fontDisplay = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['600', '700'], // dikurangi biar ringan
+  variable: '--font-display',
+  display: 'swap',
+  preload: false, // tidak perlu preload
+});
+
+const fontBody = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500'], // cukup untuk body
+  variable: '--font-body',
+  display: 'swap',
+  preload: true, // preload hanya font utama
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://www.bengkulutravel.com'),
+  alternates: {
+    canonical: 'https://www.bengkulutravel.com',
+  },
+  title: {
+    default: 'Travel Bengkulu | Antar Jemput Door to Door Terpercaya',
+    template: '%s | Travel Bengkulu',
+  },
+  description:
+    'Jasa travel Bengkulu terpercaya. Melayani rute Bengkulu-Palembang, Bengkulu-Jambi, Bengkulu-Curup. Antar jemput door to door. Hubungi kami sekarang!',
+  keywords: [
+    'travel bengkulu',
+    'travel bengkulu palembang',
+    'travel palembang bengkulu',
+    'travel bengkulu jambi',
+    'travel jambi bengkulu',
+    'travel bengkulu curup',
+    'travel curup bengkulu',
+    'rental mobil curup',
+    'travel bengkulu lebong',
+    'travel lebong bengkulu',
+    'travel bengkulu lampung',
+    'antar jemput bandara curup',
+    'bengkulu ke palembang berapa jam',
+  ],
+  openGraph: {
+    type: 'website',
+    locale: 'id_ID',
+    url: 'https://www.bengkulutravel.com',
+    siteName: 'Travel Bengkulu',
+    title: 'Travel Bengkulu | Antar Jemput Door to Door Terpercaya',
+    description:
+      'Jasa travel Bengkulu terpercaya. Rute Bengkulu-Palembang, Bengkulu-Jambi, Bengkulu-Curup.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="id" className={`${fontDisplay.variable} ${fontBody.variable}`}>
+      <body>
+        <Navbar />
+        <main>{children}</main>
+        <Footer />
+        <WhatsAppFloat />
+      </body>
+    </html>
+  );
+}
