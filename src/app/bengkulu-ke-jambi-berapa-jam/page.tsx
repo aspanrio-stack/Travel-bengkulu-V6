@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Bengkulu ke Jambi Berapa Jam? Jarak & Rute Lengkap',
+  title: 'Bengkulu ke Jambi Berapa Jam? Jarak & Rute Lengkap 2025',
   description:
     'Bengkulu ke Jambi berapa jam? Jaraknya ±540 km, waktu tempuh 9–12 jam via darat. Info rute, kondisi jalan, tips perjalanan & travel door to door Rp 250.000.',
   alternates: { canonical: 'https://www.bengkulutravel.com/bengkulu-ke-jambi-berapa-jam' },
@@ -16,6 +17,16 @@ export default function BengkuluKeJambiBerapaJam() {
       breadcrumbs={[{ label: 'Artikel' }, { label: 'Bengkulu ke Jambi Berapa Jam' }]}
       badge="🕐 Info Perjalanan"
     >
+      {/* Tombol Pesan */}
+      <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p className="text-primary-800 font-semibold text-sm">Siap memesan? Klik tombol di bawah untuk langsung ke form pemesanan.</p>
+        <Link
+          href="/pesan?rute=bkl-jmb"
+          className="shrink-0 bg-primary-700 hover:bg-primary-800 text-white font-bold px-6 py-2.5 rounded-xl transition-colors flex items-center gap-2 text-sm"
+        >
+          🎫 Pesan Sekarang
+        </Link>
+      </div>
       <p>
         Pertanyaan <strong>"Bengkulu ke Jambi berapa jam?"</strong> sering muncul bagi yang ingin merencanakan perjalanan antar provinsi ini. Jawabannya cukup beragam tergantung moda transportasi, kondisi jalan, dan waktu keberangkatan.
       </p>
