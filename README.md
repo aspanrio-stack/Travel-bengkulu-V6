@@ -1,4 +1,4 @@
-# Travel Bengkulu – Website Next.js
+# Travel Bengkulu – Website Next.js Developer By Rio Mardiansyah
 
 Website resmi Travel Bengkulu (bengkulutravel.com) dibangun dengan Next.js 14, TypeScript, dan Tailwind CSS.
 
