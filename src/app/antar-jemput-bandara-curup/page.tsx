@@ -3,9 +3,9 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Antar Jemput Bandara Curup – Tarif Rp 125.000 Bisa Pakai QRIS',
+  title: 'Antar Jemput Bandara Curup – Tarif Rp 100.000',
   description:
-    'Layanan antar jemput bandara Curup (Bandara Fatmawati Curup). Tarif Rp 125.000. On-time guarantee. Armada nyaman. mengikuti jadwal pesawat',
+    'Layanan antar jemput bandara Curup (Bandara Fatmawati Curup). Tarif Rp 100.000. On-time guarantee. Armada nyaman. Pesan via WhatsApp 0852-6864-5461!',
   alternates: { canonical: 'https://bengkulutravel.com/antar-jemput-bandara-curup' },
 };
 
@@ -16,20 +16,20 @@ export default function AntarJemputBandaraCurup() {
       description="Layanan khusus antar jemput ke dan dari Bandara di Curup. Tepat waktu, nyaman, dan terjangkau."
       breadcrumbs={[{ label: 'Antar Jemput Bandara Curup' }]}
       badge="✈️ Airport Transfer"
-      price="Rp 125.000"
+      price="Rp 100.000"
     >
       {/* Tombol Pesan Cepat */}
       <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
         <p className="text-primary-800 font-semibold text-sm">Siap memesan? Klik tombol di bawah untuk langsung ke form pemesanan.</p>
         <Link
           href="/pesan?rute=bnd-crp"
-          className="shrink-0 bg-primary-600 hover:bg-primary-700 text-white font-bold px-6 py-2.5 rounded-xl transition-colors flex items-center gap-2 text-sm"
+          className="shrink-0 bg-primary-700 hover:bg-primary-800 text-white font-bold px-6 py-2.5 rounded-xl transition-colors flex items-center gap-2 text-sm"
         >
           🎫 Pesan Sekarang
         </Link>
       </div>
       <p>
-        Kami menyediakan layanan <strong>antar jemput bandara Curup</strong> yang khusus dirancang untuk penumpang pesawat yang membutuhkan transportasi dari/ke bandara secara on-time dan nyaman. Dengan tarif flat hanya <strong>Rp 125.000</strong>, Anda tidak perlu khawatir soal transportasi dari atau ke bandara.
+        Kami menyediakan layanan <strong>antar jemput bandara Curup</strong> yang khusus dirancang untuk penumpang pesawat yang membutuhkan transportasi dari/ke bandara secara on-time dan nyaman. Dengan tarif flat hanya <strong>Rp 100.000</strong>, Anda tidak perlu khawatir soal transportasi dari atau ke bandara.
       </p>
 
       <h2>Tarif Antar Jemput Bandara</h2>
@@ -44,12 +44,12 @@ export default function AntarJemputBandaraCurup() {
         <tbody>
           <tr>
             <td>Jemput dari Bandara</td>
-            <td><strong>Rp 125.000</strong></td>
+            <td><strong>Rp 100.000</strong></td>
             <td>Ke seluruh area Curup</td>
           </tr>
           <tr>
             <td>Antar ke Bandara</td>
-            <td><strong>Rp 125.000</strong></td>
+            <td><strong>Rp 100.000</strong></td>
             <td>Dari seluruh area Curup</td>
           </tr>
         </tbody>
