@@ -28,8 +28,6 @@ export default function ArticleLayout({
 }: ArticleLayoutProps) {
   const pathname = usePathname();
   const waText = encodeURIComponent(`Halo Travel Bengkulu, saya ingin informasi tentang ${title}`);
-  const handleWAClick = (loc: string) => trackWhatsAppClick(loc, pathname);
-  const handlePhoneClick = (loc: string) => trackPhoneClick(loc);
 
   return (
     <div className="min-h-screen pt-16">
@@ -92,7 +90,7 @@ export default function ArticleLayout({
                 <p className="text-white text-sm mb-5 opacity-90">Hubungi kami via WhatsApp untuk konfirmasi jadwal dan ketersediaan.</p>
                 <a
                   href={`${WA_BASE}${waText}`}
-                  onClick={() => handleWAClick("sidebar_cta")}
+
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full bg-green-400 hover:bg-green-300 text-slate-900 font-bold px-5 py-3 rounded-xl flex items-center justify-center gap-2 transition-colors" aria-label="Hubungi Travel Bengkulu via WhatsApp" aria-label="Hubungi via WhatsApp"
@@ -104,7 +102,7 @@ export default function ArticleLayout({
                 </a>
                 <a
                   href="tel:+6285268645461"
-                  onClick={() => handlePhoneClick("sidebar_cta")}
+
                   className="w-full mt-2 bg-white/20 hover:bg-white/30 text-white font-semibold px-5 py-3 rounded-xl flex items-center justify-center gap-2 transition-colors" aria-label="Telepon Travel Bengkulu" aria-label="Telepon Travel Bengkulu"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
