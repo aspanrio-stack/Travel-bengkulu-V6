@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Travel Bengkulu Curup – Antar Jemput Door to Door Rp 80.000 | 2026',
+  title: 'Travel Bengkulu Curup – Antar Jemput Door to Door Rp 80.000',
   description:
     'Jasa travel Bengkulu Curup door to door murah. Tarif hanya Rp 80.000/orang. Berangkat setiap hari. Armada nyaman. Pesan via WhatsApp 0852-6864-5461!',
   alternates: { canonical: 'https://bengkulutravel.com/travel-bengkulu-curup' },
@@ -23,7 +23,7 @@ export default function TravelBengkuluCurup() {
         <p className="text-primary-800 font-semibold text-sm">Siap memesan? Klik tombol di bawah untuk langsung ke form pemesanan.</p>
         <Link
           href="/pesan?rute=bkl-crp"
-          className="shrink-0 bg-primary-600 hover:bg-primary-700 text-white font-bold px-6 py-2.5 rounded-xl transition-colors flex items-center gap-2 text-sm"
+          className="shrink-0 bg-primary-700 hover:bg-primary-800 text-white font-bold px-6 py-2.5 rounded-xl transition-colors flex items-center gap-2 text-sm"
         >
           🎫 Pesan Sekarang
         </Link>
