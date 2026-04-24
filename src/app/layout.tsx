@@ -1,66 +1,57 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  poweredByHeader: false,
-  compress: true,
+import type { Metadata } from 'next';
+import { Playfair_Display, Plus_Jakarta_Sans } from 'next/font/google';
+import './globals.css';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import WhatsAppFloat from '@/components/WhatsAppFloat';
 
-  images: {
-    formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 2592000,
-    deviceSizes: [390, 640, 828, 1080, 1200],
-    imageSizes: [16, 32, 64, 128, 256],
-  },
+const fontDisplay = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['600', '700'],
+  variable: '--font-display',
+  display: 'swap',
+  preload: true,
+});
 
-  experimental: {
-    optimizePackageImports: ['lucide-react', '@headlessui/react'],
-    // AKTIFKAN INI: Menghilangkan render-blocking CSS secara otomatis
-    optimizeCss: true,
-  },
+const fontBody = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-body',
+  display: 'swap',
+  preload: true,
+});
 
-  async headers() {
-    return [
-      {
-        source: '/images/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable', // Cache lebih kuat (1 tahun)
-          },
-        ],
-      },
-      {
-        source: '/fonts/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-    ];
+export const metadata: Metadata = {
+  metadataBase: new URL('https://www.bengkulutravel.com'),
+  alternates: {
+    canonical: 'https://www.bengkulutravel.com',
   },
-
-  async redirects() {
-    return [
-      { source: '/index.html', destination: '/', permanent: true },
-      { source: '/p/bengkulutravelcom-layanan-travel-antar.html', destination: '/', permanent: true },
-      { source: '/2026/02/travel-bengkulu-jambi.html', destination: '/travel-bengkulu-jambi', permanent: true },
-      { source: '/2026/02/travel-bengkulu-ke-curup-door-to-door.html', destination: '/travel-bengkulu-curup', permanent: true },
-      { source: '/2026/02/bengkulu-ke-jambi-berapa-jam.html', destination: '/jarak-jambi-bengkulu', permanent: true },
-      { source: '/2026/02/travel-bengkulu-palembang-setiap-hari.html', destination: '/travel-bengkulu-palembang', permanent: true },
-      { source: '/bengkulu-ke-palembang', destination: '/travel-bengkulu-palembang', permanent: true },
-      { source: '/2026/02/rental-mobil-curup.html', destination: '/rental-mobil-curup', permanent: true },
-      { source: '/2026/02/kirim-paket-palembang-ke-bengkulu.html', destination: '/kirim-paket-bengkulu-palembang', permanent: true },
-      { source: '/2026/02/kirim-paket-bengkulu-ke-palembang.html', destination: '/kirim-paket-bengkulu-palembang', permanent: true },
-      { source: '/2026/02/transportasi-bengkulu-ke-padang.html', destination: '/', permanent: true },
-      { source: '/2026/02/travel-bengkulu-padang.html', destination: '/', permanent: true },
-      { source: '/2026/02/travel-palembang-ke-bengkulu-door-to-door-tanpa-transit.html', destination: '/travel-palembang-bengkulu', permanent: true },
-      { source: '/2026/02/travel-bengkulu-ke-kota-jambi-door-to-door.html', destination: '/travel-bengkulu-jambi', permanent: true },
-      { source: '/search/label/:label*', destination: '/', permanent: true },
-      { source: '/search/:path*', destination: '/', permanent: true },
-      { source: '/p/:slug', destination: '/', permanent: true },
-      { source: '/:year(\\d{4})/:month(\\d{2})/:slug', destination: '/', permanent: true },
-    ];
+  title: {
+    default: 'Travel Bengkulu | Antar Jemput Door to Door Terpercaya',
+    template: '%s | Travel Bengkulu',
   },
+  description:
+    'Jasa travel Bengkulu terpercaya. Melayani rute Bengkulu-Palembang, Bengkulu-Jambi, Bengkulu-Curup. Antar jemput door to door. Hubungi kami sekarang!',
+  robots: { index: true, follow: true },
 };
 
-module.exports = nextConfig;
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="id" className={`${fontDisplay.variable} ${fontBody.variable} scroll-smooth`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
+      <body className="antialiased font-body bg-white text-slate-900">
+        <Navbar />
+        <main>{children}</main>
+        <Footer />
+        <WhatsAppFloat />
+      </body>
+    </html>
+  );
+}
