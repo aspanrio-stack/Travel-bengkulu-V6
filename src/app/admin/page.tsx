@@ -33,13 +33,8 @@ export default function AdminDashboard() {
   const [toast, setToast]           = useState('');
   const [filter, setFilter]         = useState<'all' | 'pending' | 'success'>('all');
   const [search, setSearch]         = useState('');
-  const [selected, setSelected]     = useState<Order | null>(null);
-  const [showReset, setShowReset]   = useState(false);
-  const [resetMode, setResetMode]   = useState<'archive' | 'clear'>('archive');
-  const [resetText, setResetText]   = useState('');
-  const [resetting, setResetting]   = useState(false);
-  const [storage, setStorage]       = useState<{ totalOrders: number; usedMemory: string; archives: Record<string, number> } | null>(null);
-  const [waStats, setWaStats]       = useState<{ total: number; hariIni: number; bulanIni: number } | null>(null);
+  const [selected, setSelected]       = useState<Order | null>(null);
+  const [sendingInvoice, setSendingInvoice] = useState<string | null>(null);
 
   // ── Ambil semua pesanan ──
   const fetchOrders = useCallback(async () => {
@@ -57,57 +52,7 @@ export default function AdminDashboard() {
     }
   }, [router]);
 
-  useEffect(() => { fetchOrders(); fetchStorage(); fetchWaStats(); }, [fetchOrders]);
-
-  // ── Ambil info storage Redis ──
-  const fetchStorage = async () => {
-    try {
-      const res = await fetch('/api/admin/reset');
-      if (res.ok) {
-        const data = await res.json();
-        setStorage(data);
-      }
-    } catch { /* abaikan error storage */ }
-  };
-
-  // ── Ambil statistik klik WhatsApp ──
-  const fetchWaStats = async () => {
-    try {
-      const res = await fetch('/api/track');
-      if (res.ok) setWaStats(await res.json());
-    } catch { /* abaikan */ }
-  };
-
-  // ── Reset data ──
-  const handleReset = async () => {
-    if (resetText !== 'RESET KONFIRMASI') {
-      setToast('❌ Teks konfirmasi salah!');
-      setTimeout(() => setToast(''), 3000);
-      return;
-    }
-    setResetting(true);
-    try {
-      const res = await fetch('/api/admin/reset', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode: resetMode, confirmText: resetText }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-
-      setOrders([]);
-      setShowReset(false);
-      setResetText('');
-      fetchStorage();
-      setToast(`✅ ${data.message}`);
-      setTimeout(() => setToast(''), 5000);
-    } catch (err) {
-      setToast(`❌ ${err instanceof Error ? err.message : 'Gagal reset'}`);
-      setTimeout(() => setToast(''), 4000);
-    } finally {
-      setResetting(false);
-    }
-  };
+  useEffect(() => { fetchOrders(); }, [fetchOrders]);
 
   // ── Konfirmasi pembayaran ──
   const handleConfirm = async (orderId: string) => {
@@ -133,6 +78,34 @@ export default function AdminDashboard() {
       setTimeout(() => setToast(''), 4000);
     } finally {
       setConfirming(null);
+    }
+  };
+
+  // ── Kirim Invoice ──
+  const handleSendInvoice = async (orderId: string, email: string | undefined) => {
+    if (!email) {
+      setToast('❌ Pelanggan tidak punya email, invoice tidak bisa dikirim');
+      setTimeout(() => setToast(''), 3000);
+      return;
+    }
+    if (!confirm(`Kirim invoice ke ${email}?`)) return;
+
+    setSendingInvoice(orderId);
+    try {
+      const res = await fetch('/api/admin/send-invoice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setToast(`📧 ${data.message}`);
+      setTimeout(() => setToast(''), 4000);
+    } catch (err) {
+      setToast(`❌ ${err instanceof Error ? err.message : 'Gagal kirim invoice'}`);
+      setTimeout(() => setToast(''), 4000);
+    } finally {
+      setSendingInvoice(null);
     }
   };
 
@@ -185,14 +158,20 @@ export default function AdminDashboard() {
             >
               🔄
             </button>
+            <button
+              onClick={handleLogout}
+              className="text-sm text-slate-500 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors font-medium"
+            >
+              Keluar
+            </button>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 pt-4 pb-6">
+      <div className="max-w-7xl mx-auto px-4 py-6">
 
         {/* ── STATS CARDS ── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
           {[
             { label: 'Total Pesanan', value: stats.total, icon: '📋', color: 'text-slate-800' },
             { label: 'Menunggu', value: stats.pending, icon: '⏳', color: 'text-amber-600' },
@@ -200,8 +179,6 @@ export default function AdminDashboard() {
             { label: 'Pendapatan', value: formatRp(stats.revenue), icon: '💰', color: 'text-primary-600' },
             { label: 'Via QRIS', value: stats.qris, icon: '📱', color: 'text-blue-600' },
             { label: 'Via Tunai', value: stats.tunai, icon: '💵', color: 'text-amber-600' },
-            { label: 'Klik WA Hari Ini', value: waStats?.hariIni ?? '—', icon: '💬', color: 'text-green-600' },
-            { label: 'Klik WA Bulan Ini', value: waStats?.bulanIni ?? '—', icon: '📲', color: 'text-green-700' },
           ].map(s => (
             <div key={s.label} className="bg-white rounded-xl border border-slate-100 p-4 shadow-sm">
               <p className="text-2xl mb-1">{s.icon}</p>
@@ -338,6 +315,16 @@ export default function AdminDashboard() {
                                 {confirming === order.id ? '...' : '✅ Konfirmasi'}
                               </button>
                             )}
+                            {order.email && (
+                              <button
+                                onClick={() => handleSendInvoice(order.id, order.email)}
+                                disabled={sendingInvoice === order.id}
+                                className="text-xs bg-blue-500 hover:bg-blue-600 disabled:opacity-60 text-white px-3 py-1.5 rounded-lg transition-colors font-semibold"
+                                title={`Kirim invoice ke ${order.email}`}
+                              >
+                                {sendingInvoice === order.id ? '...' : '📧 Invoice'}
+                              </button>
+                            )}
                           </div>
                         </td>
                       </tr>
@@ -377,6 +364,15 @@ export default function AdminDashboard() {
                             {confirming === order.id ? '...' : '✅ Konfirmasi'}
                           </button>
                         )}
+                        {order.email && (
+                          <button
+                            onClick={() => handleSendInvoice(order.id, order.email)}
+                            disabled={sendingInvoice === order.id}
+                            className="text-xs bg-blue-500 disabled:opacity-60 text-white px-3 py-1.5 rounded-lg font-semibold"
+                          >
+                            {sendingInvoice === order.id ? '...' : '📧 Invoice'}
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -387,134 +383,6 @@ export default function AdminDashboard() {
         </div>
 
       </div>
-
-      {/* ── BOTTOM ACTION BAR ── */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 shadow-lg px-4 py-3">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
-          {/* Info storage */}
-          {storage && (
-            <span className="flex items-center gap-1.5 text-xs text-slate-400">
-              <span>💾</span>
-              <span>{storage.usedMemory}</span>
-              <span className="text-slate-300">·</span>
-              <span>{orders.length} pesanan</span>
-            </span>
-          )}
-          <div className="flex items-center gap-2 ml-auto">
-            <button
-              onClick={() => { setShowReset(true); setResetText(''); }}
-              className="flex items-center gap-1.5 text-sm bg-orange-50 hover:bg-orange-100 text-orange-600 font-semibold px-4 py-2 rounded-xl transition-colors border border-orange-200"
-            >
-              🗃️ Reset
-            </button>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-1.5 text-sm bg-red-50 hover:bg-red-100 text-red-600 font-semibold px-4 py-2 rounded-xl transition-colors border border-red-200"
-            >
-              🚪 Keluar
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Spacer agar konten tidak tertutup bottom bar */}
-      <div className="h-20" />
-
-      {/* ── MODAL RESET DATA ── */}
-      {showReset && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4"
-          onClick={() => setShowReset(false)}>
-          <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
-            onClick={e => e.stopPropagation()}>
-
-            <div className="bg-orange-50 border-b border-orange-200 p-5">
-              <h3 className="font-bold text-orange-800 text-lg flex items-center gap-2">
-                🗃️ Reset Data Pesanan
-              </h3>
-              <p className="text-orange-600 text-sm mt-1">
-                Gunakan fitur ini untuk membersihkan data setiap bulan.
-              </p>
-            </div>
-
-            <div className="p-5 space-y-4">
-
-              {/* Info arsip yang ada */}
-              {storage && Object.keys(storage.archives).length > 0 && (
-                <div className="bg-slate-50 rounded-xl p-4">
-                  <p className="text-xs font-semibold text-slate-500 mb-2">📦 Arsip Tersimpan</p>
-                  {Object.entries(storage.archives).map(([key, count]) => (
-                    <div key={key} className="flex justify-between text-sm">
-                      <span className="text-slate-600 font-mono">{key}</span>
-                      <span className="text-slate-800 font-semibold">{count} pesanan</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Pilih mode */}
-              <div className="space-y-2">
-                <p className="text-sm font-semibold text-slate-700">Mode Reset:</p>
-                <label className={`flex items-start gap-3 p-4 border-2 rounded-xl cursor-pointer transition-all ${resetMode === 'archive' ? 'border-primary-500 bg-primary-50' : 'border-slate-200'}`}>
-                  <input type="radio" name="resetMode" value="archive"
-                    checked={resetMode === 'archive'}
-                    onChange={() => setResetMode('archive')}
-                    className="mt-0.5 accent-primary-600" />
-                  <div>
-                    <p className="font-semibold text-slate-800 text-sm">📦 Arsipkan & Bersihkan</p>
-                    <p className="text-slate-500 text-xs">Data dipindah ke arsip bulan ini (tersimpan 1 tahun) lalu tabel aktif dibersihkan. Direkomendasikan!</p>
-                  </div>
-                </label>
-                <label className={`flex items-start gap-3 p-4 border-2 rounded-xl cursor-pointer transition-all ${resetMode === 'clear' ? 'border-red-500 bg-red-50' : 'border-slate-200'}`}>
-                  <input type="radio" name="resetMode" value="clear"
-                    checked={resetMode === 'clear'}
-                    onChange={() => setResetMode('clear')}
-                    className="mt-0.5 accent-red-600" />
-                  <div>
-                    <p className="font-semibold text-red-700 text-sm">🗑️ Hapus Permanen</p>
-                    <p className="text-slate-500 text-xs">Data dihapus selamanya, tidak bisa dikembalikan. Gunakan hanya jika perlu.</p>
-                  </div>
-                </label>
-              </div>
-
-              {/* Konfirmasi teks */}
-              <div>
-                <p className="text-sm font-semibold text-slate-700 mb-1.5">
-                  Ketik <span className="font-mono bg-slate-100 px-1.5 py-0.5 rounded text-red-600">RESET KONFIRMASI</span> untuk lanjut:
-                </p>
-                <input
-                  type="text"
-                  value={resetText}
-                  onChange={e => setResetText(e.target.value)}
-                  placeholder="RESET KONFIRMASI"
-                  className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-orange-400"
-                />
-              </div>
-
-              {/* Total pesanan yang akan direset */}
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-center">
-                <p className="text-amber-800 text-sm">
-                  ⚠️ <strong>{orders.length} pesanan</strong> akan {resetMode === 'archive' ? 'diarsipkan dan dibersihkan' : 'dihapus permanen'}
-                </p>
-              </div>
-            </div>
-
-            <div className="px-5 pb-5 flex gap-3">
-              <button onClick={() => setShowReset(false)}
-                className="flex-1 border border-slate-200 text-slate-600 font-semibold py-3 rounded-xl hover:bg-slate-50 transition-colors text-sm">
-                Batal
-              </button>
-              <button
-                onClick={handleReset}
-                disabled={resetting || resetText !== 'RESET KONFIRMASI'}
-                className={`flex-1 font-bold py-3 rounded-xl transition-colors text-sm text-white disabled:opacity-50 ${
-                  resetMode === 'clear' ? 'bg-red-600 hover:bg-red-700' : 'bg-orange-500 hover:bg-orange-600'
-                }`}>
-                {resetting ? '⏳ Memproses...' : resetMode === 'archive' ? '📦 Arsipkan & Bersihkan' : '🗑️ Hapus Permanen'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ── MODAL DETAIL PESANAN ── */}
       {selected && (
@@ -571,6 +439,15 @@ export default function AdminDashboard() {
                   className="flex-1 bg-primary-600 hover:bg-primary-700 disabled:opacity-60 text-white font-bold py-3 rounded-xl text-sm transition-colors"
                 >
                   ✅ Konfirmasi & Kirim Tiket
+                </button>
+              )}
+              {selected.email && (
+                <button
+                  onClick={() => { handleSendInvoice(selected.id, selected.email); setSelected(null); }}
+                  disabled={sendingInvoice === selected.id}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white font-bold py-3 rounded-xl text-sm transition-colors"
+                >
+                  📧 Kirim Invoice
                 </button>
               )}
             </div>
