@@ -54,7 +54,7 @@ async function generateTicketPDF(data: {
   page.drawRectangle({ x: 0, y: height - 130, width, height: 130, color: teal });
 
   // Logo box
-  page.drawRectangle({ x: margin, y: height - 100, width: 44, height: 44, color: tealLt, borderRadius: 8 });
+  page.drawRectangle({ x: margin, y: height - 100, width: 44, height: 44, color: tealLt });
   page.drawText('T', { x: margin + 14, y: height - 84, size: 22, font: fontBold, color: white });
 
   // Judul header
@@ -68,12 +68,12 @@ async function generateTicketPDF(data: {
   let y = height - 155;
 
   // ── Status box hijau ──
-  page.drawRectangle({ x: margin, y: y - 14, width: contentW, height: 34, color: rgb(0.94, 0.99, 0.96), borderColor: rgb(0.53, 0.94, 0.65), borderWidth: 1, borderRadius: 6 });
+  page.drawRectangle({ x: margin, y: y - 14, width: contentW, height: 34, color: rgb(0.94, 0.99, 0.96), borderColor: rgb(0.53, 0.94, 0.65), borderWidth: 1 });
   page.drawText('✓  Pembayaran Berhasil — Tiket Dikonfirmasi', { x: margin + 16, y: y - 2, size: 11, font: fontBold, color: green });
   y -= 46;
 
   // ── Nomor Pesanan ──
-  page.drawRectangle({ x: margin, y: y - 28, width: contentW, height: 48, color: bgLight, borderRadius: 6 });
+  page.drawRectangle({ x: margin, y: y - 28, width: contentW, height: 48, color: bgLight });
   page.drawText('NOMOR PESANAN', { x: margin + 16, y: y - 4, size: 8, font: fontBold, color: gray });
   page.drawText(orderId, { x: margin + 16, y: y - 20, size: 16, font: fontBold, color: dark });
   y -= 60;
@@ -82,7 +82,7 @@ async function generateTicketPDF(data: {
   page.drawText('DETAIL PERJALANAN', { x: margin, y, size: 8, font: fontBold, color: gray });
   y -= 14;
 
-  page.drawRectangle({ x: margin, y: y - 110, width: contentW, height: 120, color: rgb(0.94, 0.99, 0.97), borderColor: rgb(0.60, 0.96, 0.89), borderWidth: 1, borderRadius: 8 });
+  page.drawRectangle({ x: margin, y: y - 110, width: contentW, height: 120, color: rgb(0.94, 0.99, 0.97), borderColor: rgb(0.60, 0.96, 0.89), borderWidth: 1 });
 
   // Rute besar tengah
   const [fromCity, toCity] = route.includes('→')
@@ -116,7 +116,7 @@ async function generateTicketPDF(data: {
   page.drawText('DATA PENUMPANG', { x: margin, y, size: 8, font: fontBold, color: gray });
   y -= 14;
 
-  page.drawRectangle({ x: margin, y: y - 50, width: contentW, height: 60, color: bgLight, borderRadius: 6 });
+  page.drawRectangle({ x: margin, y: y - 50, width: contentW, height: 60, color: bgLight });
   page.drawText('Nama', { x: margin + 16, y: y - 16, size: 9, font: fontReg, color: gray });
   page.drawText(name, { x: col2, y: y - 16, size: 9, font: fontBold, color: dark });
   page.drawText('No. HP', { x: margin + 16, y: y - 34, size: 9, font: fontReg, color: gray });
@@ -124,13 +124,13 @@ async function generateTicketPDF(data: {
   y -= 72;
 
   // ── TOTAL ──
-  page.drawRectangle({ x: margin, y: y - 46, width: contentW, height: 56, color: teal, borderRadius: 8 });
+  page.drawRectangle({ x: margin, y: y - 46, width: contentW, height: 56, color: teal });
   page.drawText('TOTAL PEMBAYARAN', { x: margin + 16, y: y - 14, size: 8, font: fontBold, color: rgb(0.8, 0.95, 0.93) });
   page.drawText(amount, { x: margin + 16, y: y - 34, size: 22, font: fontBold, color: white });
   y -= 68;
 
   // ── INSTRUKSI ──
-  page.drawRectangle({ x: margin, y: y - 78, width: contentW, height: 88, color: yellow, borderColor: yBorder, borderWidth: 1, borderRadius: 8 });
+  page.drawRectangle({ x: margin, y: y - 78, width: contentW, height: 88, color: yellow, borderColor: yBorder, borderWidth: 1 });
   page.drawText('INSTRUKSI PENTING', { x: margin + 16, y: y - 14, size: 8, font: fontBold, color: rgb(0.57, 0.25, 0.055) });
 
   const instruksi = [
