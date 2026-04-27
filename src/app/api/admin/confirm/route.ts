@@ -102,7 +102,7 @@ async function generateTicketPDF(order: {
 
   // Status box
   page.drawRectangle({ x: margin, y: y - 14, width: contentW, height: 34, color: rgb(0.94, 0.99, 0.96), borderColor: rgb(0.53, 0.94, 0.65), borderWidth: 1 });
-  page.drawText('✓  Pembayaran Dikonfirmasi — Tiket Resmi', { x: margin + 16, y: y - 2, size: 11, font: fontBold, color: green });
+  page.drawText('Pembayaran Dikonfirmasi - Tiket Resmi', { x: margin + 16, y: y - 2, size: 11, font: fontBold, color: green });
   y -= 46;
 
   // Nomor pesanan
@@ -115,12 +115,15 @@ async function generateTicketPDF(order: {
   page.drawText('DETAIL PERJALANAN', { x: margin, y, size: 8, font: fontBold, color: gray });
   y -= 14;
 
-  const routeParts = order.route.includes('→')
-    ? order.route.split('→').map(s => s.trim())
-    : order.route.split(' ke ').map(s => s.trim());
+  // Pisah rute: support ' -> ', ' ke ', spasi biasa
+  const routeParts = order.route.includes('->')
+    ? order.route.split('->').map(s => s.trim())
+    : order.route.includes(' ke ')
+    ? order.route.split(' ke ').map(s => s.trim())
+    : [order.route, ''];
 
   const detailRows: [string, string][] = [
-    ['Rute', `${routeParts[0]} → ${routeParts[1] || ''}`],
+    ['Rute', `${routeParts[0]} -> ${routeParts[1] || ''}`],
     ['Tanggal', order.date],
     ...(order.departureTime ? [['Jam Berangkat', order.departureTime] as [string, string]] : []),
     ['Penumpang', `${order.passengers} orang`],
@@ -133,7 +136,7 @@ async function generateTicketPDF(order: {
   detailRows.forEach(([label, val], i) => {
     const ry = y - 14 - i * 18;
     page.drawText(label, { x: margin + 16, y: ry, size: 9, font: fontReg, color: gray });
-    const display = val.length > 38 ? val.slice(0, 38) + '…' : val;
+    const display = val.length > 38 ? val.slice(0, 38) + '...' : val;
     page.drawText(display, { x: col2, y: ry, size: 9, font: fontBold, color: dark });
   });
   y -= detailH + 16;
@@ -158,10 +161,10 @@ async function generateTicketPDF(order: {
   page.drawRectangle({ x: margin, y: y - 78, width: contentW, height: 88, color: yellow, borderColor: yBorder, borderWidth: 1 });
   page.drawText('INSTRUKSI PENTING', { x: margin + 16, y: y - 14, size: 8, font: fontBold, color: rgb(0.57, 0.25, 0.055) });
   [
-    `• Tunjukkan tiket ini / nomor pesanan ${order.id} kepada driver`,
-    '• Siapkan diri 15 menit sebelum waktu penjemputan',
-    '• Driver akan menghubungi Anda sebelum tiba',
-    '• Bawa identitas diri (KTP/SIM)',
+    `- Tunjukkan tiket ini / nomor pesanan ${order.id} kepada driver`,
+    '-  Siapkan diri 15 menit sebelum penjemputan',
+    '-  Driver akan menghubungi Anda sebelum tiba',
+    '-  Bawa identitas diri (KTP/SIM)',
   ].forEach((line, i) => {
     page.drawText(line, { x: margin + 16, y: y - 30 - i * 14, size: 8.5, font: fontReg, color: rgb(0.47, 0.21, 0.043) });
   });
@@ -170,8 +173,8 @@ async function generateTicketPDF(order: {
   // Footer
   page.drawLine({ start: { x: margin, y }, end: { x: width - margin, y }, thickness: 0.5, color: rgb(0.88, 0.91, 0.94) });
   y -= 16;
-  page.drawText('Travel Bengkulu  ·  BTN Air Bang Curup, Bengkulu', { x: margin, y, size: 8, font: fontReg, color: gray });
-  page.drawText('bengkulutravel.com  ·  cs@bengkulutravel.com  ·  0852-6864-5461', { x: margin, y: y - 14, size: 8, font: fontReg, color: gray });
+  page.drawText('Travel Bengkulu  |  BTN Air Bang Curup, Bengkulu', { x: margin, y, size: 8, font: fontReg, color: gray });
+  page.drawText('bengkulutravel.com  |  cs@bengkulutravel.com  |  0852-6864-5461', { x: margin, y: y - 14, size: 8, font: fontReg, color: gray });
 
   const pdfBytes = await pdfDoc.save();
   return Buffer.from(pdfBytes);
@@ -300,6 +303,7 @@ export async function POST(req: NextRequest) {
       // Generate PDF — gagal → tetap kirim email tanpa lampiran
       let pdfBuffer: Buffer | null = null;
       try {
+        console.log('[PDF] Starting generation for order:', updated.id);
         pdfBuffer = await generateTicketPDF({
           id: updated.id,
           name: updated.name,
@@ -312,8 +316,10 @@ export async function POST(req: NextRequest) {
           dropoff: updated.dropoff,
           departureTime,
         });
+        console.log('[PDF] Generated successfully, size:', pdfBuffer.length, 'bytes');
       } catch (pdfErr) {
-        console.error('PDF generation failed:', pdfErr);
+        console.error('[PDF] Generation FAILED:', pdfErr);
+        pdfBuffer = null;
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -403,8 +409,7 @@ export async function POST(req: NextRequest) {
       // Kembalikan waLink agar dashboard bisa buka WA langsung
       waLink,
     });
-
-  } catch (error) {
+      } catch (error) {
     console.error('Confirm error:', error);
     return NextResponse.json({
       error: 'Terjadi kesalahan: ' + (error instanceof Error ? error.message : 'Unknown'),
