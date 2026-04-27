@@ -100,7 +100,10 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-slate-700 py-4 text-center text-xs text-slate-300">
-        © {new Date().getFullYear()} BengkuluTravel.com — Semua hak dilindungi.
+        © {new Date().getFullYear()} BengkuluTravel.com — Semua hak dilindungi.{' '}
+        <Link href="/credits" className="text-slate-400 hover:text-primary-400 transition-colors">
+          Credits
+        </Link>
       </div>
     </footer>
   );
