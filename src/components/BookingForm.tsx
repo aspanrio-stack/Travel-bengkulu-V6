@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { ROUTES, formatPrice, Route } from '@/lib/routes';
+import { ROUTES, formatPrice, formatDepartureTime, Route } from '@/lib/routes';
 
 interface BookingFormProps {
   preselectedRouteId?: string;
@@ -18,6 +18,8 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     name: '',
     phone: '',
     date: '',
+    departureTime: '',   // ← BARU: jam keberangkatan
+    flightInfo: '',      // ← BARU: info pesawat (khusus rute bandara)
     pickupAddress: '',
     dropoffAddress: '',
     email: '',
@@ -28,15 +30,30 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
 
   useEffect(() => {
     if (preselectedRouteId) {
-      setForm(prev => ({ ...prev, routeId: preselectedRouteId }));
+      setForm(prev => ({ ...prev, routeId: preselectedRouteId, departureTime: '', flightInfo: '' }));
     }
   }, [preselectedRouteId]);
 
   const selectedRoute: Route | undefined = ROUTES.find(r => r.id === form.routeId);
   const totalPrice = selectedRoute ? selectedRoute.price * parseInt(form.passengers) : 0;
 
+  // Apakah rute ini punya jam tetap?
+  const hasFixedTimes = selectedRoute && selectedRoute.departureTimes && selectedRoute.departureTimes.length > 0;
+  // Apakah rute ini butuh info pesawat?
+  const isAirportRoute = selectedRoute && (
+    selectedRoute.id === 'crp-bnd' || selectedRoute.id === 'bnd-crp'
+  );
+  // Apakah rute ini fleksibel tapi bukan bandara (butuh konfirmasi via WA)?
+  const isFlexibleRoute = selectedRoute && !hasFixedTimes && !isAirportRoute;
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm(prev => ({
+      ...prev,
+      [name]: value,
+      // Reset jam dan info pesawat saat rute berubah
+      ...(name === 'routeId' ? { departureTime: '', flightInfo: '' } : {}),
+    }));
     setError('');
   };
 
@@ -44,6 +61,14 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     if (!form.routeId) return 'Pilih rute perjalanan';
     if (!form.date) return 'Pilih tanggal keberangkatan';
     if (form.date < today) return 'Tanggal tidak boleh di masa lalu';
+    // Wajib pilih jam jika ada pilihan tetap
+    if (hasFixedTimes && !form.departureTime) return 'Pilih jam keberangkatan';
+    // Rute bandara wajib isi info pesawat
+    if (isAirportRoute && !form.flightInfo.trim()) {
+      return selectedRoute?.id === 'crp-bnd'
+        ? 'Masukkan jam / nomor penerbangan keberangkatan'
+        : 'Masukkan jam / nomor penerbangan kedatangan';
+    }
     return '';
   };
 
@@ -63,13 +88,20 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Label jam yang dipilih untuk tampilan ringkasan & WA
+  const departureTimeLabel = (() => {
+    if (hasFixedTimes && form.departureTime) return `Pukul ${formatDepartureTime(form.departureTime)}`;
+    if (isAirportRoute && form.flightInfo) return form.flightInfo;
+    if (isFlexibleRoute) return 'Konfirmasi via WhatsApp';
+    return '';
+  })();
+
   // Arahkan ke halaman pembayaran QRIS
   const handleBayarQRIS = () => {
     const err = validateStep2();
     if (err) { setError(err); return; }
     if (!selectedRoute) return;
 
-    // Kirim semua data ke halaman pembayaran via URL params
     const params = new URLSearchParams();
     params.set('rute', form.routeId);
     params.set('name', form.name);
@@ -79,6 +111,8 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     params.set('pickup', form.pickupAddress);
     if (form.dropoffAddress) params.set('dropoff', form.dropoffAddress);
     if (wantEmail && form.email) params.set('email', form.email);
+    if (form.departureTime) params.set('departureTime', form.departureTime);
+    if (form.flightInfo) params.set('flightInfo', form.flightInfo);
     params.set('paymentMethod', 'qris');
 
     window.location.href = `/pembayaran?${params.toString()}`;
@@ -89,7 +123,6 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     if (err) { setError(err); return; }
     if (!selectedRoute) return;
 
-    // Simpan pesanan tunai ke Redis untuk rekap admin
     try {
       await fetch('/api/admin/orders', {
         method: 'POST',
@@ -101,6 +134,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
           routeId: form.routeId,
           route: `${selectedRoute.from} → ${selectedRoute.to}`,
           date: form.date,
+          departureTime: form.departureTime || form.flightInfo || '',
           passengers: form.passengers,
           pickup: form.pickupAddress,
           dropoff: form.dropoffAddress,
@@ -112,7 +146,6 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
       });
     } catch (e) {
       console.error('Gagal simpan pesanan tunai:', e);
-      // Tetap lanjut buka WhatsApp meski simpan gagal
     }
 
     const msg = [
@@ -120,6 +153,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
       '─────────────────────────',
       `*Rute:* ${selectedRoute.from} → ${selectedRoute.to}${selectedRoute.via ? ` (via ${selectedRoute.via})` : ''}`,
       `*Tanggal:* ${form.date}`,
+      departureTimeLabel ? `*Jam Berangkat:* ${departureTimeLabel}` : '',
       `*Penumpang:* ${form.passengers} orang`,
       '─────────────────────────',
       `*Nama:* ${form.name}`,
@@ -235,6 +269,80 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
               </div>
             </div>
 
+            {/* ── WAKTU KEBERANGKATAN ── */}
+            {selectedRoute && (
+              <>
+                {/* Rute dengan jam tetap → dropdown */}
+                {hasFixedTimes && (
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                      Jam Keberangkatan <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      name="departureTime"
+                      value={form.departureTime}
+                      onChange={handleChange}
+                      className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    >
+                      <option value="">-- Pilih Jam --</option>
+                      {selectedRoute.departureTimes!.map(t => (
+                        <option key={t} value={t}>
+                          🕐 {formatDepartureTime(t)}
+                        </option>
+                      ))}
+                    </select>
+                    {selectedRoute.departureNote && (
+                      <p className="text-xs text-primary-600 mt-1.5 flex items-start gap-1">
+                        <span className="mt-0.5">ℹ️</span>
+                        {selectedRoute.departureNote}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* Rute bandara → input teks jam pesawat */}
+                {isAirportRoute && (
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                      {selectedRoute.id === 'crp-bnd'
+                        ? <>Jam / Nomor Penerbangan <span className="text-slate-400 font-normal text-xs">(keberangkatan pesawat)</span></>
+                        : <>Jam / Nomor Penerbangan <span className="text-slate-400 font-normal text-xs">(kedatangan pesawat)</span></>
+                      }
+                      <span className="text-red-500 ml-1">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="flightInfo"
+                      value={form.flightInfo}
+                      onChange={handleChange}
+                      placeholder={
+                        selectedRoute.id === 'crp-bnd'
+                          ? 'Contoh: GA 123 pukul 13.00 / Pukul 13.00 WIB'
+                          : 'Contoh: JT 456 tiba pukul 15.30 / Pukul 15.30 WIB'
+                      }
+                      className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    />
+                    <p className="text-xs text-amber-600 mt-1.5 flex items-start gap-1 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                      <span className="mt-0.5 shrink-0">⏰</span>
+                      <span>
+                        {selectedRoute.id === 'crp-bnd'
+                          ? 'Kami akan menjemput Anda 3 jam sebelum jam penerbangan yang Anda masukkan.'
+                          : 'Driver akan menunggu sesuai jam kedatangan pesawat Anda.'}
+                      </span>
+                    </p>
+                  </div>
+                )}
+
+                {/* Rute fleksibel → info hubungi WA */}
+                {isFlexibleRoute && selectedRoute.departureNote && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 flex items-start gap-2">
+                    <span className="text-blue-500 shrink-0 mt-0.5">ℹ️</span>
+                    <p className="text-sm text-blue-700">{selectedRoute.departureNote}</p>
+                  </div>
+                )}
+              </>
+            )}
+
             {selectedRoute && (
               <div className="bg-slate-800 rounded-xl p-4 flex justify-between items-center">
                 <span className="text-slate-300 text-sm">{form.passengers} orang × {formatPrice(selectedRoute.price)}</span>
@@ -262,10 +370,13 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
             {selectedRoute && (
               <div className="bg-primary-50 border border-primary-200 rounded-xl p-4">
                 <p className="text-xs text-primary-500 font-semibold mb-1">RINGKASAN PESANAN</p>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-start">
                   <div>
                     <p className="font-bold text-primary-800">{selectedRoute.from} → {selectedRoute.to}</p>
                     <p className="text-sm text-primary-600">{form.date} · {form.passengers} penumpang</p>
+                    {departureTimeLabel && (
+                      <p className="text-sm text-primary-600">🕐 {departureTimeLabel}</p>
+                    )}
                   </div>
                   <p className="font-bold text-primary-700 text-xl">{formatPrice(totalPrice)}</p>
                 </div>
@@ -282,7 +393,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
                 name="name"
                 value={form.name}
                 onChange={handleChange}
-                placeholder="Nama"
+                placeholder="Nama lengkap pemesan"
                 className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
@@ -333,9 +444,8 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
               />
             </div>
 
-            {/* Email opsional dengan checkbox */}
+            {/* Email opsional */}
             <div className="border border-slate-200 rounded-xl overflow-hidden">
-              {/* Checkbox toggle */}
               <label className="flex items-start gap-3 p-4 cursor-pointer hover:bg-slate-50 transition-colors">
                 <div className="mt-0.5">
                   <input
@@ -355,7 +465,6 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
                 </div>
               </label>
 
-              {/* Input email — muncul saat checkbox dicentang */}
               {wantEmail && (
                 <div className="px-4 pb-4 border-t border-slate-100 pt-3">
                   <input
@@ -379,7 +488,6 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
             <div className="space-y-3">
               <p className="text-sm font-semibold text-slate-700">Pilih Metode Pembayaran</p>
 
-              {/* QRIS */}
               <button
                 onClick={handleBayarQRIS}
                 className="w-full bg-primary-600 hover:bg-primary-700 active:scale-95 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-3 shadow-sm"
@@ -391,7 +499,6 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
                 </div>
               </button>
 
-              {/* Tunai */}
               <button
                 onClick={handleKirimWA}
                 className="w-full bg-green-500 hover:bg-green-600 active:scale-95 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-3 shadow-sm"
@@ -406,7 +513,6 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
 
             {error && <p className="text-red-500 text-sm bg-red-50 px-4 py-3 rounded-xl">{error}</p>}
 
-            {/* Kembali */}
             <button
               onClick={() => { setStep(1); setError(''); }}
               className="w-full border border-slate-200 text-slate-500 hover:bg-slate-50 font-semibold py-3 rounded-xl transition-colors text-sm"
