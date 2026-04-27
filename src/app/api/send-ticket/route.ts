@@ -324,9 +324,14 @@ export async function POST(req: NextRequest) {
         subject: `✅ Tiket Perjalanan ${route} — ${orderId}`,
         html: ticketHTML,
       };
+
+      // ✅ PERBAIKAN: gunakan base64 string agar Resend bisa membaca attachment
       if (pdfBuffer) {
         emailPayload.attachments = [
-          { filename: `Tiket-${orderId}.pdf`, content: pdfBuffer },
+          {
+            filename: `Tiket-${orderId}.pdf`,
+            content: pdfBuffer.toString('base64'),
+          },
         ];
       }
 
