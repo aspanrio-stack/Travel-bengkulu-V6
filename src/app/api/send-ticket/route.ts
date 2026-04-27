@@ -8,7 +8,7 @@
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { PDFDocument, StandardFonts, rgb, PageSizes } from 'pdf-lib';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -369,4 +369,4 @@ export async function POST(req: NextRequest) {
     console.error('Send ticket error:', error);
     return NextResponse.json({ error: 'Gagal mengirim tiket' }, { status: 500 });
   }
-                             }
+}
