@@ -419,4 +419,102 @@ export default function AdminDashboard() {
                           <button
                             onClick={() => handleSendInvoice(order.id, order.email)}
                             disabled={sendingInvoice === order.id}
-                            className="text-xs bg-blue-500 disabled:opacity-60 text-white px-3 py-1.5 rounded-lg font-sem
+                            className="text-xs bg-blue-500 disabled:opacity-60 text-white px-3 py-1.5 rounded-lg font-semibold"
+                          >
+                            {sendingInvoice === order.id ? '...' : '📧 Invoice'}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+      </div>
+
+      {/* ── MODAL DETAIL PESANAN ── */}
+      {selected && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center p-4"
+          onClick={() => setSelected(null)}>
+          <div className="bg-white rounded-2xl w-full max-w-md max-h-[85vh] overflow-y-auto shadow-2xl"
+            onClick={e => e.stopPropagation()}>
+
+            <div className="flex items-center justify-between p-5 border-b border-slate-100">
+              <div>
+                <h3 className="font-bold text-slate-800">Detail Pesanan</h3>
+                <p className="text-xs text-slate-400 font-mono">{selected.id}</p>
+              </div>
+              <button onClick={() => setSelected(null)} className="text-slate-400 hover:text-slate-600 text-xl leading-none">×</button>
+            </div>
+
+            <div className="p-5 space-y-4">
+              <StatusBadge status={selected.status} />
+
+              {[
+                { label: 'Nama', value: selected.name },
+                { label: 'No. HP', value: selected.phone },
+                { label: 'Email', value: selected.email || '—' },
+                { label: 'Rute', value: selected.route },
+                { label: 'Jam Berangkat', value: (selected as Order & { departureTime?: string }).departureTime || '—' },
+                { label: 'Tanggal', value: selected.date },
+                { label: 'Penumpang', value: `${selected.passengers} orang` },
+                { label: 'Jemput di', value: selected.pickup },
+                { label: 'Antar ke', value: selected.dropoff || '—' },
+                { label: 'Harga', value: formatRp(selected.harga) },
+                { label: 'Kode Unik', value: `+${selected.kodeUnik}` },
+                { label: 'Total Bayar', value: formatRp(selected.total) },
+                { label: 'Metode Bayar', value: selected.paymentMethod === 'tunai' ? '💵 Tunai' : '📱 QRIS' },
+                { label: 'Waktu Pesan', value: new Date(selected.createdAt).toLocaleString('id-ID') },
+              ].map(row => (
+                <div key={row.label} className="flex justify-between text-sm py-1 border-b border-slate-50 last:border-0">
+                  <span className="text-slate-500">{row.label}</span>
+                  <span className="font-semibold text-slate-800 text-right max-w-[60%]">{row.value}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-5 pt-0 flex flex-wrap gap-2">
+              <a
+                href={waLink(selected.phone)}
+                target="_blank" rel="noopener noreferrer"
+                className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl text-center text-sm transition-colors"
+              >
+                💬 WhatsApp Pemesan
+              </a>
+              {selected.status === 'pending' && (
+                <button
+                  onClick={() => { handleConfirm(selected.id); setSelected(null); }}
+                  disabled={confirming === selected.id}
+                  className="flex-1 bg-primary-600 hover:bg-primary-700 disabled:opacity-60 text-white font-bold py-3 rounded-xl text-sm transition-colors"
+                >
+                  ✅ Konfirmasi & Kirim Tiket
+                </button>
+              )}
+              {selected.email && (
+                <button
+                  onClick={() => { handleSendInvoice(selected.id, selected.email); setSelected(null); }}
+                  disabled={sendingInvoice === selected.id}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white font-bold py-3 rounded-xl text-sm transition-colors"
+                >
+                  📧 Kirim Invoice
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── TOAST NOTIFICATION ── */}
+      {toast && (
+        <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-xl text-white text-sm font-semibold shadow-xl transition-all ${
+          toast.startsWith('✅') || toast.startsWith('📧') ? 'bg-green-600' : 'bg-red-600'
+        }`}>
+          {toast}
+        </div>
+      )}
+    </div>
+  );
+}
