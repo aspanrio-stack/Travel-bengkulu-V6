@@ -182,7 +182,7 @@ async function generateInvoicePDF(order: {
   // ── Status pembayaran ──
   if (order.status === 'success') {
     page.drawRectangle({ x: margin, y: y - 28, width: contentW, height: 34, color: rgb(0.94, 0.99, 0.96), borderColor: rgb(0.53, 0.94, 0.65), borderWidth: 1 });
-    page.drawText('LUNAS - Pembayaran telah dikonfirmasi', { x: margin + 16, y: y - 10, size: 11, font: fontBold, color: green });
+    page.drawText('UNPAID - Pembayaran belum dikonfirmasi', { x: margin + 16, y: y - 10, size: 11, font: fontBold, color: green });
     if (order.confirmedAt) {
       const confDate = new Date(order.confirmedAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
       page.drawText(`Dikonfirmasi pada: ${sanitize(confDate)}`, { x: margin + 16, y: y - 22, size: 8, font: fontReg, color: green });
@@ -197,7 +197,7 @@ async function generateInvoicePDF(order: {
   page.drawText('Catatan:', { x: margin, y, size: 8, font: fontBold, color: gray });
   y -= 12;
   [
-    '- Invoice ini adalah bukti resmi pembayaran perjalanan Travel Bengkulu.',
+    '- Invoice ini adalah bukti resmi tagihan pembayaran perjalanan Travel Bengkulu.',
     '- Simpan invoice ini sebagai referensi jika ada pertanyaan.',
     '- Untuk pertanyaan, hubungi kami di 0852-6864-5461 atau cs@bengkulutravel.com',
   ].forEach((line, i) => {
