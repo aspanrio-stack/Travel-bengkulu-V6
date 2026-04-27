@@ -35,6 +35,8 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
   }, [preselectedRouteId]);
 
   const selectedRoute: Route | undefined = ROUTES.find(r => r.id === form.routeId);
+  // Nomor lengkap dengan +62 untuk disimpan ke sistem dan WA
+  const fullPhone = form.phone ? '+62' + form.phone.replace(/^0+/, '') : '';
   const totalPrice = selectedRoute ? selectedRoute.price * parseInt(form.passengers) : 0;
 
   // Apakah rute ini punya jam tetap?
@@ -75,7 +77,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
   const validateStep2 = () => {
     if (!form.name.trim()) return 'Nama tidak boleh kosong';
     if (!form.phone.trim()) return 'Nomor HP tidak boleh kosong';
-    if (form.phone.length < 10) return 'Nomor HP tidak valid';
+    if (form.phone.length < 8) return 'Nomor HP tidak valid';
     if (!form.pickupAddress.trim()) return 'Alamat penjemputan harus diisi';
     return '';
   };
@@ -105,7 +107,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     const params = new URLSearchParams();
     params.set('rute', form.routeId);
     params.set('name', form.name);
-    params.set('phone', form.phone);
+    params.set('phone', fullPhone);
     params.set('date', form.date);
     params.set('passengers', form.passengers);
     params.set('pickup', form.pickupAddress);
@@ -129,7 +131,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: form.name,
-          phone: form.phone,
+          phone: fullPhone,
           email: wantEmail ? form.email : '',
           routeId: form.routeId,
           route: `${selectedRoute.from} → ${selectedRoute.to}`,
@@ -157,7 +159,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
       `*Penumpang:* ${form.passengers} orang`,
       '─────────────────────────',
       `*Nama:* ${form.name}`,
-      `*No. HP:* ${form.phone}`,
+      `*No. HP:* ${fullPhone}`,
       wantEmail && form.email ? `*Email:* ${form.email}` : '',
       `*Jemput di:* ${form.pickupAddress}`,
       form.dropoffAddress ? `*Antar ke:* ${form.dropoffAddress}` : '',
@@ -403,14 +405,20 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
               <label className="block text-sm font-semibold text-slate-700 mb-2">
                 No. HP / WhatsApp <span className="text-red-500">*</span>
               </label>
-              <input
-                type="tel"
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-                placeholder="08xxxxxxxxxx"
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
+              <div className="flex">
+                <span className="inline-flex items-center px-3 py-3 border border-r-0 border-slate-200 rounded-l-xl bg-slate-50 text-slate-600 font-semibold text-sm select-none">
+                  +62
+                </span>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={form.phone}
+                  onChange={handleChange}
+                  placeholder="8xxxxxxxxxx"
+                  className="flex-1 border border-slate-200 rounded-r-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+              </div>
+              <p className="text-xs text-slate-400 mt-1">Contoh: 81234567890 (tanpa angka 0 di depan)</p>
             </div>
 
             {/* Alamat Jemput */}
