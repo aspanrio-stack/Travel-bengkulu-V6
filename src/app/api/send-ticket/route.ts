@@ -305,28 +305,32 @@ export async function POST(req: NextRequest) {
 
     // 1. Kirim tiket ke pelanggan (jika ada email) — dengan PDF attachment
     if (email) {
-      // Generate PDF
-      const pdfBytes = await generateTicketPDF({
-        orderId, name, phone, route, date,
-        passengers, amount, pickup, dropoff, departureTime,
-      });
+      // Generate PDF — jika gagal, tetap kirim email tanpa lampiran
+      let pdfBuffer: Buffer | null = null;
+      try {
+        const pdfBytes = await generateTicketPDF({
+          orderId, name, phone, route, date,
+          passengers, amount, pickup, dropoff, departureTime,
+        });
+        pdfBuffer = Buffer.from(pdfBytes);
+      } catch (pdfErr) {
+        console.error('PDF generation failed:', pdfErr);
+      }
 
-      const pdfBase64 = Buffer.from(pdfBytes).toString('base64');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const emailPayload: any = {
+        from: `Travel Bengkulu <${fromEmail}>`,
+        to: email,
+        subject: `✅ Tiket Perjalanan ${route} — ${orderId}`,
+        html: ticketHTML,
+      };
+      if (pdfBuffer) {
+        emailPayload.attachments = [
+          { filename: `Tiket-${orderId}.pdf`, content: pdfBuffer },
+        ];
+      }
 
-      emailPromises.push(
-        resend.emails.send({
-          from: `Travel Bengkulu <${fromEmail}>`,
-          to: email,
-          subject: `✅ Tiket Perjalanan ${route} — ${orderId}`,
-          html: ticketHTML,
-          attachments: [
-            {
-              filename: `Tiket-${orderId}.pdf`,
-              content: pdfBase64,
-            },
-          ],
-        })
-      );
+      emailPromises.push(resend.emails.send(emailPayload));
     }
 
     // 2. Notifikasi ke admin (tanpa PDF untuk hemat kuota)
