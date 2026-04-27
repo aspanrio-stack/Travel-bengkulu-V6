@@ -24,6 +24,11 @@ function StatusBadge({ status }: { status: Order['status'] }) {
   );
 }
 
+/** Buka WhatsApp ke nomor pemesan */
+function waLink(phone: string) {
+  return `https://wa.me/${phone.replace(/\D/g, '')}`;
+}
+
 export default function AdminDashboard() {
   const router = useRouter();
   const [orders, setOrders]         = useState<Order[]>([]);
@@ -33,7 +38,7 @@ export default function AdminDashboard() {
   const [toast, setToast]           = useState('');
   const [filter, setFilter]         = useState<'all' | 'pending' | 'success'>('all');
   const [search, setSearch]         = useState('');
-  const [selected, setSelected]       = useState<Order | null>(null);
+  const [selected, setSelected]     = useState<Order | null>(null);
   const [sendingInvoice, setSendingInvoice] = useState<string | null>(null);
 
   // ── Ambil semua pesanan ──
@@ -67,7 +72,6 @@ export default function AdminDashboard() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
 
-      // Update state lokal
       setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: 'success' } : o));
       if (selected?.id === orderId) setSelected(prev => prev ? { ...prev, status: 'success' } : null);
 
@@ -247,7 +251,7 @@ export default function AdminDashboard() {
                 <table className="w-full text-sm">
                   <thead className="bg-slate-50 border-b border-slate-100">
                     <tr>
-                      {['ID', 'Nama & HP', 'Email', 'Rute', 'Tanggal', 'Total Bayar', 'Status', 'Aksi'].map(h => (
+                      {['ID', 'Nama & HP', 'Email', 'Rute & Jam', 'Tanggal', 'Total Bayar', 'Status', 'Aksi'].map(h => (
                         <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
                           {h}
                         </th>
@@ -264,7 +268,16 @@ export default function AdminDashboard() {
                         </td>
                         <td className="px-4 py-3">
                           <p className="font-semibold text-slate-800">{order.name}</p>
-                          <p className="text-slate-400 text-xs">{order.phone}</p>
+                          {/* ── Tombol WA langsung di baris tabel ── */}
+                          <a
+                            href={waLink(order.phone)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-xs text-green-600 hover:text-green-700 font-semibold mt-0.5"
+                            title="Hubungi via WhatsApp"
+                          >
+                            💬 {order.phone}
+                          </a>
                         </td>
                         <td className="px-4 py-3">
                           {order.email ? (
@@ -283,6 +296,12 @@ export default function AdminDashboard() {
                         <td className="px-4 py-3">
                           <p className="font-medium text-slate-700">{order.route}</p>
                           <p className="text-slate-400 text-xs">{order.passengers} penumpang</p>
+                          {/* Tampilkan jam keberangkatan jika ada */}
+                          {(order as Order & { departureTime?: string }).departureTime && (
+                            <p className="text-primary-600 text-xs font-semibold">
+                              🕐 {(order as Order & { departureTime?: string }).departureTime}
+                            </p>
+                          )}
                         </td>
                         <td className="px-4 py-3 text-slate-600 text-xs">{order.date}</td>
                         <td className="px-4 py-3">
@@ -299,18 +318,28 @@ export default function AdminDashboard() {
                           <StatusBadge status={order.status} />
                         </td>
                         <td className="px-4 py-3">
-                          <div className="flex gap-2">
+                          <div className="flex flex-wrap gap-1.5">
                             <button
                               onClick={() => setSelected(order)}
                               className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1.5 rounded-lg transition-colors font-medium"
                             >
                               Detail
                             </button>
+                            {/* Tombol WA konfirmasi langsung */}
+                            <a
+                              href={waLink(order.phone)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg transition-colors font-semibold inline-flex items-center gap-1"
+                              title={`WhatsApp ${order.phone}`}
+                            >
+                              💬 WA
+                            </a>
                             {order.status === 'pending' && (
                               <button
                                 onClick={() => handleConfirm(order.id)}
                                 disabled={confirming === order.id}
-                                className="text-xs bg-green-500 hover:bg-green-600 disabled:opacity-60 text-white px-3 py-1.5 rounded-lg transition-colors font-semibold"
+                                className="text-xs bg-primary-600 hover:bg-primary-700 disabled:opacity-60 text-white px-3 py-1.5 rounded-lg transition-colors font-semibold"
                               >
                                 {confirming === order.id ? '...' : '✅ Konfirmasi'}
                               </button>
@@ -340,26 +369,48 @@ export default function AdminDashboard() {
                     <div className="flex items-start justify-between mb-2">
                       <div>
                         <p className="font-bold text-slate-800">{order.name}</p>
-                        <p className="text-slate-500 text-xs">{order.phone}</p>
+                        {/* ── Tombol WA di mobile card ── */}
+                        <a
+                          href={waLink(order.phone)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-xs text-green-600 hover:text-green-700 font-semibold"
+                        >
+                          💬 {order.phone}
+                        </a>
                       </div>
                       <StatusBadge status={order.status} />
                     </div>
-                    <p className="text-sm text-slate-700 mb-1">📍 {order.route}</p>
-                    <p className="text-xs text-slate-400 mb-2">📅 {order.date} · {order.passengers} orang</p>
-                    <div className="flex items-center justify-between">
+                    <p className="text-sm text-slate-700 mb-0.5">📍 {order.route}</p>
+                    {(order as Order & { departureTime?: string }).departureTime && (
+                      <p className="text-xs text-primary-600 font-semibold mb-0.5">
+                        🕐 {(order as Order & { departureTime?: string }).departureTime}
+                      </p>
+                    )}
+                    <p className="text-xs text-slate-400 mb-3">📅 {order.date} · {order.passengers} orang</p>
+                    <div className="flex items-center justify-between gap-2">
                       <p className="font-bold text-primary-700">{formatRp(order.total)}</p>
-                      <div className="flex gap-2">
+                      <div className="flex gap-1.5 flex-wrap justify-end">
                         <button
                           onClick={() => setSelected(order)}
                           className="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg font-medium"
                         >
                           Detail
                         </button>
+                        {/* Tombol WA konfirmasi di mobile */}
+                        <a
+                          href={waLink(order.phone)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs bg-green-500 text-white px-3 py-1.5 rounded-lg font-semibold inline-flex items-center gap-1"
+                        >
+                          💬 WA
+                        </a>
                         {order.status === 'pending' && (
                           <button
                             onClick={() => handleConfirm(order.id)}
                             disabled={confirming === order.id}
-                            className="text-xs bg-green-500 disabled:opacity-60 text-white px-3 py-1.5 rounded-lg font-semibold"
+                            className="text-xs bg-primary-600 disabled:opacity-60 text-white px-3 py-1.5 rounded-lg font-semibold"
                           >
                             {confirming === order.id ? '...' : '✅ Konfirmasi'}
                           </button>
@@ -368,101 +419,4 @@ export default function AdminDashboard() {
                           <button
                             onClick={() => handleSendInvoice(order.id, order.email)}
                             disabled={sendingInvoice === order.id}
-                            className="text-xs bg-blue-500 disabled:opacity-60 text-white px-3 py-1.5 rounded-lg font-semibold"
-                          >
-                            {sendingInvoice === order.id ? '...' : '📧 Invoice'}
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-
-      </div>
-
-      {/* ── MODAL DETAIL PESANAN ── */}
-      {selected && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center p-4"
-          onClick={() => setSelected(null)}>
-          <div className="bg-white rounded-2xl w-full max-w-md max-h-[85vh] overflow-y-auto shadow-2xl"
-            onClick={e => e.stopPropagation()}>
-
-            <div className="flex items-center justify-between p-5 border-b border-slate-100">
-              <div>
-                <h3 className="font-bold text-slate-800">Detail Pesanan</h3>
-                <p className="text-xs text-slate-400 font-mono">{selected.id}</p>
-              </div>
-              <button onClick={() => setSelected(null)} className="text-slate-400 hover:text-slate-600 text-xl leading-none">×</button>
-            </div>
-
-            <div className="p-5 space-y-4">
-              <StatusBadge status={selected.status} />
-
-              {[
-                { label: 'Nama', value: selected.name },
-                { label: 'No. HP', value: selected.phone },
-                { label: 'Email', value: selected.email || '—' },
-                { label: 'Rute', value: selected.route },
-                { label: 'Tanggal', value: selected.date },
-                { label: 'Penumpang', value: `${selected.passengers} orang` },
-                { label: 'Jemput di', value: selected.pickup },
-                { label: 'Antar ke', value: selected.dropoff || '—' },
-                { label: 'Harga', value: formatRp(selected.harga) },
-                { label: 'Kode Unik', value: `+${selected.kodeUnik}` },
-                { label: 'Total Bayar', value: formatRp(selected.total) },
-                { label: 'Metode Bayar', value: selected.paymentMethod === 'tunai' ? '💵 Tunai' : '📱 QRIS' },
-              { label: 'Waktu Pesan', value: new Date(selected.createdAt).toLocaleString('id-ID') },
-              ].map(row => (
-                <div key={row.label} className="flex justify-between text-sm py-1 border-b border-slate-50 last:border-0">
-                  <span className="text-slate-500">{row.label}</span>
-                  <span className="font-semibold text-slate-800 text-right max-w-[60%]">{row.value}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="p-5 pt-0 flex gap-3">
-              <a
-                href={`https://wa.me/${selected.phone.replace(/\D/g,'')}`}
-                target="_blank" rel="noopener noreferrer"
-                className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl text-center text-sm transition-colors"
-              >
-                💬 WhatsApp
-              </a>
-              {selected.status === 'pending' && (
-                <button
-                  onClick={() => { handleConfirm(selected.id); setSelected(null); }}
-                  disabled={confirming === selected.id}
-                  className="flex-1 bg-primary-600 hover:bg-primary-700 disabled:opacity-60 text-white font-bold py-3 rounded-xl text-sm transition-colors"
-                >
-                  ✅ Konfirmasi & Kirim Tiket
-                </button>
-              )}
-              {selected.email && (
-                <button
-                  onClick={() => { handleSendInvoice(selected.id, selected.email); setSelected(null); }}
-                  disabled={sendingInvoice === selected.id}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white font-bold py-3 rounded-xl text-sm transition-colors"
-                >
-                  📧 Kirim Invoice
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── TOAST NOTIFICATION ── */}
-      {toast && (
-        <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-xl text-white text-sm font-semibold shadow-xl transition-all ${
-          toast.startsWith('✅') ? 'bg-green-600' : 'bg-red-600'
-        }`}>
-          {toast}
-        </div>
-      )}
-    </div>
-  );
-}
+                            className="text-xs bg-blue-500 disabled:opacity-60 text-white px-3 py-1.5 rounded-lg font-sem
