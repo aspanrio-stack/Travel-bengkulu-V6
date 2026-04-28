@@ -10,6 +10,8 @@ export default function robots(): MetadataRoute.Robots {
         '/feeds/',      // Memblokir folder feed
         '/*?m=1',       // Memblokir parameter feed/mobile sisa sistem lama
         '/*?alt=rss',   // Memblokir parameter RSS
+        '/site.webmanifest',
+        '/search',
       ],
     },
     sitemap: 'https://bengkulutravel.com/sitemap.xml',
