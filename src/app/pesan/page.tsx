@@ -45,10 +45,10 @@ export default async function PesanPage({
 
           {/* Feature badges */}
           <div className="flex flex-wrap justify-center gap-3 mt-5 text-sm">
-            {isRental
+            {(isRental
               ? ['✅ Avanza · Innova · HiAce', '👨‍✈️ Dengan Sopir / Lepas Kunci', '📱 Bayar QRIS atau Tunai', '🚗 Unit Diantar ke Lokasi']
               : ['✅ Mudah & Cepat', '💬 Konfirmasi via WhatsApp', '📱 Bayar via QRIS', '🚗 Door to Door']
-            }.map(f => (
+            ).map(f => (
               <span key={f} className="bg-white/20 px-3 py-1.5 rounded-full font-medium">{f}</span>
             ))}
           </div>
