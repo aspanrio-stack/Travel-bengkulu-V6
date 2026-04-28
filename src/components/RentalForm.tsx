@@ -8,7 +8,7 @@ import {
   type RentalVehicle,
   type RentalType,
   type RentalArea,
-} from '@/lib/orders';
+} from '@/lib/rental-config';
 
 const today = new Date().toISOString().split('T')[0];
 
