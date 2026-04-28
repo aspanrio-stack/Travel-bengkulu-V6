@@ -4,7 +4,6 @@ import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
-
 const fontDisplay = Playfair_Display({
   subsets: ['latin'],
   weight: ['600', '700'],
@@ -50,7 +49,6 @@ export default function RootLayout({
         <Navbar />
         <main>{children}</main>
         <Footer />
-        <WhatsAppFloat />
       </body>
     </html>
   );
