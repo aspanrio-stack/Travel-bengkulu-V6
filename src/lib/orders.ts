@@ -36,10 +36,11 @@ export interface Order {
 
 // ─────────────────────────────────────────────
 // TYPE: Pesanan Rental
+// Re-export dari rental-config agar server code bisa import dari satu tempat
 // ─────────────────────────────────────────────
-export type RentalVehicle = 'avanza' | 'innova' | 'hiace';
-export type RentalType = 'with_driver' | 'lepas_kunci';
-export type RentalArea = 'dalam_kota' | 'luar_kota';
+export type { RentalVehicle, RentalType, RentalArea } from './rental-config';
+export { RENTAL_PRICES, VEHICLE_LABELS, RENTAL_TYPE_LABELS, AREA_LABELS } from './rental-config';
+import type { RentalVehicle, RentalType, RentalArea } from './rental-config';
 
 export interface RentalOrder {
   id: string;
@@ -72,38 +73,6 @@ export interface RentalOrder {
 // ─────────────────────────────────────────────
 // Tabel harga rental
 // ─────────────────────────────────────────────
-export const RENTAL_PRICES = {
-  with_driver: {
-    dalam_kota: { avanza: 600_000, innova: 700_000, hiace: 1_500_000 },
-    luar_kota:  { avanza: 700_000, innova: 800_000, hiace: 2_000_000 },
-  },
-  lepas_kunci: {
-    // area tidak berlaku untuk lepas kunci, pakai 'dalam_kota' sebagai default key
-    dalam_kota: { avanza: 350_000, innova: 500_000, hiace: 0 },
-    luar_kota:  { avanza: 350_000, innova: 500_000, hiace: 0 },
-  },
-  driver_fee: {
-    dalam_kota: 250_000,
-    luar_kota:  350_000,
-  },
-} as const;
-
-export const VEHICLE_LABELS: Record<RentalVehicle, string> = {
-  avanza: 'Toyota Avanza',
-  innova: 'Toyota Innova',
-  hiace:  'Toyota HiAce',
-};
-
-export const RENTAL_TYPE_LABELS: Record<RentalType, string> = {
-  with_driver: 'Dengan Sopir',
-  lepas_kunci: 'Lepas Kunci',
-};
-
-export const AREA_LABELS: Record<RentalArea, string> = {
-  dalam_kota: 'Dalam Kota',
-  luar_kota:  'Luar Kota',
-};
-
 // ─────────────────────────────────────────────
 // Singleton Redis client
 // ─────────────────────────────────────────────
