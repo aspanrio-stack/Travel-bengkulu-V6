@@ -10,7 +10,9 @@ const navLinks = [
     label: 'Layanan',
     children: [
       { href: '/travel-bengkulu-palembang', label: 'Bengkulu ↔ Palembang' },
+      { href: '/travel-palembang-bengkulu', label: 'Bengkulu ↔ Palembang' },
       { href: '/travel-bengkulu-jambi', label: 'Bengkulu ↔ Jambi' },
+      { href: '/travel-jambi-bengkulu', label: 'Bengkulu ↔ Jambi' },
       { href: '/travel-bengkulu-curup', label: 'Bengkulu ↔ Curup' },
       { href: '/travel-bengkulu-lebong', label: 'Bengkulu ↔ Lebong' },
       { href: '/travel-bengkulu-lampung', label: 'Bengkulu ↔ Lampung' },
