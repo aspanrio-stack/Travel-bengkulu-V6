@@ -50,7 +50,7 @@ export default function Page() {
           <tr><td>Via</td><td>Liwa</td></tr>
           <tr><td>Jadwal</td><td>Setiap hari, fleksibel</td></tr>
           <tr><td>Sistem</td><td>Door to door</td></tr>
-          <tr><td>Armada</td><td>Toyota Avanza, Innova, HiAce</td></tr>
+          <tr><td>Armada</td><td>Toyota Innova, HiAce</td></tr>
         </tbody>
       </table>
 
