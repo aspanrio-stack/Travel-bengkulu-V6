@@ -606,30 +606,6 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* ── TAB NAVIGASI (baru) ── */}
-          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
-            <button
-              onClick={() => setActiveTab('pesanan')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                activeTab === 'pesanan'
-                  ? 'bg-white shadow-sm text-blue-700'
-                  : 'text-slate-500 hover:text-slate-700'
-              }`}
-            >
-              📋 Pesanan
-            </button>
-            <button
-              onClick={() => setActiveTab('kwitansi')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                activeTab === 'kwitansi'
-                  ? 'bg-white shadow-sm text-blue-700'
-                  : 'text-slate-500 hover:text-slate-700'
-              }`}
-            >
-              🧾 Kwitansi
-            </button>
-          </div>
-
           <div className="flex items-center gap-2">
             {activeTab === 'pesanan' && (
               <button
@@ -660,6 +636,30 @@ export default function AdminDashboard() {
               Dashboard Admin Travel Bengkulu
             </h1>
             <p className="text-slate-400 text-sm mt-1 italic">karya Dekcik</p>
+          </div>
+
+          {/* ── TAB NAVIGASI ── */}
+          <div className="flex gap-3 mb-6">
+            <button
+              onClick={() => setActiveTab('pesanan')}
+              className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all border-2 ${
+                activeTab === 'pesanan'
+                  ? 'bg-blue-600 border-blue-600 text-white shadow-md'
+                  : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300'
+              }`}
+            >
+              📋 Pesanan
+            </button>
+            <button
+              onClick={() => setActiveTab('kwitansi')}
+              className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all border-2 ${
+                activeTab === 'kwitansi'
+                  ? 'bg-blue-600 border-blue-600 text-white shadow-md'
+                  : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300'
+              }`}
+            >
+              🧾 Kwitansi
+            </button>
           </div>
 
           {/* Catatan Admin */}
