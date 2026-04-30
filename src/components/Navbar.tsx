@@ -192,8 +192,8 @@ export default function Navbar() {
             </div>
           </div>
           <div className="leading-tight">
-            <div className="font-bold text-slate-800 text-[15px] tracking-tight">RPM</div>
-            <div className="font-semibold text-primary-600 text-[11px] tracking-wider uppercase -mt-0.5">Travel</div>
+            <div className="font-bold text-slate-800 text-[15px] tracking-tight">BENGKULU</div>
+            <div className="font-semibold text-primary-600 text-[11px] tracking-wider uppercase -mt-0.5">Travel.COM</div>
           </div>
         </Link>
 
