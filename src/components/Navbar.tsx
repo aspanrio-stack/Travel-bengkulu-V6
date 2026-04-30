@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 const navLinks = [
@@ -50,13 +51,10 @@ const navLinks = [
 ];
 
 // ─── Price context hook ───────────────────────────────────────────────────────
-// Halaman lain bisa memanggil: window.dispatchEvent(new CustomEvent('rpm-price', { detail: { price: 150000, rute: 'Bengkulu–Palembang' } }))
-// Atau cukup set data-rpm-price & data-rpm-rute pada <body> / <main>
 function usePriceFromPage() {
   const [pagePrice, setPagePrice] = useState<{ price?: number; rute?: string }>({});
 
   useEffect(() => {
-    // Baca dari dataset elemen utama
     const read = () => {
       const el = document.querySelector('[data-rpm-price]') as HTMLElement | null;
       if (el) {
@@ -69,7 +67,6 @@ function usePriceFromPage() {
 
     read();
 
-    // Dengarkan event custom dari halaman mana pun
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail as { price?: number; rute?: string };
       setPagePrice(detail ?? {});
@@ -148,19 +145,16 @@ export default function Navbar() {
 
   const { price, rute } = usePriceFromPage();
 
-  // Query string untuk membawa harga ke halaman /pesan
   const pesanHref = price
     ? `/pesan?harga=${price}${rute ? `&rute=${encodeURIComponent(rute)}` : ''}`
     : '/pesan';
 
-  // Scroll shadow
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Dropdown dengan delay agar tidak langsung hilang saat pindah ke panel
   const openDropdown = (label: string) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setDropdown(label);
@@ -182,14 +176,13 @@ export default function Navbar() {
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center gap-2.5 group shrink-0">
           <div className="relative w-9 h-9">
-            <div className="absolute inset-0 bg-primary-600 rounded-xl rotate-6 opacity-20 group-hover:rotate-12 transition-transform duration-300" />
-            <div className="relative w-9 h-9 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center shadow-md shadow-primary-500/20 group-hover:shadow-primary-500/35 transition-shadow duration-300">
-              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="2" y1="12" x2="22" y2="12"/>
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-              </svg>
-            </div>
+            <Image
+              src="/logo.png"
+              alt="Bengkulu Travel Logo"
+              fill
+              className="object-contain"
+              priority
+            />
           </div>
           <div className="leading-tight">
             <div className="font-bold text-slate-800 text-[15px] tracking-tight">BENGKULU</div>
@@ -227,7 +220,6 @@ export default function Navbar() {
                   onMouseLeave={closeDropdown}
                 >
                   <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/70 border border-slate-100 py-2 min-w-[230px] overflow-hidden">
-                    {/* Accent strip */}
                     <div className="h-0.5 bg-gradient-to-r from-primary-500 to-primary-300 mx-3 mb-2 rounded-full" />
                     {link.children.map((child) => (
                       <Link
