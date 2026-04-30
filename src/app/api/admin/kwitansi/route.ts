@@ -91,7 +91,7 @@ async function generateKwitansiPDF(data: KwitansiData): Promise<Buffer> {
   page.drawRectangle({ x: 0, y: height - 90, width, height: 90, color: primary });
 
   // Logo inisial
-  page.drawRectangle({ x: margin, y: height - 70, width: 40, height: 40, color: rgb(1,1,1,0.2) });
+  page.drawRectangle({ x: margin, y: height - 70, width: 40, height: 40, color: rgb(0.8, 0.88, 1.0) });
   page.drawText(isBT ? 'BT' : 'KG', {
     x: margin + 6, y: height - 53, size: 16, font: fontBold, color: white,
   });
@@ -271,3 +271,4 @@ export async function POST(req: NextRequest) {
     }, { status: 500 });
   }
 }
+  
