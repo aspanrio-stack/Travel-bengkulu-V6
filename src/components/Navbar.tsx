@@ -2,7 +2,8 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import { ROUTES, getRouteById } from '@/lib/routes';
 
 const navLinks = [
   {
@@ -50,32 +51,31 @@ const navLinks = [
   { href: '/#kontak', label: 'Kontak' },
 ];
 
-// ─── Price context hook ───────────────────────────────────────────────────────
-function usePriceFromPage() {
-  const [pagePrice, setPagePrice] = useState<{ price?: number; rute?: string }>({});
+// ─── Mapping pathname → route ID ─────────────────────────────────────────────
+//
+// Setiap halaman produk dipetakan ke route ID di routes.ts.
+// Navbar membaca pathname saat ini lalu mengambil harga dari ROUTES —
+// tidak perlu event, tidak perlu DOM attribute.
+//
+const PATH_TO_ROUTE_ID: Record<string, string> = {
+  '/travel-bengkulu-palembang':   'bkl-plm',
+  '/travel-palembang-bengkulu':   'plm-bkl',
+  '/travel-bengkulu-jambi':       'bkl-jmb',
+  '/travel-jambi-bengkulu':       'jmb-bkl',
+  '/travel-bengkulu-curup':       'bkl-crp',
+  '/travel-curup-bengkulu':       'crp-bkl',
+  '/antar-jemput-bandara-curup':  'crp-bnd',
+  '/travel-bengkulu-lebong':      'bkl-lbg',
+  '/travel-lebong-bengkulu':      'lbg-bkl',
+  '/travel-bengkulu-lampung':     'bkl-lmp',
+  '/travel-lampung-bengkulu':     'lmp-bkl',
+};
 
-  useEffect(() => {
-    const read = () => {
-      const el = document.querySelector('[data-rpm-price]') as HTMLElement | null;
-      if (el) {
-        setPagePrice({
-          price: el.dataset.rpmPrice ? Number(el.dataset.rpmPrice) : undefined,
-          rute: el.dataset.rpmRute,
-        });
-      }
-    };
-
-    read();
-
-    const handler = (e: Event) => {
-      const detail = (e as CustomEvent).detail as { price?: number; rute?: string };
-      setPagePrice(detail ?? {});
-    };
-    window.addEventListener('rpm-price', handler);
-    return () => window.removeEventListener('rpm-price', handler);
-  }, []);
-
-  return pagePrice;
+function useRouteFromPath() {
+  const pathname = usePathname();
+  const routeId = PATH_TO_ROUTE_ID[pathname] ?? null;
+  const route = routeId ? getRouteById(routeId) : null;
+  return route ?? null;
 }
 
 // ─── Tombol Pesan dengan shimmer ─────────────────────────────────────────────
@@ -143,10 +143,12 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { price, rute } = usePriceFromPage();
+  const route = useRouteFromPath();
 
-  const pesanHref = price
-    ? `/pesan?harga=${price}${rute ? `&rute=${encodeURIComponent(rute)}` : ''}`
+  // Kalau halaman punya rute → bawa route ID & harga ke form pemesanan.
+  // Kalau tidak (homepage, artikel, hotel, dll) → buka /pesan biasa.
+  const pesanHref = route
+    ? `/pesan?rute=${route.id}`
     : '/pesan';
 
   useEffect(() => {
@@ -331,25 +333,3 @@ export default function Navbar() {
     </header>
   );
 }
-
-/*
- * ─── PANDUAN INTEGRASI HARGA ──────────────────────────────────────────────────
- *
- * Agar tombol "Pesan Tiket" di navbar otomatis membawa harga dari halaman saat ini:
- *
- * CARA 1 — Custom Event (recommended, bisa dipanggil kapan saja):
- *   window.dispatchEvent(new CustomEvent('rpm-price', {
- *     detail: { price: 150000, rute: 'Bengkulu–Palembang' }
- *   }));
- *
- * CARA 2 — data-attribute pada elemen mana pun di halaman:
- *   <section data-rpm-price="150000" data-rpm-rute="Bengkulu–Palembang">
- *     ...konten halaman...
- *   </section>
- *
- * Di halaman /pesan, baca query string untuk pre-fill form:
- *   const params = new URLSearchParams(window.location.search);
- *   const harga = params.get('harga');   // "150000"
- *   const rute  = params.get('rute');    // "Bengkulu–Palembang"
- * ─────────────────────────────────────────────────────────────────────────────
- */
