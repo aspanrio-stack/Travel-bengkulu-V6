@@ -626,41 +626,41 @@ export default function AdminDashboard() {
         </div>
       </header>
 
+      {/* ── JUDUL & TAB NAVIGASI (selalu tampil) ── */}
+      <div className="max-w-7xl mx-auto px-4 pt-6">
+        <div className="mb-4 text-center">
+          <h1 className="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">
+            Dashboard Admin Travel Bengkulu
+          </h1>
+          <p className="text-slate-400 text-sm mt-1 italic">karya Dekcik</p>
+        </div>
+        <div className="flex gap-3 mb-6">
+          <button
+            onClick={() => setActiveTab('pesanan')}
+            className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all border-2 ${
+              activeTab === 'pesanan'
+                ? 'bg-blue-600 border-blue-600 text-white shadow-md'
+                : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300'
+            }`}
+          >
+            📋 Pesanan
+          </button>
+          <button
+            onClick={() => setActiveTab('kwitansi')}
+            className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all border-2 ${
+              activeTab === 'kwitansi'
+                ? 'bg-blue-600 border-blue-600 text-white shadow-md'
+                : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300'
+            }`}
+          >
+            🧾 Kwitansi
+          </button>
+        </div>
+      </div>
+
       {/* ── KONTEN PESANAN ── */}
       {activeTab === 'pesanan' && (
-        <div className="max-w-7xl mx-auto px-4 py-6">
-
-          {/* Judul */}
-          <div className="mb-6 text-center">
-            <h1 className="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">
-              Dashboard Admin Travel Bengkulu
-            </h1>
-            <p className="text-slate-400 text-sm mt-1 italic">karya Dekcik</p>
-          </div>
-
-          {/* ── TAB NAVIGASI ── */}
-          <div className="flex gap-3 mb-6">
-            <button
-              onClick={() => setActiveTab('pesanan')}
-              className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all border-2 ${
-                activeTab === 'pesanan'
-                  ? 'bg-blue-600 border-blue-600 text-white shadow-md'
-                  : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300'
-              }`}
-            >
-              📋 Pesanan
-            </button>
-            <button
-              onClick={() => setActiveTab('kwitansi')}
-              className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all border-2 ${
-                activeTab === 'kwitansi'
-                  ? 'bg-blue-600 border-blue-600 text-white shadow-md'
-                  : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300'
-              }`}
-            >
-              🧾 Kwitansi
-            </button>
-          </div>
+        <div className="max-w-7xl mx-auto px-4 pb-6">
 
           {/* Catatan Admin */}
           <div className="mb-6 bg-amber-50 border border-amber-300 rounded-2xl p-4 shadow-sm">
