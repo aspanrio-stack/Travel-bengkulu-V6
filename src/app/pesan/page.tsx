@@ -76,7 +76,7 @@ export default async function PesanPage({
                 : 'text-slate-500 hover:bg-slate-50'
             }`}
           >
-            🚗 Rental Mobil
+            🚗 
           </a>
         </div>
       </div>
