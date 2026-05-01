@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Buat order ──
-    const order: Order = {
+    const order = {
       id: 'RNT-' + uuidv4().split('-')[0].toUpperCase() + Date.now().toString().slice(-4),
       name,
       phone,
@@ -66,12 +66,12 @@ export async function POST(req: NextRequest) {
       harga: parseInt(pricePerDay) || 0,
       kodeUnik: 0,
       total: parseInt(totalPrice) || 0,
-      status: 'pending',
+      status: 'pending' as const,
       paymentMethod: (paymentMethod === 'tunai' ? 'tunai' : 'qris') as 'qris' | 'tunai',
       createdAt: new Date().toISOString(),
-    };
+    } as Order & { departureTime?: string };
 
-    await saveOrder(order);
+    await saveOrder(order as Order);
 
     // ── Susun pesan WA ke pemesan ──
     const msgPemesan = [
