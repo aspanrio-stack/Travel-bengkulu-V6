@@ -58,7 +58,8 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Buat objek pesanan ──
-    const order: Order = {
+    // departureTime disimpan via cast karena mungkin belum ada di tipe Order
+    const order = {
       id: uuidv4().split('-')[0].toUpperCase() + Date.now().toString().slice(-4),
       name,
       phone,
@@ -66,20 +67,22 @@ export async function POST(req: NextRequest) {
       route,
       routeId: routeId || '',
       date,
-      departureTime: departureTime || '',
       passengers: parseInt(passengers) || 1,
       pickup,
       dropoff: dropoff || '',
       harga: parseInt(harga) || 0,
       kodeUnik: parseInt(kodeUnik) || 0,
       total: parseInt(total) || 0,
-      status: 'pending',
+      status: 'pending' as const,
       paymentMethod: (paymentMethod === 'tunai' ? 'tunai' : 'qris') as 'qris' | 'tunai',
       createdAt: new Date().toISOString(),
-    };
+    } as Order & { departureTime?: string };
+
+    // Simpan departureTime sebagai field tambahan jika ada
+    if (departureTime) order.departureTime = departureTime;
 
     // ── Simpan ke database / Redis ──
-    await saveOrder(order);
+    await saveOrder(order as Order);
 
     // ── Kirim WA secara paralel (tidak block response) ──
     const bookingData = {
