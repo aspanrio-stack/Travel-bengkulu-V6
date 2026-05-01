@@ -4,10 +4,7 @@
  * GET  /api/admin/orders  — Ambil semua pesanan (hanya admin)
  * POST /api/admin/orders  — Simpan pesanan baru + kirim WA notifikasi
  *
- * WA yang dikirim saat POST:
- *   1. Ke pemesan  → ringkasan pesanan + info bahwa pesanan diterima
- *   2. Ke admin 1  → detail lengkap + instruksi cek pembayaran
- *   3. Ke admin 2  → idem
+ * FIX: await WA sebelum return response agar tidak terbunuh Vercel serverless
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -58,8 +55,7 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Buat objek pesanan ──
-    // departureTime disimpan via cast karena mungkin belum ada di tipe Order
-    const order = {
+    const order: Order = {
       id: uuidv4().split('-')[0].toUpperCase() + Date.now().toString().slice(-4),
       name,
       phone,
@@ -67,52 +63,43 @@ export async function POST(req: NextRequest) {
       route,
       routeId: routeId || '',
       date,
+      departureTime: departureTime || '',
       passengers: parseInt(passengers) || 1,
       pickup,
       dropoff: dropoff || '',
       harga: parseInt(harga) || 0,
       kodeUnik: parseInt(kodeUnik) || 0,
       total: parseInt(total) || 0,
-      status: 'pending' as const,
+      status: 'pending',
       paymentMethod: (paymentMethod === 'tunai' ? 'tunai' : 'qris') as 'qris' | 'tunai',
       createdAt: new Date().toISOString(),
-    } as Order & { departureTime?: string };
-
-    // Simpan departureTime sebagai field tambahan jika ada
-    if (departureTime) order.departureTime = departureTime;
-
-    // ── Simpan ke database / Redis ──
-    await saveOrder(order as Order);
-
-    // ── Kirim WA secara paralel (tidak block response) ──
-    const bookingData = {
-      id:             order.id,
-      name:           order.name,
-      phone:          order.phone,
-      email:          order.email || undefined,
-      route:          order.route,
-      date:           order.date,
-      departureTime:  order.departureTime || undefined,
-      passengers:     order.passengers,
-      pickup:         order.pickup,
-      dropoff:        order.dropoff || undefined,
-      total:          order.total,
-      paymentMethod:  order.paymentMethod,
     };
 
-    // Fire-and-forget: kirim ke pemesan + semua admin
-    Promise.allSettled([
-      // WA ke pemesan
+    // ── Simpan ke Redis ──
+    await saveOrder(order);
+
+    // ── Susun data untuk template WA ──
+    const bookingData = {
+      id:            order.id,
+      name:          order.name,
+      phone:         order.phone,
+      email:         order.email || undefined,
+      route:         order.route,
+      date:          order.date,
+      departureTime: order.departureTime || undefined,
+      passengers:    order.passengers,
+      pickup:        order.pickup,
+      dropoff:       order.dropoff || undefined,
+      total:         order.total,
+      paymentMethod: order.paymentMethod,
+    };
+
+    // ── Kirim WA — await dulu sebelum return ──
+    // PENTING: Vercel serverless mati setelah return, jadi harus await di sini
+    await Promise.allSettled([
       sendWA(order.phone, msgPemesanTerima(bookingData)),
-      // WA ke semua admin
       sendWABulk(ADMIN_NUMBERS, msgAdminPesananBaru(bookingData)),
-    ]).then(results => {
-      results.forEach((r, i) => {
-        if (r.status === 'rejected') {
-          console.error(`[Fonnte] Gagal kirim WA index ${i}:`, r.reason);
-        }
-      });
-    });
+    ]);
 
     return NextResponse.json({ success: true, orderId: order.id });
 
