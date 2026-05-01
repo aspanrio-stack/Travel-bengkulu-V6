@@ -25,51 +25,17 @@ export default function ArticleLayout({
   children,
 }: ArticleLayoutProps) {
   const pathname = usePathname();
-  // Ambil slug rute dari pathname untuk pre-fill form, misal /travel-lebong-bengkulu → lbg-bkl
   const pesanHref = `/pesan?dari=${encodeURIComponent(pathname ?? '')}`;
 
   return (
     <div className="min-h-screen pt-16">
       {/* ── Keyframe animations ── */}
       <style>{`
-        @keyframes glow-pulse {
-          0%, 100% {
-            box-shadow:
-              0 0 8px 3px rgba(74, 222, 128, 0.45),
-              0 0 20px 6px rgba(74, 222, 128, 0.2);
-          }
-          50% {
-            box-shadow:
-              0 0 16px 5px rgba(74, 222, 128, 0.75),
-              0 0 36px 12px rgba(74, 222, 128, 0.3);
-          }
-        }
         @keyframes shimmer-sweep {
           0%   { background-position: -200% center; }
           100% { background-position:  200% center; }
         }
-        @keyframes border-spin {
-          to { transform: rotate(360deg); }
-        }
-        @keyframes icon-float {
-          0%, 100% { transform: translateY(0px); }
-          50%       { transform: translateY(-3px); }
-        }
 
-        .cta-btn-glow {
-          animation: glow-pulse 2.2s ease-in-out infinite;
-          transition: transform 0.15s ease;
-        }
-        .cta-btn-glow:hover {
-          animation: none;
-          transform: scale(1.03);
-          box-shadow:
-            0 0 22px 7px rgba(74, 222, 128, 0.85),
-            0 0 48px 16px rgba(74, 222, 128, 0.4);
-        }
-        .cta-btn-glow:active {
-          transform: scale(0.97);
-        }
         .cta-btn-shimmer {
           background: linear-gradient(
             105deg,
@@ -81,37 +47,15 @@ export default function ArticleLayout({
           );
           background-size: 200% auto;
           animation: shimmer-sweep 2.8s linear infinite;
+          transition: opacity 0.15s ease, transform 0.15s ease;
         }
-
-        /* Spinning ring wrapper */
-        .spin-ring {
-          position: relative;
-          border-radius: 14px;
-          padding: 2px;
-          overflow: hidden;
+        .cta-btn-shimmer:hover {
+          opacity: 0.9;
+          transform: translateY(-1px);
         }
-        .spin-ring::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: conic-gradient(
-            from 0deg,
-            #4ade80, #86efac, #ffffff55, #4ade80
-          );
-          border-radius: 14px;
-          animation: border-spin 2.5s linear infinite;
-          z-index: 0;
-        }
-        .spin-ring > a {
-          position: relative;
-          z-index: 1;
-          display: flex;
-          border-radius: 12px;
-        }
-
-        .cta-icon-float {
-          animation: icon-float 2s ease-in-out infinite;
-          display: inline-block;
+        .cta-btn-shimmer:active {
+          transform: scale(0.98);
+          opacity: 1;
         }
       `}</style>
 
@@ -186,26 +130,22 @@ export default function ArticleLayout({
                   Isi form online — admin konfirmasi otomatis ✅
                 </p>
 
-                {/* Tombol Utama → /pesan */}
-                <div className="spin-ring mb-3">
-                  <Link
-                    href={pesanHref}
-                    className="cta-btn-glow cta-btn-shimmer w-full text-white font-bold px-5 py-3.5 rounded-xl items-center justify-center gap-2 transition-colors"
-                    aria-label={`Pesan travel ${title} secara online`}
-                  >
-                    <span className="cta-icon-float">
-                      <svg className="w-5 h-5 inline -mt-0.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                      </svg>
-                    </span>
-                    {' '}Pesan Online Sekarang
-                  </Link>
-                </div>
+                {/* Tombol Utama → shimmer saja */}
+                <Link
+                  href={pesanHref}
+                  className="cta-btn-shimmer w-full text-white font-bold px-5 py-3.5 rounded-xl flex items-center justify-center gap-2 mb-3"
+                  aria-label={`Pesan travel ${title} secara online`}
+                >
+                  <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                  </svg>
+                  Pesan Online Sekarang
+                </Link>
 
                 {/* Tombol Sekunder: Telepon */}
                 <a
                   href="tel:+6285268645461"
-                  className="w-full mt-1 text-white font-semibold px-5 py-3 rounded-xl flex items-center justify-center gap-2 transition-all duration-200"
+                  className="w-full text-white font-semibold px-5 py-3 rounded-xl flex items-center justify-center gap-2 transition-all duration-200"
                   style={{ background: 'rgba(255,255,255,0.13)', border: '1px solid rgba(255,255,255,0.22)' }}
                   aria-label="Telepon Travel Bengkulu"
                   onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.22)')}
