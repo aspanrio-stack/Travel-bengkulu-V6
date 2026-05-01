@@ -22,6 +22,7 @@ export interface Order {
   route: string;
   routeId: string;
   date: string;
+  departureTime?: string;
   passengers: number;
   pickup: string;
   dropoff?: string;
