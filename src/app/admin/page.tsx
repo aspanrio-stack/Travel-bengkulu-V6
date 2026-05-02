@@ -477,9 +477,11 @@ export default function AdminDashboard() {
   const [filter, setFilter]         = useState<'all' | 'pending' | 'success'>('all');
   const [search, setSearch]         = useState('');
   const [selected, setSelected]     = useState<Order | null>(null);
-  const [sendingInvoice, setSendingInvoice] = useState<string | null>(null);
 
-  // ← TAB STATE (baru)
+  // ── GANTI: sendingInvoice → printingTicket ──
+  const [printingTicket, setPrintingTicket] = useState<string | null>(null);
+
+  // ← TAB STATE
   const [activeTab, setActiveTab] = useState<'pesanan' | 'kwitansi'>('pesanan');
 
   // ── Ambil semua pesanan ──
@@ -530,31 +532,35 @@ export default function AdminDashboard() {
     }
   };
 
-  // ── Kirim Invoice ──
-  const handleSendInvoice = async (orderId: string, email: string | undefined) => {
-    if (!email) {
-      setToast('❌ Pelanggan tidak punya email, invoice tidak bisa dikirim');
-      setTimeout(() => setToast(''), 3000);
-      return;
-    }
-    if (!confirm(`Kirim invoice ke ${email}?`)) return;
-
-    setSendingInvoice(orderId);
+  // ── Print Tiket (download PDF) ──
+  const handlePrintTicket = async (orderId: string) => {
+    setPrintingTicket(orderId);
     try {
-      const res = await fetch('/api/admin/send-invoice', {
+      const res = await fetch('/api/admin/print-ticket', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ orderId }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      setToast(`📧 ${data.message}`);
+
+      if (data.pdf) {
+        const bytes = Uint8Array.from(atob(data.pdf), c => c.charCodeAt(0));
+        const blob  = new Blob([bytes], { type: 'application/pdf' });
+        const url   = URL.createObjectURL(blob);
+        const a     = document.createElement('a');
+        a.href      = url;
+        a.download  = data.filename || `Tiket-${orderId}.pdf`;
+        a.click();
+        URL.revokeObjectURL(url);
+        setToast('🖨️ PDF tiket berhasil diunduh');
+      }
       setTimeout(() => setToast(''), 4000);
     } catch (err) {
-      setToast(`❌ ${err instanceof Error ? err.message : 'Gagal kirim invoice'}`);
+      setToast(`❌ ${err instanceof Error ? err.message : 'Gagal generate tiket'}`);
       setTimeout(() => setToast(''), 4000);
     } finally {
-      setSendingInvoice(null);
+      setPrintingTicket(null);
     }
   };
 
@@ -626,7 +632,7 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      {/* ── JUDUL & TAB NAVIGASI (selalu tampil) ── */}
+      {/* ── JUDUL & TAB NAVIGASI ── */}
       <div className="max-w-7xl mx-auto px-4 pt-6">
         <div className="mb-4 text-center">
           <h1 className="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">
@@ -676,9 +682,9 @@ export default function AdminDashboard() {
                     </span>
                   </li>
                   <li className="flex items-start gap-2 text-sm text-amber-900">
-                    <span className="text-blue-500 font-bold mt-0.5">📧</span>
+                    <span className="text-indigo-500 font-bold mt-0.5">🖨️</span>
                     <span>
-                      Tekan tombol <strong>Invoice</strong> saja jika sudah terima order.
+                      Tekan tombol <strong>Print Tiket</strong> untuk download PDF tiket pesanan.
                     </span>
                   </li>
                 </ul>
@@ -853,16 +859,15 @@ export default function AdminDashboard() {
                                   {confirming === order.id ? '...' : '✅ Konfirmasi'}
                                 </button>
                               )}
-                              {order.email && (
-                                <button
-                                  onClick={() => handleSendInvoice(order.id, order.email)}
-                                  disabled={sendingInvoice === order.id}
-                                  className="text-xs bg-blue-500 hover:bg-blue-600 disabled:opacity-60 text-white px-3 py-1.5 rounded-lg transition-colors font-semibold"
-                                  title={`Kirim invoice ke ${order.email}`}
-                                >
-                                  {sendingInvoice === order.id ? '...' : '📧 Invoice'}
-                                </button>
-                              )}
+                              {/* ── GANTI: Kirim Invoice → Print Tiket ── */}
+                              <button
+                                onClick={() => handlePrintTicket(order.id)}
+                                disabled={printingTicket === order.id}
+                                className="text-xs bg-indigo-500 hover:bg-indigo-600 disabled:opacity-60 text-white px-3 py-1.5 rounded-lg transition-colors font-semibold"
+                                title="Download PDF tiket"
+                              >
+                                {printingTicket === order.id ? '...' : '🖨️ Print Tiket'}
+                              </button>
                             </div>
                           </td>
                         </tr>
@@ -922,15 +927,14 @@ export default function AdminDashboard() {
                               {confirming === order.id ? '...' : '✅ Konfirmasi'}
                             </button>
                           )}
-                          {order.email && (
-                            <button
-                              onClick={() => handleSendInvoice(order.id, order.email)}
-                              disabled={sendingInvoice === order.id}
-                              className="text-xs bg-blue-500 disabled:opacity-60 text-white px-3 py-1.5 rounded-lg font-semibold"
-                            >
-                              {sendingInvoice === order.id ? '...' : '📧 Invoice'}
-                            </button>
-                          )}
+                          {/* ── GANTI: Kirim Invoice → Print Tiket ── */}
+                          <button
+                            onClick={() => handlePrintTicket(order.id)}
+                            disabled={printingTicket === order.id}
+                            className="text-xs bg-indigo-500 disabled:opacity-60 text-white px-3 py-1.5 rounded-lg font-semibold"
+                          >
+                            {printingTicket === order.id ? '...' : '🖨️ Print Tiket'}
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -943,7 +947,7 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* ── KONTEN KWITANSI (baru) ── */}
+      {/* ── KONTEN KWITANSI ── */}
       {activeTab === 'kwitansi' && (
         <KwitansiTab setToast={showToast} />
       )}
@@ -1006,15 +1010,14 @@ export default function AdminDashboard() {
                   ✅ Konfirmasi & Kirim Tiket
                 </button>
               )}
-              {selected.email && (
-                <button
-                  onClick={() => { handleSendInvoice(selected.id, selected.email); setSelected(null); }}
-                  disabled={sendingInvoice === selected.id}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white font-bold py-3 rounded-xl text-sm transition-colors"
-                >
-                  📧 Kirim Invoice
-                </button>
-              )}
+              {/* ── GANTI: Kirim Invoice → Print Tiket ── */}
+              <button
+                onClick={() => { handlePrintTicket(selected.id); setSelected(null); }}
+                disabled={printingTicket === selected.id}
+                className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-bold py-3 rounded-xl text-sm transition-colors"
+              >
+                🖨️ Print Tiket
+              </button>
             </div>
           </div>
         </div>
