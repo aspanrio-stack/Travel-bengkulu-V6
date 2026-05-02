@@ -275,23 +275,20 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
                   </option>
                 ))}
               </select>
-            </div>
 
-            {selectedRoute && (
-              <div className="bg-primary-50 border border-primary-200 rounded-xl p-4">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="font-bold text-primary-800">{selectedRoute.from} → {selectedRoute.to}</p>
-                    <p className="text-sm text-primary-600">⏱ {selectedRoute.duration}</p>
-                    {selectedRoute.via && <p className="text-xs text-primary-500">Via {selectedRoute.via}</p>}
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs text-primary-500">Per orang</p>
-                    <p className="font-bold text-primary-700 text-xl">{formatPrice(selectedRoute.price)}</p>
-                  </div>
+              {/* Info rute tampil di bawah dropdown sebagai hint kecil, bukan kotak besar duplikat */}
+              {selectedRoute && (
+                <div className="mt-2 flex items-center justify-between px-1">
+                  <span className="text-xs text-slate-500 flex items-center gap-1">
+                    <span>⏱</span> {selectedRoute.duration}
+                    {selectedRoute.via && <span className="ml-1 text-slate-400">· via {selectedRoute.via}</span>}
+                  </span>
+                  <span className="text-xs font-semibold text-primary-700">
+                    {formatPrice(selectedRoute.price)}/orang
+                  </span>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
