@@ -152,6 +152,38 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* Metode Pembayaran */}
+      <div className="border-t border-slate-700">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
+          <span className="text-xs font-semibold uppercase tracking-widest text-slate-500 shrink-0">
+            Metode Pembayaran
+          </span>
+          <div className="flex items-center gap-4 flex-wrap justify-center sm:justify-start">
+            <img
+              src="/images/qris-logo-white.png"
+              alt="QRIS"
+              width={400}
+              height={120}
+              loading="lazy"
+              decoding="async"
+              className="h-8 w-auto opacity-75"
+            />
+            <img
+              src="/images/gpn-logo.png"
+              alt="GPN"
+              width={400}
+              height={120}
+              loading="lazy"
+              decoding="async"
+              className="h-8 w-auto opacity-75"
+            />
+            <span className="flex items-center gap-1.5 text-slate-400 text-xs">
+              💵 Tunai
+            </span>
+          </div>
+        </div>
+      </div>
+
       <div className="border-t border-slate-700 py-4 text-center text-xs text-slate-300 pr-16 md:pr-0">
         © {new Date().getFullYear()} BengkuluTravel.com — Semua hak dilindungi.{' '}
         <Link href="/credits" className="text-slate-400 hover:text-primary-400 transition-colors">
