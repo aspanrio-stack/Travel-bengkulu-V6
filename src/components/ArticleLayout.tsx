@@ -1,6 +1,33 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { getRouteById } from '@/lib/routes';
+
+// ─── Mapping pathname → route ID ─────────────────────────────────────────────
+// Ikuti pola yang sama dengan Navbar.tsx.
+// Tambahkan entri baru di sini setiap ada halaman artikel travel baru.
+const PATH_TO_ROUTE_ID: Record<string, string> = {
+  '/travel-bengkulu-palembang':  'bkl-plm',
+  '/travel-palembang-bengkulu':  'plm-bkl',
+  '/travel-bengkulu-jambi':      'bkl-jmb',
+  '/travel-jambi-bengkulu':      'jmb-bkl',
+  '/travel-bengkulu-curup':      'bkl-crp',
+  '/travel-curup-bengkulu':      'crp-bkl',
+  '/antar-jemput-bandara-curup': 'crp-bnd',
+  '/travel-bengkulu-lebong':     'bkl-lbg',
+  '/travel-lebong-bengkulu':     'lbg-bkl',
+  '/travel-bengkulu-lampung':    'bkl-lmp',
+  '/travel-lampung-bengkulu':    'lmp-bkl',
+};
+
+function usePesanHref(): string {
+  const pathname = usePathname();
+  const routeId = PATH_TO_ROUTE_ID[pathname ?? ''] ?? null;
+  const route = routeId ? getRouteById(routeId) : null;
+  return route ? `/pesan?rute=${route.id}` : '/pesan';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 interface Breadcrumb {
   label: string;
@@ -13,13 +40,6 @@ interface ArticleLayoutProps {
   breadcrumbs: Breadcrumb[];
   badge?: string;
   price?: string;
-  /**
-   * ID rute dari ROUTES di @/lib/routes.ts
-   * Contoh: 'bkl-plm', 'crp-bkl', 'bkl-crp', dst.
-   * Jika diisi, tombol CTA akan mengarah ke /pesan?rute={routeId}
-   * sehingga rute otomatis terisi di BookingForm.
-   */
-  routeId?: string;
   children: React.ReactNode;
 }
 
@@ -29,16 +49,9 @@ export default function ArticleLayout({
   breadcrumbs,
   badge,
   price,
-  routeId,
   children,
 }: ArticleLayoutProps) {
-  const pathname = usePathname();
-
-  // Jika routeId tersedia → pre-select rute di halaman /pesan
-  // Fallback ke ?dari=pathname agar tidak ada dead link
-  const pesanHref = routeId
-    ? `/pesan?rute=${encodeURIComponent(routeId)}`
-    : `/pesan?dari=${encodeURIComponent(pathname ?? '')}`;
+  const pesanHref = usePesanHref();
 
   return (
     <div className="min-h-screen pt-16">
@@ -143,7 +156,7 @@ export default function ArticleLayout({
                   Isi form online — admin konfirmasi otomatis ✅
                 </p>
 
-                {/* Tombol Utama → shimmer + pre-select rute */}
+                {/* Tombol Utama → otomatis bawa rute sesuai halaman */}
                 <Link
                   href={pesanHref}
                   className="cta-btn-shimmer w-full text-white font-bold px-5 py-3.5 rounded-xl flex items-center justify-center gap-2 mb-3"
