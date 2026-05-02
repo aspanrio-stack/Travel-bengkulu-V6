@@ -24,7 +24,7 @@ export default async function PesanPage({
     <div className="min-h-screen pt-16 bg-slate-50">
 
       {/* Hero Header */}
-      <div className={`text-white py-12 ${
+      <div className={`text-white py-10 ${
         isRental
           ? 'bg-gradient-to-br from-amber-700 to-amber-500'
           : 'bg-gradient-to-br from-primary-800 to-primary-600'
@@ -52,37 +52,30 @@ export default async function PesanPage({
               <span key={f} className="bg-white/20 px-3 py-1.5 rounded-full font-medium">{f}</span>
             ))}
           </div>
-        </div>
-      </div>
 
-      {/* Mode Switch Tab */}
-      <div className="max-w-3xl mx-auto px-4 -mt-1">
-        <div className="bg-white rounded-t-2xl border border-slate-200 border-b-0 flex overflow-hidden shadow-sm">
-          <a
-            href="/pesan"
-            className={`flex-1 py-3.5 text-center text-sm font-bold transition-colors flex items-center justify-center gap-2 ${
-              !isRental
-                ? 'bg-primary-700 text-white'
-                : 'text-slate-500 hover:bg-slate-50'
-            }`}
-          >
-            🚌 Travel Antar Kota
-          </a>
-          <a
-            href="/pesan?mode=rental"
-            className={`flex-1 py-3.5 text-center text-sm font-bold transition-colors flex items-center justify-center gap-2 ${
-              isRental
-                ? 'bg-amber-600 text-white'
-                : 'text-slate-500 hover:bg-slate-50'
-            }`}
-          >
-            🚗 
-          </a>
+          {/* Link mode switch — subtle, di dalam hero */}
+          <div className="mt-6">
+            {isRental ? (
+              <a
+                href="/pesan"
+                className="inline-flex items-center gap-1.5 text-sm text-amber-100 hover:text-white underline underline-offset-4 transition-colors"
+              >
+                🚌 Cari tiket travel antar kota?
+              </a>
+            ) : (
+              <a
+                href="/pesan?mode=rental"
+                className="inline-flex items-center gap-1.5 text-sm text-primary-100 hover:text-white underline underline-offset-4 transition-colors"
+              >
+                🚗 Butuh rental mobil? Klik di sini
+              </a>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Form */}
-      <div className="max-w-3xl mx-auto px-4 pb-10">
+      <div className="max-w-3xl mx-auto px-4 py-6 pb-10">
         {isRental
           ? <RentalForm />
           : <BookingForm preselectedRouteId={routeId} />
