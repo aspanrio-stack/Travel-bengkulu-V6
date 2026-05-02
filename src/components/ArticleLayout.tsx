@@ -13,6 +13,13 @@ interface ArticleLayoutProps {
   breadcrumbs: Breadcrumb[];
   badge?: string;
   price?: string;
+  /**
+   * ID rute dari ROUTES di @/lib/routes.ts
+   * Contoh: 'bkl-plm', 'crp-bkl', 'bkl-crp', dst.
+   * Jika diisi, tombol CTA akan mengarah ke /pesan?rute={routeId}
+   * sehingga rute otomatis terisi di BookingForm.
+   */
+  routeId?: string;
   children: React.ReactNode;
 }
 
@@ -22,10 +29,16 @@ export default function ArticleLayout({
   breadcrumbs,
   badge,
   price,
+  routeId,
   children,
 }: ArticleLayoutProps) {
   const pathname = usePathname();
-  const pesanHref = `/pesan?dari=${encodeURIComponent(pathname ?? '')}`;
+
+  // Jika routeId tersedia → pre-select rute di halaman /pesan
+  // Fallback ke ?dari=pathname agar tidak ada dead link
+  const pesanHref = routeId
+    ? `/pesan?rute=${encodeURIComponent(routeId)}`
+    : `/pesan?dari=${encodeURIComponent(pathname ?? '')}`;
 
   return (
     <div className="min-h-screen pt-16">
@@ -130,7 +143,7 @@ export default function ArticleLayout({
                   Isi form online — admin konfirmasi otomatis ✅
                 </p>
 
-                {/* Tombol Utama → shimmer saja */}
+                {/* Tombol Utama → shimmer + pre-select rute */}
                 <Link
                   href={pesanHref}
                   className="cta-btn-shimmer w-full text-white font-bold px-5 py-3.5 rounded-xl flex items-center justify-center gap-2 mb-3"
