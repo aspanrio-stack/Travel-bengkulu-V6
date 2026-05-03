@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.bengkulutravel.com';
+  const baseUrl = 'https://bengkulutravel.com';
   const lastModified = new Date();
 
   return [
