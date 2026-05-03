@@ -91,6 +91,7 @@ interface BookingData {
   dropoff?: string;
   total: number;
   paymentMethod: 'tunai' | 'qris';
+  gpsLink?: string; // Link Google Maps jika user mengizinkan share lokasi
 }
 
 /**
@@ -149,6 +150,7 @@ export function msgAdminPesananBaru(data: BookingData): string {
     data.email ? `📧 Email     : ${data.email}` : `📧 Email     : (tidak diisi)`,
     `📍 Jemput di : ${data.pickup}`,
     data.dropoff ? `🏁 Antar ke  : ${data.dropoff}` : '',
+    data.gpsLink ? `🗺️ Lokasi GPS : ${data.gpsLink}` : `🗺️ Lokasi GPS : (tidak disertakan)`,
     ``,
     `💰 Total     : ${formatRp(data.total)}`,
     `💳 Metode    : ${data.paymentMethod === 'qris' ? '📱 QRIS' : '💵 Tunai'}`,
