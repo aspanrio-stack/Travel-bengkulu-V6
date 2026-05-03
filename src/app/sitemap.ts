@@ -18,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/antar-jemput-bandara-curup`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/travel-curup-bandara-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/kirim-paket-bengkulu-palembang`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
+    
     // Halaman "berapa jam" — keyword volume tinggi
     { url: `${baseUrl}/bengkulu-ke-palembang-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/bengkulu-palembang-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
@@ -25,12 +26,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/bengkulu-jambi-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/jambi-bengkulu-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/jambi-bengkulu-berapa-jam-naik-mobil`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${baseUrl}/bengkulu-ke-palembang`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/bengkulu-lebong-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+    
     // Artikel
     { url: `${baseUrl}/jarak-jambi-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/jarak-bengkulu-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/bengkulu-lebong-lewat-mana`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/ongkos-travel-bengkulu-2026`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/tempat-wisata-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/wisata-pantai-panjang-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
+    
     // ── Artikel Hotel ────────────────────────────────────────────────
     { url: `${baseUrl}/daftar-hotel-di-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
    { url: `${baseUrl}/hotel-di-kota-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },  
@@ -38,6 +43,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/hotel-syariah-di-curup`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/hotel-di-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/hotel-syariah-di-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
+    
     // ── Artikel Kuliner ────────────────────────────────────────────────
     { url: `${baseUrl}/makanan-khas-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
    { url: `${baseUrl}/makanan-khas-kota-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },  
