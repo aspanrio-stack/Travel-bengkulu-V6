@@ -48,7 +48,13 @@ export async function POST(req: NextRequest) {
       date, departureTime, passengers,
       pickup, dropoff,
       harga, kodeUnik, total, paymentMethod,
+      gpsLat, gpsLng,
     } = body;
+
+    // Buat link Google Maps jika koordinat GPS tersedia
+    const gpsLink = (gpsLat && gpsLng)
+      ? `https://maps.google.com/?q=${gpsLat},${gpsLng}`
+      : null;
 
     if (!name || !phone || !route || !total) {
       return NextResponse.json({ error: 'Data tidak lengkap' }, { status: 400 });
@@ -92,6 +98,8 @@ export async function POST(req: NextRequest) {
       dropoff:       order.dropoff || undefined,
       total:         order.total,
       paymentMethod: order.paymentMethod,
+      // GPS: ada jika user mengizinkan share lokasi, null jika tidak
+      gpsLink:       gpsLink ?? undefined,
     };
 
     // ── Kirim WA — await dulu sebelum return ──
