@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { ROUTES, formatPrice, formatDepartureTime, Route } from '@/lib/routes';
+import LocationPicker from '@/components/LocationPicker';
 
 interface BookingFormProps {
   preselectedRouteId?: string;
@@ -13,6 +14,9 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [sukses, setSukses] = useState<{ orderId: string; paymentMethod: string } | null>(null);
+
+  // ── BARU: state lokasi GPS ──
+  const [gpsLocation, setGpsLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   const [form, setForm] = useState({
     routeId: preselectedRouteId || '',
@@ -89,6 +93,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     return '';
   })();
 
+  // ── DIMODIFIKASI: tambah gpsLocation ke payload ──
   const buildOrderPayload = (paymentMethod: 'tunai' | 'qris') => ({
     name: form.name,
     phone: fullPhone,
@@ -104,9 +109,12 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     kodeUnik: 0,
     total: totalPrice,
     paymentMethod,
+    // Kirim koordinat GPS jika user mengizinkan (null jika tidak)
+    gpsLat: gpsLocation?.lat ?? null,
+    gpsLng: gpsLocation?.lng ?? null,
   });
 
-  // ── TUNAI: simpan pesanan → WA otomatis via Fonnte → tampil halaman sukses ──
+  // ── TUNAI ──
   const handleKirimWA = async () => {
     const err = validateStep2();
     if (err) { setError(err); return; }
@@ -133,7 +141,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     }
   };
 
-  // ── QRIS: simpan pesanan → WA otomatis via Fonnte → redirect ke /pembayaran ──
+  // ── QRIS ──
   const handleBayarQRIS = async () => {
     const err = validateStep2();
     if (err) { setError(err); return; }
@@ -174,7 +182,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     }
   };
 
-  // ── HALAMAN SUKSES (setelah pesanan tunai berhasil) ──
+  // ── HALAMAN SUKSES ──
   if (sukses) {
     return (
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden p-8 text-center">
@@ -276,7 +284,6 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
                 ))}
               </select>
 
-              {/* Info rute tampil di bawah dropdown sebagai hint kecil, bukan kotak besar duplikat */}
               {selectedRoute && (
                 <div className="mt-2 flex items-center justify-between px-1">
                   <span className="text-xs text-slate-500 flex items-center gap-1">
@@ -411,6 +418,9 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
                 placeholder="Contoh: Jl. Veteran No. 12, Curup, Rejang Lebong"
                 className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none" />
             </div>
+
+            {/* ── BARU: Location Picker GPS ── */}
+            <LocationPicker onChange={setGpsLocation} />
 
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
