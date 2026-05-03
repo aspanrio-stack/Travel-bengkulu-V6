@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Jarak Bengkulu ke Lebong Berapa Km? Panduan Lengkap 2025',
+  title: 'Jarak Bengkulu ke Lebong Berapa Km? Panduan Lengkap 2026',
   description:
     'Jarak Bengkulu ke Lebong sekitar 150 km via Bengkulu Utara. Cek detail jarak per segmen, biaya BBM, waktu tempuh, dan pesan travel door to door Rp 100.000!',
   alternates: { canonical: 'https://bengkulutravel.com/jarak-bengkulu-lebong' },
