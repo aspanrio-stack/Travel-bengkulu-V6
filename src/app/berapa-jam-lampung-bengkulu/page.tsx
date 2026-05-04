@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Berapa Jam Lampung Bengkulu? Ini Rute Tercepat 2026',
   description:
     'Berapa jam perjalanan Lampung ke Bengkulu? Jawabannya 11–13 jam via Liwa-Krui. Simak rute tercepat, titik pemberhentian, dan tips perjalanan 2026.',
-  alternates: { canonical: 'https://bengkulutravel.com/travel-lampung-bengkulu' },
+  alternates: { canonical: 'https://bengkulutravel.com/berapa-jam-lampung-bengkulu' },
 };
 
 export default function BerapaJamLampungBengkulu() {
