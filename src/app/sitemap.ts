@@ -27,6 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/jambi-bengkulu-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/jambi-bengkulu-berapa-jam-naik-mobil`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/bengkulu-lebong-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/berapa-jam-lampung-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     
     // Artikel
     { url: `${baseUrl}/jarak-jambi-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
@@ -35,6 +36,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/ongkos-travel-bengkulu-2026`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/tempat-wisata-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/wisata-pantai-panjang-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/lampung-bengkulu-lewat-mana`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/ongkos-travel-bengkulu-lampung`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     
     // ── Artikel Hotel ────────────────────────────────────────────────
     { url: `${baseUrl}/daftar-hotel-di-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
