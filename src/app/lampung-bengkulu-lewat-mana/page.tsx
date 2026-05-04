@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Lampung Bengkulu Lewat Mana? Ini Jalur Paling Enak 2026',
   description:
     'Mau ke Bengkulu dari Lampung tapi bingung lewat mana? Panduan lengkap jalur via Liwa-Krui vs jalur alternatif, titik menarik, dan tips perjalanan 2026.',
-  alternates: { canonical: 'https://bengkulutravel.com/travel-lampung-bengkulu' },
+  alternates: { canonical: 'https://bengkulutravel.com/lampung-bengkulu-lewat-mana' },
 };
 
 export default function LampungBengkuluLewatMana() {
