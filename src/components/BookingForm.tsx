@@ -114,7 +114,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     gpsLng: gpsLocation?.lng ?? null,
   });
 
-  // ── TUNAI ──
+  // ── TUNAI: simpan ke DB lalu langsung redirect ke WA admin ──
   const handleKirimWA = async () => {
     const err = validateStep2();
     if (err) { setError(err); return; }
@@ -133,10 +133,44 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
         setError(data.error || 'Terjadi kesalahan. Silakan coba lagi.');
         return;
       }
-      setSukses({ orderId: data.orderId, paymentMethod: 'tunai' });
+
+      // Buat pesan WA otomatis ke admin
+      const orderId = data.orderId || '-';
+      const dep = form.departureTime
+        ? `\nJam: ${formatDepartureTime(form.departureTime)}`
+        : form.flightInfo
+        ? `\nPenerbangan: ${form.flightInfo}`
+        : '';
+
+      const msgAdmin = [
+        `Halo Admin Travel Bengkulu 👋`,
+        ``,
+        `Saya ingin memesan travel dengan pembayaran *Tunai ke Driver*.`,
+        ``,
+        `*Detail Pesanan:*`,
+        `🚗 Rute: ${selectedRoute.from} → ${selectedRoute.to}`,
+        `📅 Tanggal: ${form.date}${dep}`,
+        `👥 Penumpang: ${form.passengers} orang`,
+        `📍 Jemput di: ${form.pickupAddress}`,
+        form.dropoffAddress ? `🏁 Antar ke: ${form.dropoffAddress}` : '',
+        ``,
+        `*Data Pemesan:*`,
+        `👤 Nama: ${form.name}`,
+        `📞 No. HP: ${fullPhone}`,
+        wantEmail && form.email ? `📧 Email: ${form.email}` : '',
+        ``,
+        `💰 Total: ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(totalPrice)}`,
+        `💳 Pembayaran: Tunai ke Driver`,
+        `🔖 No. Pesanan: *${orderId}*`,
+        ``,
+        `Mohon dikonfirmasi ketersediaan dan jadwal keberangkatan. Terima kasih!`,
+      ].filter(Boolean).join('\n');
+
+      // Redirect ke WA admin (nomor utama)
+      window.location.href = `https://wa.me/6285268645461?text=${encodeURIComponent(msgAdmin)}`;
+
     } catch {
       setError('Gagal menghubungi server. Periksa koneksi internet Anda.');
-    } finally {
       setSubmitting(false);
     }
   };
@@ -457,8 +491,8 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
               <p className="text-sm font-semibold text-slate-700">Pilih Metode Pembayaran</p>
 
               <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 flex items-start gap-2 text-sm text-blue-700">
-                <span className="shrink-0 mt-0.5">📱</span>
-                <span>Notifikasi WhatsApp otomatis terkirim ke nomor HP Anda setelah konfirmasi.</span>
+                <span className="shrink-0 mt-0.5">ℹ️</span>
+                <span>Untuk QRIS, tiket dikirim otomatis setelah admin verifikasi pembayaran. Untuk tunai, Anda langsung terhubung ke WhatsApp admin.</span>
               </div>
 
               <button onClick={handleBayarQRIS} disabled={submitting}
@@ -473,13 +507,13 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
               <button onClick={handleKirimWA} disabled={submitting}
                 className="w-full bg-green-500 hover:bg-green-600 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-3 shadow-sm">
                 {submitting ? (
-                  <span className="animate-pulse">Memproses...</span>
+                  <span className="animate-pulse">Memproses & Membuka WhatsApp...</span>
                 ) : (
                   <>
-                    <span className="text-2xl">💵</span>
+                    <span className="text-2xl">💬</span>
                     <div className="text-left">
-                      <p className="font-bold">Bayar Tunai ke Driver</p>
-                      <p className="text-xs text-green-100">Konfirmasi otomatis via WA · Bayar saat dijemput</p>
+                      <p className="font-bold">Pesan via WhatsApp (Tunai)</p>
+                      <p className="text-xs text-green-100">Langsung terhubung ke admin · Bayar saat dijemput</p>
                     </div>
                   </>
                 )}
