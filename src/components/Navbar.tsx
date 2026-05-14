@@ -17,7 +17,7 @@ const navLinks = [
       { href: '/travel-bengkulu-lebong', label: 'Bengkulu ↔ Lebong' },
       { href: '/travel-bengkulu-lampung', label: 'Bengkulu ↔ Lampung' },
       { href: '/rental-mobil-curup', label: 'Rental Mobil Curup' },
-      { href: '/antar-jemput-bandara-curup', label: 'Antar Jemput Bandara' },
+      { href: '/antar-jemput-bandara-curup', label: 'Antar dan Jemput Bandara' },
       { href: '/kirim-paket-bengkulu-palembang', label: 'Kirim Paket' },
     ],
   },
