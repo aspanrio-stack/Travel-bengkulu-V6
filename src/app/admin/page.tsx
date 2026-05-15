@@ -181,6 +181,7 @@ function KwitansiTab({ setToast }: { setToast: (msg: string) => void }) {
         setToast(`📧 ${data.message}`);
       }
 
+      // Generate nomor baru setelah berhasil
       set('nomorKwitansi', generateNomorKwitansi());
 
     } catch (err) {
@@ -194,6 +195,7 @@ function KwitansiTab({ setToast }: { setToast: (msg: string) => void }) {
     <div className="p-4 md:p-6 max-w-2xl mx-auto">
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
 
+        {/* Header card */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 flex items-center justify-between">
           <div>
             <h2 className="text-white font-bold text-lg">🧾 Buat Kwitansi Manual</h2>
@@ -209,6 +211,7 @@ function KwitansiTab({ setToast }: { setToast: (msg: string) => void }) {
 
         <div className="p-5 space-y-5">
 
+          {/* 1. Pilih Perusahaan */}
           <section>
             <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">1. Header Kwitansi</p>
             <div className="grid grid-cols-2 gap-3">
@@ -233,6 +236,7 @@ function KwitansiTab({ setToast }: { setToast: (msg: string) => void }) {
             </div>
           </section>
 
+          {/* Nomor Kwitansi */}
           <div className="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-3 border border-slate-100">
             <span className="text-xs text-slate-500 font-semibold whitespace-nowrap">No. Kwitansi</span>
             <span className="font-mono text-sm font-bold text-blue-700 flex-1">{form.nomorKwitansi}</span>
@@ -245,6 +249,7 @@ function KwitansiTab({ setToast }: { setToast: (msg: string) => void }) {
             </button>
           </div>
 
+          {/* 2. Data Penerima */}
           <section>
             <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">2. Data Penerima</p>
             <div className="space-y-3">
@@ -272,9 +277,11 @@ function KwitansiTab({ setToast }: { setToast: (msg: string) => void }) {
             </div>
           </section>
 
+          {/* 3. Isi Kwitansi */}
           <section>
             <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">3. Isi Kwitansi</p>
 
+            {/* Jenis layanan */}
             <div className="grid grid-cols-3 gap-2 mb-3">
               {([
                 ['rental',       '🚗', 'Rental Mobil'],
@@ -296,6 +303,7 @@ function KwitansiTab({ setToast }: { setToast: (msg: string) => void }) {
               ))}
             </div>
 
+            {/* Tarif & Hari */}
             <div className="grid grid-cols-2 gap-3 mb-3">
               <div>
                 <label className="block text-xs text-slate-500 mb-1 font-medium">Tarif per Hari (Rp) *</label>
@@ -320,6 +328,7 @@ function KwitansiTab({ setToast }: { setToast: (msg: string) => void }) {
               </div>
             </div>
 
+            {/* Preview total */}
             {total > 0 && (
               <div className="bg-blue-600 text-white rounded-xl px-4 py-3 flex justify-between items-center">
                 <span className="text-sm font-semibold">
@@ -330,6 +339,7 @@ function KwitansiTab({ setToast }: { setToast: (msg: string) => void }) {
             )}
           </section>
 
+          {/* 4. Tanggal & Pembayaran */}
           <section>
             <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">4. Tanggal & Pembayaran</p>
             <div className="grid grid-cols-2 gap-3">
@@ -363,6 +373,7 @@ function KwitansiTab({ setToast }: { setToast: (msg: string) => void }) {
             </div>
           </section>
 
+          {/* Catatan */}
           <div>
             <label className="block text-xs text-slate-500 mb-1 font-medium">Catatan (opsional)</label>
             <input
@@ -374,6 +385,7 @@ function KwitansiTab({ setToast }: { setToast: (msg: string) => void }) {
             />
           </div>
 
+          {/* 5. Aksi */}
           <section className="pt-2 space-y-3">
             <div className="flex gap-3">
               <button
@@ -399,6 +411,7 @@ function KwitansiTab({ setToast }: { setToast: (msg: string) => void }) {
               </button>
             </div>
 
+            {/* Input email (muncul saat klik Kirim Email) */}
             {form.showEmail && (
               <div className="flex gap-2">
                 <input
@@ -422,6 +435,7 @@ function KwitansiTab({ setToast }: { setToast: (msg: string) => void }) {
         </div>
       </div>
 
+      {/* Preview ringkasan */}
       {form.namaPenerima && total > 0 && (
         <div className="mt-4 bg-white rounded-xl border border-slate-200 p-4 text-xs text-slate-500 space-y-1">
           <p className="font-semibold text-slate-700 mb-2">📋 Ringkasan Kwitansi</p>
@@ -448,7 +462,7 @@ function KwitansiTab({ setToast }: { setToast: (msg: string) => void }) {
 }
 
 // ─────────────────────────────────────────────
-// ADMIN DASHBOARD (Main) — Tanpa Login
+// ADMIN DASHBOARD (Main)
 // ─────────────────────────────────────────────
 export default function AdminDashboard() {
   // State pesanan
@@ -460,15 +474,16 @@ export default function AdminDashboard() {
   const [filter, setFilter]         = useState<'all' | 'pending' | 'success'>('all');
   const [search, setSearch]         = useState('');
   const [selected, setSelected]     = useState<Order | null>(null);
+
   const [printingTicket, setPrintingTicket] = useState<string | null>(null);
-  const [activeTab, setActiveTab]   = useState<'pesanan' | 'kwitansi'>('pesanan');
+  const [activeTab, setActiveTab] = useState<'pesanan' | 'kwitansi'>('pesanan');
 
   // ── Ambil semua pesanan ──
   const fetchOrders = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
-      const res  = await fetch('/api/admin/orders');
+      const res = await fetch('/api/admin/orders');
       const data = await res.json();
       setOrders(data.orders || []);
     } catch {
@@ -485,10 +500,10 @@ export default function AdminDashboard() {
     if (!confirm(`Konfirmasi pembayaran pesanan ${orderId}?\n\nTiket + PDF akan dikirim ke email pelanggan (jika ada).`)) return;
     setConfirming(orderId);
     try {
-      const res  = await fetch('/api/admin/confirm', {
-        method:  'POST',
+      const res = await fetch('/api/admin/confirm', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ orderId }),
+        body: JSON.stringify({ orderId }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -499,7 +514,9 @@ export default function AdminDashboard() {
       setToast(`✅ ${data.message}`);
       setTimeout(() => setToast(''), 4000);
 
-      if (data.waLink) setTimeout(() => { window.open(data.waLink, '_blank'); }, 600);
+      if (data.waLink) {
+        setTimeout(() => { window.open(data.waLink, '_blank'); }, 600);
+      }
     } catch (err) {
       setToast(`❌ ${err instanceof Error ? err.message : 'Gagal konfirmasi'}`);
       setTimeout(() => setToast(''), 4000);
@@ -508,14 +525,14 @@ export default function AdminDashboard() {
     }
   };
 
-  // ── Print Tiket ──
+  // ── Print Tiket (download PDF) ──
   const handlePrintTicket = async (orderId: string) => {
     setPrintingTicket(orderId);
     try {
-      const res  = await fetch('/api/admin/print-ticket', {
-        method:  'POST',
+      const res = await fetch('/api/admin/print-ticket', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ orderId }),
+        body: JSON.stringify({ orderId }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -540,6 +557,9 @@ export default function AdminDashboard() {
     }
   };
 
+  // ── Logout dinonaktifkan ──
+  const handleLogout = () => { /* no-op */ };
+
   // ── Filter & Search ──
   const filtered = orders.filter(o => {
     const matchFilter = filter === 'all' || o.status === filter;
@@ -560,6 +580,7 @@ export default function AdminDashboard() {
     tunai:   orders.filter(o => o.paymentMethod === 'tunai').length,
   };
 
+  // ── Toast helper (untuk KwitansiTab) ──
   const showToast = (msg: string) => {
     setToast(msg);
     setTimeout(() => setToast(''), 4000);
@@ -591,7 +612,12 @@ export default function AdminDashboard() {
                 🔄
               </button>
             )}
-            {/* Tombol Keluar dihapus — tidak ada sistem login */}
+            <button
+              onClick={handleLogout}
+              className="text-sm text-slate-500 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors font-medium"
+            >
+              Keluar
+            </button>
           </div>
         </div>
       </header>
@@ -755,6 +781,7 @@ export default function AdminDashboard() {
                               target="_blank"
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1 text-xs text-green-600 hover:text-green-700 font-semibold mt-0.5"
+                              title="Hubungi via WhatsApp"
                             >
                               💬 {order.phone}
                             </a>
@@ -809,6 +836,7 @@ export default function AdminDashboard() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-xs bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg transition-colors font-semibold inline-flex items-center gap-1"
+                                title={`WhatsApp ${order.phone}`}
                               >
                                 💬 WA
                               </a>
@@ -821,6 +849,7 @@ export default function AdminDashboard() {
                                   {confirming === order.id ? '...' : '✅ Konfirmasi'}
                                 </button>
                               )}
+                              {/* ── GANTI: Kirim Invoice → Print Tiket ── */}
                               <button
                                 onClick={() => handlePrintTicket(order.id)}
                                 disabled={printingTicket === order.id}
@@ -888,6 +917,7 @@ export default function AdminDashboard() {
                               {confirming === order.id ? '...' : '✅ Konfirmasi'}
                             </button>
                           )}
+                          {/* ── GANTI: Kirim Invoice → Print Tiket ── */}
                           <button
                             onClick={() => handlePrintTicket(order.id)}
                             disabled={printingTicket === order.id}
@@ -903,6 +933,7 @@ export default function AdminDashboard() {
               </>
             )}
           </div>
+
         </div>
       )}
 
@@ -969,6 +1000,7 @@ export default function AdminDashboard() {
                   ✅ Konfirmasi & Kirim Tiket
                 </button>
               )}
+              {/* ── GANTI: Kirim Invoice → Print Tiket ── */}
               <button
                 onClick={() => { handlePrintTicket(selected.id); setSelected(null); }}
                 disabled={printingTicket === selected.id}
@@ -981,7 +1013,7 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* ── TOAST ── */}
+      {/* ── TOAST NOTIFICATION ── */}
       {toast && (
         <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-xl text-white text-sm font-semibold shadow-xl transition-all ${
           toast.startsWith('✅') || toast.startsWith('📧') || toast.startsWith('🖨️')
