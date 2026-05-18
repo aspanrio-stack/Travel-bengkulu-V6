@@ -12,6 +12,7 @@ export default function robots(): MetadataRoute.Robots {
         '/*?alt=rss',   // Memblokir parameter RSS
         '/site.webmanifest',
         '/search',
+        '/orang',
       ],
     },
     sitemap: 'https://bengkulutravel.com/sitemap.xml',
