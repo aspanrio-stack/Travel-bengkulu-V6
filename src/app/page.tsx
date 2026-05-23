@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     'Travel Bengkulu melayani antar jemput door to door rute Bengkulu–Palembang, Bengkulu–Jambi, dan Bengkulu–Curup. Armada bersih, pengemudi berpengalaman, harga pas di kantong. Pesan sekarang via WhatsApp!',
 };
 
-const WA = 'https://wa.me/6285268645461?text=Halo%20Travel%20Bengkulu%2C%20saya%20ingin%20pesan%20travel';
+const WA = 'https://wa.me/6282374497929?text=Halo%20Travel%20Bengkulu%2C%20saya%20ingin%20pesan%20travel';
 
 const services = [
   { icon: null, title: 'Travel Bengkulu – Palembang', description: 'Jemput dari pintu Anda di Bengkulu, antar langsung ke tujuan di Palembang. Tidak perlu tunggu di terminal.', price: 'Rp 250.000', href: '/travel-bengkulu-palembang', badge: '🔥 Populer', image: '/images/innova.jpg' },
