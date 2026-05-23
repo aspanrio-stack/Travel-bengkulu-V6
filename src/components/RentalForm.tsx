@@ -160,7 +160,7 @@ export default function RentalForm() {
       '_Mohon konfirmasi ketersediaan unit. Terima kasih!_',
     ].filter(Boolean).join('%0A');
 
-    window.open(`https://wa.me/6285268645461?text=${msg}`, '_blank');
+    window.open(`https://wa.me/6282374497929?text=${msg}`, '_blank');
     setSubmitting(false);
   };
 
