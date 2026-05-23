@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
-const WA_NUMBER = '6285268645461';
+const WA_NUMBER = '6282374497929';
 const WA_NUMBER_DISPLAY = '0852-6864-5461';
 
 // Mapping pathname → pesan WA yang kontekstual
@@ -133,7 +133,7 @@ export default function Footer() {
               <svg className="w-4 h-4 text-primary-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
-              <a href="tel:+6285268645461" className="hover:text-primary-400 transition-colors">0852-6864-5461</a>
+              <a href="tel:+6282374497929" className="hover:text-primary-400 transition-colors">0852-6864-5461</a>
             </li>
             <li className="flex items-center gap-3">
               <svg className="w-4 h-4 text-green-400 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
