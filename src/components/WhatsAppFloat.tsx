@@ -35,7 +35,7 @@ export default function WhatsAppFloat() {
 
   // Ambil pesan sesuai halaman, fallback ke default
   const pesan = pesanMap[pathname ?? ''] || pesanDefault;
-  const waUrl = `https://wa.me/6285268645461?text=${encodeURIComponent(pesan)}`;
+  const waUrl = `https://wa.me/6282374497929?text=${encodeURIComponent(pesan)}`;
 
   const handleClick = () => {
     // Track ke Redis — silent
