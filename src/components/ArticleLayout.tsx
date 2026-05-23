@@ -170,7 +170,7 @@ export default function ArticleLayout({
 
                 {/* Tombol Sekunder: Telepon */}
                 <a
-                  href="tel:+6285268645461"
+                  href="tel:+6282374497929"
                   className="w-full text-white font-semibold px-5 py-3 rounded-xl flex items-center justify-center gap-2 transition-all duration-200"
                   style={{ background: 'rgba(255,255,255,0.13)', border: '1px solid rgba(255,255,255,0.22)' }}
                   aria-label="Telepon Travel Bengkulu"
