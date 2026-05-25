@@ -31,7 +31,24 @@ const nextConfig = {
       },
     ];
   },
-
+async redirects() {
+  return [
+    {
+      source: '/orang',
+      destination: '/ongkos-travel-bengkulu-2026',
+      permanent: true, // 301
+    },
+  ];
+},
+  async redirects() {
+  return [
+    {
+      source: '/_next/static/media/:path*',
+      destination: '/',
+      permanent: false,
+    },
+  ];
+},
   async redirects() {
     return [
       { source: '/index.html', destination: '/', permanent: true },
