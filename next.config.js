@@ -8,14 +8,12 @@ const nextConfig = {
     minimumCacheTTL: 2592000,
     deviceSizes: [390, 640, 828, 1080, 1200],
     imageSizes: [16, 32, 64, 128, 256],
-    // Izinkan domain eksternal jika Anda mengambil gambar dari luar nantinya
     remotePatterns: [],
   },
 
   experimental: {
     optimizePackageImports: ['lucide-react', '@headlessui/react'],
-    // Inilah kunci untuk menghilangkan blocking CSS/Fonts
-    optimizeCss: true, 
+    optimizeCss: true,
   },
 
   async headers() {
@@ -25,32 +23,29 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable', // Cache lebih agresif untuk gambar
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
     ];
   },
-async redirects() {
-  return [
-    {
-      source: '/orang',
-      destination: '/ongkos-travel-bengkulu-2026',
-      permanent: true, // 301
-    },
-  ];
-},
-  async redirects() {
-  return [
-    {
-      source: '/_next/static/media/:path*',
-      destination: '/',
-      permanent: false,
-    },
-  ];
-},
+
+  // ✅ Semua redirect digabung dalam SATU fungsi
   async redirects() {
     return [
+      // --- Fix 404 GSC ---
+      {
+        source: '/orang',
+        destination: '/ongkos-travel-bengkulu-2026',
+        permanent: true,
+      },
+      {
+        source: '/_next/static/media/:path*',
+        destination: '/',
+        permanent: false,
+      },
+
+      // --- Redirect dari blog lama ---
       { source: '/index.html', destination: '/', permanent: true },
       { source: '/p/bengkulutravelcom-layanan-travel-antar.html', destination: '/', permanent: true },
       { source: '/2026/02/travel-bengkulu-jambi.html', destination: '/travel-bengkulu-jambi', permanent: true },
