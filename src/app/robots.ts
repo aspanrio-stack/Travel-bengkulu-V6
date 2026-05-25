@@ -5,14 +5,13 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      // Tambahkan disallow di bawah ini untuk memblokir URL penyebab error di GSC
       disallow: [
-        '/feeds/',      // Memblokir folder feed
-        '/*?m=1',       // Memblokir parameter feed/mobile sisa sistem lama
-        '/*?alt=rss',   // Memblokir parameter RSS
+        '/feeds/',
+        '/*?m=1',
+        '/*?alt=rss',
         '/site.webmanifest',
         '/search',
-        '/orang',
+        // '/orang' → dihapus, sudah ditangani redirect 301
       ],
     },
     sitemap: 'https://bengkulutravel.com/sitemap.xml',
