@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Jambi Bengkulu Berapa Jam Naik Mobil? Panduan Lengkap',
   description:
     'Jambi ke Bengkulu berapa jam naik mobil? ±9–12 jam via darat. Rute terbaik, estimasi BBM, rest area, tips berkendara aman, dan alternatif travel Rp 250.000.',
-  alternates: { canonical: 'https://www.bengkulutravel.com/jambi-bengkulu-berapa-jam-naik-mobil' },
+  alternates: { canonical: 'https://bengkulutravel.com/jambi-bengkulu-berapa-jam-naik-mobil' },
 };
 
 export default function JambiBengkuluBerapaJamNaikMobil() {

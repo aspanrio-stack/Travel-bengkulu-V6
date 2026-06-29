@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Jambi Bengkulu Berapa Jam? Jarak, Rute & Estimasi Waktu',
   description:
     'Jambi ke Bengkulu berapa jam? Jaraknya ±540 km, waktu tempuh 9–12 jam via darat. Info rute lengkap, kondisi jalan, tips & travel door to door Rp 250.000.',
-  alternates: { canonical: 'https://www.bengkulutravel.com/jambi-bengkulu-berapa-jam' },
+  alternates: { canonical: 'https://bengkulutravel.com/jambi-bengkulu-berapa-jam' },
 };
 
 export default function JambiBengkuluBerapaJam() {

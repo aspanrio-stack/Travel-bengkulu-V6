@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'Travel Bengkulu – Jasa Antar Jemput Door to Door Terpercaya',
   description:
     'Travel Bengkulu terpercaya. Melayani Bengkulu–Palembang, Bengkulu–Jambi, Bengkulu–Curup. Antar jemput door to door mulai Rp 80.000. Pesan WA 0852-6864-5461.',
-  alternates: { canonical: 'https://www.bengkulutravel.com/travel-bengkulu' },
+  alternates: { canonical: 'https://bengkulutravel.com/travel-bengkulu' },
 };
 
 const routes = [
@@ -18,9 +18,33 @@ const routes = [
   { from: 'Jambi', to: 'Bengkulu', price: 'Rp 250.000', duration: '9–12 jam', href: '/travel-jambi-bengkulu', img: '/images/hiace.jpg' },
 ];
 
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://bengkulutravel.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Travel Bengkulu",
+      "item": "https://bengkulutravel.com/travel-bengkulu"
+    }
+  ]
+};
+
 export default function TravelBengkulu() {
   return (
     <div className="min-h-screen pt-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/* Hero */}
       <div className="bg-gradient-to-br from-primary-800 via-primary-700 to-primary-600 text-white">
         <div className="max-w-5xl mx-auto px-4 py-16 text-center">

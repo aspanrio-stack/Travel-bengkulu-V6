@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Berapa Ongkos Travel Bengkulu Lampung 2026? Ini Rinciannya',
   description:
     'Cari tahu berapa ongkos travel Bengkulu Lampung 2026. Tarif per orang, perbandingan moda transportasi, dan cara pesan travel door to door terpercaya.',
-  alternates: { canonical: 'https://ongkos-travel-bengkulu-lampung' },
+  alternates: { canonical: 'https://bengkulutravel.com/ongkos-travel-bengkulu-lampung' },
 };
 
 export default function OngkosTravelBengkuluLampung() {

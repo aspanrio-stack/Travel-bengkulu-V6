@@ -9,6 +9,32 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://bengkulutravel.com/travel-bengkulu-curup' },
 };
 
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://bengkulutravel.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Travel Bengkulu",
+      "item": "https://bengkulutravel.com/travel-bengkulu"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Bengkulu–Curup",
+      "item": "https://bengkulutravel.com/travel-bengkulu-curup"
+    }
+  ]
+};
+
 export default function TravelBengkuluCurup() {
   return (
     <ArticleLayout
@@ -18,6 +44,10 @@ export default function TravelBengkuluCurup() {
       badge="💸 Termurah"
       price="Rp 80.000"
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/* Tombol Pesan Cepat */}
       <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
         <p className="text-primary-800 font-semibold text-sm">Siap memesan? Klik tombol di bawah untuk langsung ke form pemesanan.</p>
@@ -91,6 +121,18 @@ export default function TravelBengkuluCurup() {
         <li><strong>Kebun Teh Kabawetan</strong> – Hamparan teh hijau yang fotogenik</li>
         <li><strong>Wisata Kuliner Curup</strong> – Berbagai hidangan khas Rejang Lebong</li>
       </ul>
+
+      <section style={{marginTop: "2rem", padding: "1.25rem", background: "#f0f9f0", borderRadius: "8px", borderLeft: "4px solid #16a34a"}}>
+        <h3 style={{marginBottom: "0.75rem", color: "#15803d", fontSize: "1rem", fontWeight: 700}}>Layanan &amp; Info Terkait Rute Curup</h3>
+        <ul style={{listStyle: "none", padding: 0, margin: 0, display: "flex", flexWrap: "wrap", gap: "0.5rem"}}>
+          <li><Link href="/travel-curup-bengkulu" style={{color: "#16a34a", textDecoration: "underline"}}>Travel Curup → Bengkulu</Link></li>
+          <li><Link href="/rental-mobil-curup" style={{color: "#16a34a", textDecoration: "underline"}}>Rental Mobil Curup</Link></li>
+          <li><Link href="/antar-jemput-bandara-curup" style={{color: "#16a34a", textDecoration: "underline"}}>Antar Jemput Bandara Curup</Link></li>
+          <li><Link href="/travel-curup-bandara-bengkulu" style={{color: "#16a34a", textDecoration: "underline"}}>Travel Curup–Bandara Bengkulu</Link></li>
+          <li><Link href="/makanan-khas-curup" style={{color: "#16a34a", textDecoration: "underline"}}>Makanan Khas Curup</Link></li>
+          <li><Link href="/travel-bengkulu" style={{color: "#16a34a", textDecoration: "underline"}}>Semua Rute Travel Bengkulu</Link></li>
+        </ul>
+      </section>
     </ArticleLayout>
   );
 }

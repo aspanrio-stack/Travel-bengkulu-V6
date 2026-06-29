@@ -8,6 +8,32 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://bengkulutravel.com/travel-curup-bandara-bengkulu' },
 };
 
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://bengkulutravel.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Travel Bengkulu",
+      "item": "https://bengkulutravel.com/travel-bengkulu"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Curup–Bandara Bengkulu",
+      "item": "https://bengkulutravel.com/travel-curup-bandara-bengkulu"
+    }
+  ]
+};
+
 export default function Page() {
   return (
     <ArticleLayout
@@ -17,6 +43,10 @@ export default function Page() {
       badge="✈️ Airport Transfer"
       price="Rp 125.000"
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/* Tombol Pesan */}
       <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
         <p className="text-primary-800 font-semibold text-sm">Siap memesan? Klik tombol di bawah untuk langsung ke form pemesanan.</p>

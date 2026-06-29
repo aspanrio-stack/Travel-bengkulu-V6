@@ -9,6 +9,32 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://bengkulutravel.com/travel-bengkulu-jambi' },
 };
 
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://bengkulutravel.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Travel Bengkulu",
+      "item": "https://bengkulutravel.com/travel-bengkulu"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Bengkulu–Jambi",
+      "item": "https://bengkulutravel.com/travel-bengkulu-jambi"
+    }
+  ]
+};
+
 export default function TravelBengkuluJambi() {
   return (
     <ArticleLayout
@@ -18,6 +44,10 @@ export default function TravelBengkuluJambi() {
       badge="🗺️ Rute Sumatera"
       price="Rp 250.000"
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/* Tombol Pesan Cepat */}
       <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
         <p className="text-primary-800 font-semibold text-sm">Siap memesan? Klik tombol di bawah untuk langsung ke form pemesanan.</p>
@@ -95,6 +125,17 @@ export default function TravelBengkuluJambi() {
         <li>Berangkat pagi untuk menghindari kemacetan di area kota</li>
         <li>Istirahat cukup sebelum perjalanan malam hari</li>
       </ul>
+
+      <section style={{marginTop: "2rem", padding: "1.25rem", background: "#f0f9f0", borderRadius: "8px", borderLeft: "4px solid #16a34a"}}>
+        <h3 style={{marginBottom: "0.75rem", color: "#15803d", fontSize: "1rem", fontWeight: 700}}>Layanan Terkait Rute Jambi</h3>
+        <ul style={{listStyle: "none", padding: 0, margin: 0, display: "flex", flexWrap: "wrap", gap: "0.5rem"}}>
+          <li><Link href="/travel-jambi-bengkulu" style={{color: "#16a34a", textDecoration: "underline"}}>Travel Jambi → Bengkulu</Link></li>
+          <li><Link href="/bengkulu-ke-jambi-berapa-jam" style={{color: "#16a34a", textDecoration: "underline"}}>Bengkulu ke Jambi Berapa Jam?</Link></li>
+          <li><Link href="/jarak-jambi-bengkulu" style={{color: "#16a34a", textDecoration: "underline"}}>Jarak Jambi Bengkulu</Link></li>
+          <li><Link href="/ongkos-travel-bengkulu-2026" style={{color: "#16a34a", textDecoration: "underline"}}>Ongkos Travel Bengkulu 2026</Link></li>
+          <li><Link href="/travel-bengkulu" style={{color: "#16a34a", textDecoration: "underline"}}>Semua Rute Travel Bengkulu</Link></li>
+        </ul>
+      </section>
     </ArticleLayout>
   );
 }

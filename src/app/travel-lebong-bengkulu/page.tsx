@@ -8,6 +8,32 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://bengkulutravel.com/travel-lebong-bengkulu' },
 };
 
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://bengkulutravel.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Travel Bengkulu",
+      "item": "https://bengkulutravel.com/travel-bengkulu"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Lebong–Bengkulu",
+      "item": "https://bengkulutravel.com/travel-lebong-bengkulu"
+    }
+  ]
+};
+
 export default function Page() {
   return (
     <ArticleLayout
@@ -17,6 +43,10 @@ export default function Page() {
       badge="🚗 Rute Baru"
       price="Rp 100.000"
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
 
       {/* ===== KOTAK PEMESANAN UTAMA ===== */}
       <div className="mb-8 rounded-2xl overflow-hidden border-2 border-primary-500 shadow-lg">
@@ -132,11 +162,17 @@ export default function Page() {
         <li><strong>Pesan 24 Jam</strong> — via WhatsApp kapan saja</li>
       </ul>
 
-      <h2>Layanan Terkait</h2>
-      <ul>
-        <li><Link href="/travel-bengkulu" className="text-primary-600 hover:underline">Semua Rute Travel Bengkulu</Link></li>
-        <li><Link href="/pesan" className="text-primary-600 hover:underline">Form Pemesanan Online</Link></li>
-      </ul>
+      <section style={{marginTop: "2rem", padding: "1.25rem", background: "#f0f9f0", borderRadius: "8px", borderLeft: "4px solid #16a34a"}}>
+        <h3 style={{marginBottom: "0.75rem", color: "#15803d", fontSize: "1rem", fontWeight: 700}}>Layanan &amp; Info Terkait Rute Lebong</h3>
+        <ul style={{listStyle: "none", padding: 0, margin: 0, display: "flex", flexWrap: "wrap", gap: "0.5rem"}}>
+          <li><Link href="/travel-bengkulu-lebong" style={{color: "#16a34a", textDecoration: "underline"}}>Travel Bengkulu → Lebong</Link></li>
+          <li><Link href="/bengkulu-lebong-berapa-jam" style={{color: "#16a34a", textDecoration: "underline"}}>Bengkulu–Lebong Berapa Jam?</Link></li>
+          <li><Link href="/jarak-bengkulu-lebong" style={{color: "#16a34a", textDecoration: "underline"}}>Jarak Bengkulu–Lebong</Link></li>
+          <li><Link href="/bengkulu-lebong-lewat-mana" style={{color: "#16a34a", textDecoration: "underline"}}>Bengkulu–Lebong Lewat Mana?</Link></li>
+          <li><Link href="/makanan-khas-lebong" style={{color: "#16a34a", textDecoration: "underline"}}>Makanan Khas Lebong</Link></li>
+          <li><Link href="/travel-bengkulu" style={{color: "#16a34a", textDecoration: "underline"}}>Semua Rute Travel Bengkulu</Link></li>
+        </ul>
+      </section>
     </ArticleLayout>
   );
 }

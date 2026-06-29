@@ -14,22 +14,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/travel-jambi-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/travel-bengkulu-curup`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/travel-curup-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/travel-bengkulu-lampung`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/travel-lampung-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/travel-bengkulu-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/travel-lebong-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/rental-mobil-curup`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/antar-jemput-bandara-curup`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/travel-curup-bandara-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/kirim-paket-bengkulu-palembang`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
-    
+
     // Halaman "berapa jam" — keyword volume tinggi
     { url: `${baseUrl}/bengkulu-ke-palembang-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${baseUrl}/bengkulu-palembang-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/bengkulu-ke-jambi-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${baseUrl}/bengkulu-jambi-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/jambi-bengkulu-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/jambi-bengkulu-berapa-jam-naik-mobil`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/bengkulu-lebong-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/berapa-jam-lampung-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
-    
-    // Artikel
+
+    // Artikel informatif
     { url: `${baseUrl}/jarak-jambi-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/jarak-bengkulu-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/bengkulu-lebong-lewat-mana`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
@@ -38,18 +40,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/wisata-pantai-panjang-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/lampung-bengkulu-lewat-mana`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/ongkos-travel-bengkulu-lampung`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
-    
-    // ── Artikel Hotel ────────────────────────────────────────────────
+
+    // Artikel Hotel
     { url: `${baseUrl}/daftar-hotel-di-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
-   { url: `${baseUrl}/hotel-di-kota-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },  
+    { url: `${baseUrl}/hotel-di-kota-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/hotel-di-curup`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/hotel-syariah-di-curup`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/hotel-di-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/hotel-syariah-di-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
-    
-    // ── Artikel Kuliner ────────────────────────────────────────────────
+
+    // Artikel Kuliner
     { url: `${baseUrl}/makanan-khas-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
-   { url: `${baseUrl}/makanan-khas-kota-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },  
+    { url: `${baseUrl}/makanan-khas-kota-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/makanan-khas-curup`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/makanan-khas-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
   ];
