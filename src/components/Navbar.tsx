@@ -139,6 +139,7 @@ function PesanButton({ href }: { href: string }) {
 
 // ─── Navbar utama ─────────────────────────────────────────────────────────────
 export default function Navbar() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [dropdown, setDropdown] = useState<string | null>(null);
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
@@ -166,6 +167,8 @@ export default function Navbar() {
   const closeDropdown = () => {
     timeoutRef.current = setTimeout(() => setDropdown(null), 120);
   };
+
+  if (pathname === '/credits') return null;
 
   return (
     <header

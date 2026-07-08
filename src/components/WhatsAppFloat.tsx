@@ -30,8 +30,8 @@ const pesanDefault = 'Halo Admin Travel Bengkulu, saya ingin informasi layanan t
 export default function WhatsAppFloat() {
   const pathname = usePathname();
 
-  // Jangan tampilkan di halaman admin
-  if (pathname?.startsWith('/admin')) return null;
+  // Jangan tampilkan di halaman admin & credits
+  if (pathname?.startsWith('/admin') || pathname === '/credits') return null;
 
   // Ambil pesan sesuai halaman, fallback ke default
   const pesan = pesanMap[pathname ?? ''] || pesanDefault;

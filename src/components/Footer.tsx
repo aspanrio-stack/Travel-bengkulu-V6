@@ -26,6 +26,8 @@ const DEFAULT_MESSAGE = 'Halo, saya ingin bertanya tentang layanan Travel Bengku
 export default function Footer() {
   const pathname = usePathname();
 
+  if (pathname === '/credits') return null;
+
   const message = WA_MESSAGES[pathname] ?? DEFAULT_MESSAGE;
   const waUrl = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
 
