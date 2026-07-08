@@ -146,7 +146,7 @@ export default function Footer() {
           </ul>
 
           <div className="mt-4 p-3 bg-slate-800 rounded-xl">
-            <p className="text-xs text-slate-500 mb-1">Armada Kami</p>
+            <p className="text-xs text-slate-400 mb-1">Armada Kami</p>
             <p className="text-xs text-slate-200">🚗 Toyota Avanza &nbsp;|&nbsp; Toyota Innova &nbsp;|&nbsp; Toyota HiAce</p>
           </div>
         </div>
@@ -155,7 +155,7 @@ export default function Footer() {
       {/* Metode Pembayaran */}
       <div className="border-t border-slate-700">
         <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
-          <span className="text-xs font-semibold uppercase tracking-widest text-slate-500 shrink-0">
+          <span className="text-xs font-semibold uppercase tracking-widest text-slate-400 shrink-0">
             Metode Pembayaran
           </span>
           <div className="flex items-center gap-4 flex-wrap justify-center sm:justify-start">

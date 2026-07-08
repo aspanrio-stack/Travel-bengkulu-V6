@@ -168,7 +168,7 @@ export default function HomePage() {
                 </div>
                 <div className="p-5">
                   <h3 className="font-display font-bold text-slate-800 text-xl mb-0.5">{car.name}</h3>
-                  <p className="text-primary-600 text-sm font-semibold mb-3">{car.type}</p>
+                  <p className="text-primary-700 text-sm font-semibold mb-3">{car.type}</p>
                   <p className="text-slate-500 text-sm leading-relaxed">{car.desc}</p>
                 </div>
               </div>
