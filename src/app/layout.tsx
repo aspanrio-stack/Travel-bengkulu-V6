@@ -42,7 +42,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" className={`${fontDisplay.variable} ${fontBody.variable} scroll-smooth`}>
-      <head>
+      <head />
       <body className="antialiased font-body bg-white text-slate-900">
         <Navbar />
         <main>{children}</main>
