@@ -28,8 +28,8 @@ module.exports = {
       },
       fontFamily: {
         // Gunakan CSS variable dari Next.js font optimization
-        display: ['var(--font-playfair)', 'Georgia', 'serif'],
-        body: ['var(--font-jakarta)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'Georgia', 'serif'],
+        body: ['var(--font-body)', 'system-ui', 'sans-serif'],
       },
       animation: {
         'fade-up': 'fadeUp 0.6s ease-out forwards',
