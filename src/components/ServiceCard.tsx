@@ -52,8 +52,8 @@ export default function ServiceCard({ icon, title, description, price, href, bad
         <p className="text-slate-500 text-sm leading-relaxed mb-4">{description}</p>
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs text-slate-400">Mulai dari</p>
-            <p className="text-primary-600 font-bold text-lg">{price}</p>
+            <p className="text-xs text-slate-500">Mulai dari</p>
+            <p className="text-primary-700 font-bold text-lg">{price}</p>
           </div>
           <div className="w-8 h-8 bg-primary-50 rounded-lg flex items-center justify-center text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-all duration-300 group-hover:translate-x-1">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -186,7 +186,7 @@ export default function Footer() {
 
       <div className="border-t border-slate-700 py-4 text-center text-xs text-slate-300 pr-16 md:pr-0">
         © {new Date().getFullYear()} BengkuluTravel.com — Semua hak dilindungi.{' '}
-        <Link href="/credits" className="text-slate-400 hover:text-primary-400 transition-colors">
+        <Link href="/credits" className="text-slate-300 underline hover:text-primary-400 transition-colors">
           Credits
         </Link>
       </div>
