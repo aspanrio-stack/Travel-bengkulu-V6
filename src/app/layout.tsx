@@ -33,6 +33,20 @@ export const metadata: Metadata = {
   description:
     'Jasa travel Bengkulu terpercaya. Melayani rute Bengkulu-Palembang, Bengkulu-Jambi, Bengkulu-Curup. Antar jemput door to door. Hubungi kami sekarang!',
   robots: { index: true, follow: true },
+  openGraph: {
+    title: 'Travel Bengkulu | Antar Jemput Door to Door Terpercaya',
+    description:
+      'Jasa travel Bengkulu terpercaya. Melayani rute Bengkulu-Palembang, Bengkulu-Jambi, Bengkulu-Curup.',
+    url: 'https://www.bengkulutravel.com',
+    siteName: 'Travel Bengkulu',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    locale: 'id_ID',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: ['/og-image.png'],
+  },
 };
 
 export default function RootLayout({
