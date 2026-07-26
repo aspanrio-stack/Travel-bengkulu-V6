@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { Order } from '@/lib/orders';
+import RatesTab from './RatesTab';
 
 // ─────────────────────────────────────────────
 // Helpers
@@ -476,7 +477,7 @@ export default function AdminDashboard() {
   const [selected, setSelected]     = useState<Order | null>(null);
 
   const [printingTicket, setPrintingTicket] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'pesanan' | 'kwitansi'>('pesanan');
+  const [activeTab, setActiveTab] = useState<'pesanan' | 'kwitansi' | 'tarif'>('pesanan');
 
   // ── Ambil semua pesanan ──
   const fetchOrders = useCallback(async () => {
@@ -650,6 +651,16 @@ export default function AdminDashboard() {
             }`}
           >
             🧾 Kwitansi
+          </button>
+          <button
+            onClick={() => setActiveTab('tarif')}
+            className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all border-2 ${
+              activeTab === 'tarif'
+                ? 'bg-blue-600 border-blue-600 text-white shadow-md'
+                : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300'
+            }`}
+          >
+            💰 Update Tarif
           </button>
         </div>
       </div>
@@ -940,6 +951,11 @@ export default function AdminDashboard() {
       {/* ── KONTEN KWITANSI ── */}
       {activeTab === 'kwitansi' && (
         <KwitansiTab setToast={showToast} />
+      )}
+
+      {/* ── KONTEN UPDATE TARIF ── */}
+      {activeTab === 'tarif' && (
+        <RatesTab setToast={showToast} />
       )}
 
       {/* ── MODAL DETAIL PESANAN ── */}
