@@ -1,9 +1,22 @@
-import { redirect } from 'next/navigation';
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 // /admin/login tidak lagi dipakai sebagai form login (password sudah
-// dinonaktifkan) — versi dashboard lama yang sebelumnya ada di sini
-// sudah tidak dipakai (tidak ada tab Kwitansi/Update Tarif). Redirect
-// ke /admin supaya URL lama ini tetap membuka dashboard yang aktif.
+// dinonaktifkan). Redirect di sisi browser (client-side), BUKAN HTTP
+// redirect — supaya tidak ada kemungkinan sama sekali bentrok dengan
+// aturan redirect lain di next.config.js / vercel.json / cache edge.
 export default function AdminLoginRedirect() {
-  redirect('/admin');
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/admin');
+  }, [router]);
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <p className="text-slate-400 text-sm">Mengarahkan ke dashboard…</p>
+    </div>
+  );
 }

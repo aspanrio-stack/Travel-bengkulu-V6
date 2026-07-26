@@ -10,11 +10,6 @@
       ],
       "destination": "https://bengkulutravel.com/:path*",
       "permanent": true
-    },
-    {
-      "source": "/admin/login",
-      "destination": "/admin",
-      "permanent": false
     }
   ]
 }
