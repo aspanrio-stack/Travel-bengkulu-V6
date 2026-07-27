@@ -478,6 +478,7 @@ export default function AdminDashboard() {
 
   const [printingTicket, setPrintingTicket] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'pesanan' | 'kwitansi' | 'tarif'>('pesanan');
+  const [waStats, setWaStats] = useState({ total: 0, hariIni: 0, bulanIni: 0 });
 
   // ── Ambil semua pesanan ──
   const fetchOrders = useCallback(async () => {
@@ -495,6 +496,18 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => { fetchOrders(); }, [fetchOrders]);
+
+  // ── Ambil statistik klik tombol WA float ──
+  useEffect(() => {
+    fetch('/api/track')
+      .then(res => res.json())
+      .then(data => setWaStats({
+        total:    data.total    ?? 0,
+        hariIni:  data.hariIni  ?? 0,
+        bulanIni: data.bulanIni ?? 0,
+      }))
+      .catch(() => {});
+  }, []);
 
   // ── Konfirmasi pembayaran ──
   const handleConfirm = async (orderId: string) => {
@@ -697,7 +710,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4 mb-6">
             {[
               { label: 'Total Pesanan', value: stats.total,            icon: '📋', color: 'text-slate-800' },
               { label: 'Menunggu',      value: stats.pending,           icon: '⏳', color: 'text-amber-600' },
@@ -705,6 +718,7 @@ export default function AdminDashboard() {
               { label: 'Pendapatan',    value: formatRp(stats.revenue), icon: '💰', color: 'text-primary-600' },
               { label: 'Via QRIS',      value: stats.qris,              icon: '📱', color: 'text-blue-600' },
               { label: 'Via Tunai',     value: stats.tunai,             icon: '💵', color: 'text-amber-600' },
+              { label: 'Klik WA',       value: waStats.total,           icon: '💬', color: 'text-green-600' },
             ].map(s => (
               <div key={s.label} className="bg-white rounded-xl border border-slate-100 p-4 shadow-sm">
                 <p className="text-2xl mb-1">{s.icon}</p>
