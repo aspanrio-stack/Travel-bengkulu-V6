@@ -710,7 +710,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3 mb-6">
             {[
               { label: 'Total Pesanan', value: stats.total,            icon: '📋', color: 'text-slate-800' },
               { label: 'Menunggu',      value: stats.pending,           icon: '⏳', color: 'text-amber-600' },
@@ -720,10 +720,12 @@ export default function AdminDashboard() {
               { label: 'Via Tunai',     value: stats.tunai,             icon: '💵', color: 'text-amber-600' },
               { label: 'Klik WA',       value: waStats.total,           icon: '💬', color: 'text-green-600' },
             ].map(s => (
-              <div key={s.label} className="bg-white rounded-xl border border-slate-100 p-4 shadow-sm">
-                <p className="text-2xl mb-1">{s.icon}</p>
-                <p className={`font-bold text-xl ${s.color}`}>{s.value}</p>
-                <p className="text-slate-500 text-xs mt-0.5">{s.label}</p>
+              <div key={s.label} className="bg-white rounded-lg border border-slate-100 p-3 shadow-sm flex items-center gap-2.5">
+                <span className="text-xl shrink-0">{s.icon}</span>
+                <div className="min-w-0">
+                  <p className={`font-bold text-base leading-tight ${s.color}`}>{s.value}</p>
+                  <p className="text-slate-500 text-[11px] leading-tight truncate">{s.label}</p>
+                </div>
               </div>
             ))}
           </div>
