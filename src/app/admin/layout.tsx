@@ -20,8 +20,8 @@ export default function AdminLayout({
       {/* Sembunyikan semua elemen website di halaman admin */}
       <style dangerouslySetInnerHTML={{ __html: `
         body > main > div.admin-layout ~ * { display: none !important; }
-        header { display: none !important; }
-        footer { display: none !important; }
+        body > header { display: none !important; }
+        body > footer { display: none !important; }
         .wa-float { display: none !important; }
         [class*="fixed bottom"] { display: none !important; }
       `}} />
