@@ -1,23 +1,17 @@
 'use client';
 
-import { useEffect } from 'react';
-
-// /admin/login tidak lagi dipakai sebagai form login (password sudah
-// dinonaktifkan). Redirect pakai window.location (full page load),
-// BUKAN router.replace() — navigasi client-side Next.js sempat macet
-// di tengah jalan. window.location paling sederhana dan tidak
-// bergantung pada RSC/router internal Next.js sama sekali.
+// PENTING: auto-redirect DIMATIKAN sementara. Ternyata /admin sendiri
+// redirect balik ke /admin/login di level server (dikonfirmasi lewat
+// Vercel logs — respons 307), yang sumbernya belum ketemu. Auto-redirect
+// di sini bikin loop cepat tanpa henti (307 ↔ 304 berulang). Sampai
+// sumber redirect /admin → /admin/login ditemukan, halaman ini cuma
+// menampilkan link manual, tidak mencoba redirect otomatis.
 export default function AdminLoginRedirect() {
-  useEffect(() => {
-    window.location.href = '/admin';
-  }, []);
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50">
       <p className="text-slate-400 text-sm">
-        Mengarahkan ke dashboard…{' '}
         <a href="/admin" className="text-blue-600 underline">
-          Klik di sini kalau tidak otomatis
+          Buka dashboard
         </a>
       </p>
     </div>
