@@ -1,12 +1,16 @@
 'use client';
 
-// PENTING: auto-redirect DIMATIKAN sementara. Ternyata /admin sendiri
-// redirect balik ke /admin/login di level server (dikonfirmasi lewat
-// Vercel logs — respons 307), yang sumbernya belum ketemu. Auto-redirect
-// di sini bikin loop cepat tanpa henti (307 ↔ 304 berulang). Sampai
-// sumber redirect /admin → /admin/login ditemukan, halaman ini cuma
-// menampilkan link manual, tidak mencoba redirect otomatis.
+import { useEffect } from 'react';
+
+// /admin/login tidak lagi dipakai sebagai form login. Auto-redirect ke
+// /admin — aman sekarang karena gerbang cookie admin_session di
+// src/proxy.ts (middleware) sudah dinonaktifkan, jadi /admin tidak lagi
+// melempar balik ke sini.
 export default function AdminLoginRedirect() {
+  useEffect(() => {
+    window.location.href = '/admin';
+  }, []);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50">
       <p className="text-slate-400 text-sm">

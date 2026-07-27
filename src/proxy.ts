@@ -1,29 +1,11 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { jwtVerify } from 'jose';
-
-function getSecret(): Uint8Array {
-  const secret = process.env.ADMIN_JWT_SECRET || 'bengkulutravel-admin-secret-key-2026';
-  return new TextEncoder().encode(secret);
-}
 
 export async function proxy(request: NextRequest) {
-  const { pathname, search, searchParams } = request.nextUrl;
+  const { search, searchParams, pathname } = request.nextUrl;
 
-  // ── PROTEKSI /admin (kecuali /admin/login) ──
-  if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
-    const token = request.cookies.get('admin_session')?.value;
-    if (!token) {
-      return NextResponse.redirect(new URL('/admin/login', request.url));
-    }
-    try {
-      await jwtVerify(token, getSecret());
-    } catch {
-      const res = NextResponse.redirect(new URL('/admin/login', request.url));
-      res.cookies.delete('admin_session');
-      return res;
-    }
-  }
+  // Proteksi /admin lewat cookie admin_session sudah dinonaktifkan —
+  // /admin memang dibuat terbuka tanpa login (lihat lib/auth.ts).
 
   // ============================================================
   // 1. URL rusak Blogger: /?m=1feeds/... /?m=1search/... /?m=1p/...
