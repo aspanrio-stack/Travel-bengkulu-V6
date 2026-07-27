@@ -558,8 +558,11 @@ export default function AdminDashboard() {
     }
   };
 
-  // ── Logout dinonaktifkan ──
-  const handleLogout = () => { /* no-op */ };
+  // ── Logout ──
+  const handleLogout = async () => {
+    await fetch('/api/admin/logout', { method: 'POST' });
+    window.location.href = '/admin/login';
+  };
 
   // ── Filter & Search ──
   const filtered = orders.filter(o => {
