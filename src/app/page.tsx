@@ -141,6 +141,41 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* KENAPA PILIH KAMI */}
+      <section className="relative py-20 bg-gradient-to-br from-primary-900 via-primary-800 to-slate-900 overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-0 right-0 w-1/2 h-full pattern-dots opacity-10"></div>
+          <div className="absolute -top-24 -right-24 w-[28rem] h-[28rem] bg-primary-400/20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-1/4 w-72 h-72 bg-gold-500/10 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="inline-flex items-center gap-2 bg-primary-600/30 border border-primary-500/40 text-primary-300 text-sm font-medium px-4 py-2 rounded-full mb-5">
+              Kenapa Travel Bengkulu
+            </span>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-white leading-tight mb-4">
+              Nyaman di Jalan,<br />Tenang Sampai Tujuan
+            </h2>
+            <p className="italic text-primary-200 text-lg underline decoration-primary-400/50 underline-offset-4">
+              Door to Door, Bukan Sekadar Janji
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {whyUs.map((item) => (
+              <div key={item.title} className="card p-6 bg-white/95">
+                <div className="w-12 h-12 rounded-xl bg-primary-50 flex items-center justify-center text-2xl mb-4">
+                  {item.icon}
+                </div>
+                <h3 className="font-display font-bold text-slate-800 text-lg mb-2">{item.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ARMADA */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4">
