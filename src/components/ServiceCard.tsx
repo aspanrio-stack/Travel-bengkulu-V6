@@ -26,7 +26,7 @@ export default function ServiceCard({ icon, title, description, price, href, bad
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
           {badge && (
-            <span className="absolute top-3 left-3 badge bg-white/90 text-slate-700 shadow-sm text-xs">
+            <span className="absolute top-3 left-3 badge bg-gold-400 text-primary-900 shadow-sm text-xs">
               {badge}
             </span>
           )}
@@ -37,7 +37,7 @@ export default function ServiceCard({ icon, title, description, price, href, bad
             {icon}
           </div>
           {badge && (
-            <span className="absolute top-3 left-3 badge bg-white/90 text-slate-700 shadow-sm text-xs">
+            <span className="absolute top-3 left-3 badge bg-gold-400 text-primary-900 shadow-sm text-xs">
               {badge}
             </span>
           )}
