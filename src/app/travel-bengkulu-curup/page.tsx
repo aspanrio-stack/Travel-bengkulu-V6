@@ -3,9 +3,9 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Travel Bengkulu Curup – Antar Jemput Door to Door Rp 80.000',
+  title: 'Travel Bengkulu Curup – Antar Jemput Door to Door Rp 100.000',
   description:
-    'Jasa travel Bengkulu Curup door to door murah. Tarif hanya Rp 80.000/orang. Berangkat setiap hari. Armada nyaman. Pesan via WhatsApp 0852-6864-5461!',
+    'Jasa travel Bengkulu Curup door to door murah. Tarif hanya Rp 100.000/orang. Berangkat setiap hari. Armada nyaman. Pesan via WhatsApp 0852-6864-5461!',
   alternates: { canonical: 'https://bengkulutravel.com/travel-bengkulu-curup' },
 };
 
@@ -42,7 +42,7 @@ export default function TravelBengkuluCurup() {
       description="Perjalanan Bengkulu–Curup yang nyaman dan hemat. Antar jemput door to door dengan harga terjangkau."
       breadcrumbs={[{ label: 'Travel Bengkulu Curup' }]}
       badge="💸 Termurah"
-      price="Rp 80.000"
+      price="Rp 100.000"
     >
       <script
         type="application/ld+json"
@@ -59,7 +59,7 @@ export default function TravelBengkuluCurup() {
         </Link>
       </div>
       <p>
-        <strong>Travel Bengkulu Curup</strong> adalah layanan transportasi antar kota dalam provinsi yang menghubungkan Kota Bengkulu dengan Curup, ibukota Kabupaten Rejang Lebong. Dengan tarif terjangkau hanya <strong>Rp 80.000</strong> per orang dan sistem door to door, perjalanan ke Curup kini semakin praktis.
+        <strong>Travel Bengkulu Curup</strong> adalah layanan transportasi antar kota dalam provinsi yang menghubungkan Kota Bengkulu dengan Curup, ibukota Kabupaten Rejang Lebong. Dengan tarif terjangkau hanya <strong>Rp 100.000</strong> per orang dan sistem door to door, perjalanan ke Curup kini semakin praktis.
       </p>
 
       <h2>Tarif Travel Bengkulu–Curup</h2>
@@ -74,12 +74,12 @@ export default function TravelBengkuluCurup() {
         <tbody>
           <tr>
             <td>Bengkulu → Curup</td>
-            <td><strong>Rp 80.000</strong></td>
+            <td><strong>Rp 100.000</strong></td>
             <td>Per orang, door to door</td>
           </tr>
           <tr>
             <td>Curup → Bengkulu</td>
-            <td><strong>Rp 80.000</strong></td>
+            <td><strong>Rp 100.000</strong></td>
             <td>Per orang, door to door</td>
           </tr>
         </tbody>

@@ -26,7 +26,7 @@ export default function HotelDiCurup() {
         <Link href="/travel-bengkulu-curup" className="text-primary-600 font-semibold hover:underline">
           travel Bengkulu–Curup
         </Link>{' '}
-        dengan tarif hanya <strong>Rp 80.000 per orang</strong>, langsung diantar ke depan hotel Anda.
+        dengan tarif hanya <strong>Rp 100.000 per orang</strong>, langsung diantar ke depan hotel Anda.
       </p>
 
       <h2>Rekomendasi Hotel di Curup</h2>
@@ -114,7 +114,7 @@ export default function HotelDiCurup() {
           <Link href="/travel-bengkulu-curup" className="text-primary-600 font-semibold hover:underline">
             travel Bengkulu–Curup
           </Link>{' '}
-          kami hadir dengan tarif terjangkau <strong>Rp 80.000/orang</strong>, dijemput dari hotel Anda dan diantar door to door ke tujuan. Tidak perlu repot cari angkutan umum atau naik ojek ke terminal!
+          kami hadir dengan tarif terjangkau <strong>Rp 100.000/orang</strong>, dijemput dari hotel Anda dan diantar door to door ke tujuan. Tidak perlu repot cari angkutan umum atau naik ojek ke terminal!
         </p>
         <Link
           href="/travel-bengkulu-curup"
@@ -159,7 +159,7 @@ export default function HotelDiCurup() {
         <Link href="/travel-bengkulu-curup" className="text-primary-600 hover:underline">
           travel Bengkulu–Curup
         </Link>{' '}
-        dengan tarif Rp 80.000 per orang. Perjalanan hanya 2–2,5 jam dan Anda langsung diantar ke hotel tujuan.
+        dengan tarif Rp 100.000 per orang. Perjalanan hanya 2–2,5 jam dan Anda langsung diantar ke hotel tujuan.
       </p>
 
       <h3>Apakah ada transportasi dari hotel ke bandara Bengkulu?</h3>

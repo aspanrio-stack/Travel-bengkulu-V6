@@ -16,9 +16,9 @@ const services = [
   { icon: null, title: 'Travel Palembang – Bengkulu', description: 'Berangkat dari Palembang? Kami jemput ke lokasi Anda dan antar sampai depan rumah di Bengkulu.', price: 'Rp 250.000', href: '/travel-palembang-bengkulu', image: '/images/avanza.jpg' },
   { icon: null, title: 'Travel Bengkulu – Jambi', description: 'Rute Bengkulu–Jambi dengan armada lega dan ber-AC. Perjalanan jauh terasa lebih ringan.', price: 'Rp 250.000', href: '/travel-bengkulu-jambi', image: '/images/innova.jpg' },
   { icon: null, title: 'Travel Jambi – Bengkulu', description: 'Dari Jambi langsung ke Bengkulu tanpa gonta-ganti kendaraan. Penjemputan dari titik yang Anda tentukan.', price: 'Rp 250.000', href: '/travel-jambi-bengkulu', image: '/images/avanza.jpg' },
-  { icon: null, title: 'Travel Bengkulu – Curup', description: 'Perjalanan Bengkulu–Curup terasa lebih santai. Cocok untuk urusan keluarga maupun bisnis harian.', price: 'Rp 80.000', href: '/travel-bengkulu-curup', badge: '💸 Hemat', image: '/images/avanza.jpg' },
+  { icon: null, title: 'Travel Bengkulu – Curup', description: 'Perjalanan Bengkulu–Curup terasa lebih santai. Cocok untuk urusan keluarga maupun bisnis harian.', price: 'Rp 100.000', href: '/travel-bengkulu-curup', badge: '💸 Hemat', image: '/images/avanza.jpg' },
   { icon: null, title: 'Rental Mobil Curup', description: 'Butuh mobil seharian di Curup? Tersedia Avanza, Innova, dan HiAce. Bisa lepas kunci atau pakai pengemudi.', price: 'Rp 300.000', href: '/rental-mobil-curup', image: '/images/hiace.jpg' },
-  { icon: null, title: 'Antar Jemput Bandara Curup', description: 'Layanan khusus penjemputan dan pengantaran ke Bandara Curup. Tidak perlu khawatir ketinggalan penerbangan.', price: 'Rp 100.000', href: '/antar-jemput-bandara-curup', image: '/images/innova.jpg', badge: '✈️ Airport' },
+  { icon: null, title: 'Antar Jemput Bandara Curup', description: 'Layanan khusus penjemputan dan pengantaran ke Bandara Curup. Tidak perlu khawatir ketinggalan penerbangan.', price: 'Rp 150.000', href: '/antar-jemput-bandara-curup', image: '/images/innova.jpg', badge: '✈️ Airport' },
   { icon: null, title: 'Kirim Paket Bengkulu–Palembang', description: 'Titipkan paket Anda bersama armada travel kami. Aman, terlacak, dan sampai tepat waktu.', price: 'Hubungi Kami', href: '/kirim-paket-bengkulu-palembang', image: '/images/hiace.jpg' },
 ];
 

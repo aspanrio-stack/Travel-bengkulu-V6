@@ -32,7 +32,7 @@ const hotelCategories = [
     ],
     priceRange: 'Rp 150.000 – 700.000/malam',
     highlights: ['Air Terjun Suban', 'Danau Tes', 'Kebun Teh Kabawetan', 'Bukit Kaba'],
-    travelLink: { href: '/travel-bengkulu-curup', label: 'Travel Bengkulu–Curup', price: 'Rp 80.000' },
+    travelLink: { href: '/travel-bengkulu-curup', label: 'Travel Bengkulu–Curup', price: 'Rp 100.000' },
   },
   {
     city: 'Lebong (Muara Aman)',
@@ -200,7 +200,7 @@ export default function DaftarHotelDiBengkulu() {
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             {[
-              { href: '/travel-bengkulu-curup', label: 'Bengkulu → Curup', price: 'Rp 80.000' },
+              { href: '/travel-bengkulu-curup', label: 'Bengkulu → Curup', price: 'Rp 100.000' },
               { href: '/travel-bengkulu-lebong', label: 'Bengkulu → Lebong', price: 'Rp 100.000' },
               { href: '/travel-bengkulu-palembang', label: 'Bengkulu → Palembang', price: 'Rp 250.000' },
             ].map(r => (

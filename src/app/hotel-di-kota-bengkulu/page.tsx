@@ -29,7 +29,7 @@ export default function HotelDiKotaBengkulu() {
         <Link href="/travel-bengkulu-curup" className="text-primary-600 font-semibold hover:underline">
           travel Bengkulu–Curup
         </Link>{' '}
-        (Rp 80.000) dan{' '}
+        (Rp 100.000) dan{' '}
         <Link href="/travel-bengkulu-lebong" className="text-primary-600 font-semibold hover:underline">
           travel Bengkulu–Lebong
         </Link>{' '}
@@ -178,7 +178,7 @@ export default function HotelDiKotaBengkulu() {
             <span className="text-xl">🚗</span>
             <div>
               <p className="font-bold text-primary-700 text-sm">Ke Curup</p>
-              <p className="text-xs text-slate-500">Rp 80.000 · 2–2,5 jam</p>
+              <p className="text-xs text-slate-500">Rp 100.000 · 2–2,5 jam</p>
             </div>
           </Link>
           <Link href="/travel-bengkulu-lebong" className="flex items-center gap-2 bg-white border border-primary-200 hover:bg-primary-50 px-4 py-3 rounded-xl transition-colors">
@@ -214,7 +214,7 @@ export default function HotelDiKotaBengkulu() {
       <p>Ada banyak! Mulai dari Rp 100.000 per malam untuk guest house dan hostel. Kawasan sekitar Pantai Panjang dan Pasar Panorama banyak pilihan penginapan budget yang bersih dan nyaman.</p>
 
       <h3>Bagaimana cara dari hotel di Bengkulu ke Curup atau Lebong?</h3>
-      <p>Gunakan layanan travel kami — <Link href="/travel-bengkulu-curup" className="text-primary-600 hover:underline">ke Curup Rp 80.000</Link> atau <Link href="/travel-bengkulu-lebong" className="text-primary-600 hover:underline">ke Lebong Rp 100.000</Link>. Dijemput langsung dari hotel Anda!</p>
+      <p>Gunakan layanan travel kami — <Link href="/travel-bengkulu-curup" className="text-primary-600 hover:underline">ke Curup Rp 100.000</Link> atau <Link href="/travel-bengkulu-lebong" className="text-primary-600 hover:underline">ke Lebong Rp 100.000</Link>. Dijemput langsung dari hotel Anda!</p>
     </ArticleLayout>
   );
 }

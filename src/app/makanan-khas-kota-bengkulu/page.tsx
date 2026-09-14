@@ -107,7 +107,7 @@ export default function MakananKhasKotaBengkulu() {
         </p>
         <div className="flex flex-col sm:flex-row gap-3">
           <Link href="/travel-bengkulu-curup" className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-bold px-5 py-3 rounded-xl transition-colors text-center text-sm">
-            🎫 Travel ke Curup — Rp 80.000
+            🎫 Travel ke Curup — Rp 100.000
           </Link>
           <Link href="/travel-bengkulu-lebong" className="flex-1 bg-primary-700 hover:bg-primary-800 text-white font-bold px-5 py-3 rounded-xl transition-colors text-center text-sm">
             🎫 Travel ke Lebong — Rp 100.000

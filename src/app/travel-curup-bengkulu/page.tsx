@@ -3,8 +3,8 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Travel Curup Bengkulu – Antar Jemput Door to Door Rp 80.000 | Update 2026',
-  description: 'Jasa travel Curup Bengkulu door to door. Tarif hanya Rp 80.000/orang. Dijemput dari rumah di Curup ke Bengkulu. Pesan WA 0852-6864-5461!',
+  title: 'Travel Curup Bengkulu – Antar Jemput Door to Door Rp 100.000 | Update 2026',
+  description: 'Jasa travel Curup Bengkulu door to door. Tarif hanya Rp 100.000/orang. Dijemput dari rumah di Curup ke Bengkulu. Pesan WA 0852-6864-5461!',
   alternates: { canonical: 'https://bengkulutravel.com/travel-curup-bengkulu' },
 };
 
@@ -41,7 +41,7 @@ export default function Page() {
       description="Layanan travel antar jemput door to door dari Curup langsung ke Bengkulu. Tarif hemat, berangkat setiap hari."
       breadcrumbs={[{ label: 'Travel Curup Bengkulu' }]}
       badge="💸 Termurah"
-      price="Rp 80.000"
+      price="Rp 100.000"
     >
       <script
         type="application/ld+json"
@@ -60,7 +60,7 @@ export default function Page() {
 
       <p>
         <strong>Travel Curup Bengkulu</strong> melayani perjalanan dengan sistem antar jemput <em>door to door</em>.
-        Dengan tarif <strong>Rp 80.000 per orang</strong>, kami menjemput langsung dari lokasi Anda
+        Dengan tarif <strong>Rp 100.000 per orang</strong>, kami menjemput langsung dari lokasi Anda
         dan mengantarkan ke tujuan tanpa perlu berganti kendaraan.
       </p>
 
@@ -74,7 +74,7 @@ export default function Page() {
         </thead>
         <tbody>
           <tr><td>Rute</td><td><strong>Curup → Bengkulu</strong></td></tr>
-          <tr><td>Tarif</td><td><strong>Rp 80.000/orang</strong></td></tr>
+          <tr><td>Tarif</td><td><strong>Rp 100.000/orang</strong></td></tr>
           <tr><td>Jarak</td><td>±85 km</td></tr>
           <tr><td>Waktu Tempuh</td><td>2–2,5 jam</td></tr>
           
@@ -95,7 +95,7 @@ export default function Page() {
       <h2>Keunggulan Layanan Kami</h2>
       <ul>
         <li><strong>Door to Door</strong> — dijemput dari rumah, diantar ke tujuan</li>
-        <li><strong>Tarif Flat</strong> — Rp 80.000/orang, tidak ada biaya tersembunyi</li>
+        <li><strong>Tarif Flat</strong> — Rp 100.000/orang, tidak ada biaya tersembunyi</li>
         <li><strong>Armada Terawat</strong> — Avanza, Innova, HiAce ber-AC</li>
         <li><strong>Pengemudi Berpengalaman</strong> — hafal rute Curup–Bengkulu</li>
         <li><strong>Pesan 24 Jam</strong> — via WhatsApp kapan saja</li>

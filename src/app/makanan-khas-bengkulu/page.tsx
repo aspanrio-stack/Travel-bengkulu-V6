@@ -30,7 +30,7 @@ const regions = [
     imageAlt: 'Tempoyak makanan khas Curup Rejang Lebong',
     foods: ['Tempoyak', 'Lemea', 'Gulai Kemba Bawang', 'Pindang Patin', 'Kopi Arabika Curup', 'Bolu Koja'],
     travelLinks: [
-      { href: '/travel-bengkulu-curup', label: 'Travel Bengkulu → Curup', price: 'Rp 80.000' },
+      { href: '/travel-bengkulu-curup', label: 'Travel Bengkulu → Curup', price: 'Rp 100.000' },
     ],
     color: 'teal',
   },
@@ -186,7 +186,7 @@ export default function MakananKhasBengkulu() {
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link href="/travel-bengkulu-curup" className="bg-white/20 hover:bg-white/30 text-white px-5 py-3 rounded-xl font-bold text-sm transition-colors">
-              🚗 Ke Curup — Rp 80.000
+              🚗 Ke Curup — Rp 100.000
             </Link>
             <Link href="/travel-bengkulu-lebong" className="bg-white/20 hover:bg-white/30 text-white px-5 py-3 rounded-xl font-bold text-sm transition-colors">
               🚗 Ke Lebong — Rp 100.000

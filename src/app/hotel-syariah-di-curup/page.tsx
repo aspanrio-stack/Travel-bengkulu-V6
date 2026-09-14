@@ -26,7 +26,7 @@ export default function HotelSyariahDiCurup() {
         <Link href="/travel-bengkulu-curup" className="text-primary-600 font-semibold hover:underline">
           travel Bengkulu–Curup door to door
         </Link>{' '}
-        kami dengan tarif <strong>Rp 80.000 per orang</strong> — dijemput dari rumah Anda di Bengkulu dan diantar langsung ke depan hotel syariah pilihan Anda di Curup.
+        kami dengan tarif <strong>Rp 100.000 per orang</strong> — dijemput dari rumah Anda di Bengkulu dan diantar langsung ke depan hotel syariah pilihan Anda di Curup.
       </p>
 
       <h2>Apa Itu Hotel Syariah?</h2>
@@ -131,7 +131,7 @@ export default function HotelSyariahDiCurup() {
           <Link href="/travel-bengkulu-curup" className="text-primary-600 font-semibold hover:underline">
             travel Bengkulu–Curup
           </Link>{' '}
-          kami. Dengan tarif <strong>Rp 80.000 per orang</strong>, Anda dijemput dari rumah di Bengkulu dan diantar langsung ke hotel syariah pilihan Anda di Curup tanpa perlu naik angkutan umum. Nyaman untuk seluruh anggota keluarga!
+          kami. Dengan tarif <strong>Rp 100.000 per orang</strong>, Anda dijemput dari rumah di Bengkulu dan diantar langsung ke hotel syariah pilihan Anda di Curup tanpa perlu naik angkutan umum. Nyaman untuk seluruh anggota keluarga!
         </p>
         <Link
           href="/travel-bengkulu-curup"
@@ -176,7 +176,7 @@ export default function HotelSyariahDiCurup() {
         <Link href="/travel-bengkulu-curup" className="text-primary-600 hover:underline">
           travel Bengkulu–Curup
         </Link>{' '}
-        dengan tarif Rp 80.000 per orang. Anda dijemput dari rumah di Bengkulu dan diantar langsung ke hotel tanpa perlu pindah kendaraan.
+        dengan tarif Rp 100.000 per orang. Anda dijemput dari rumah di Bengkulu dan diantar langsung ke hotel tanpa perlu pindah kendaraan.
       </p>
 
       <h3>Apakah ada layanan jemput dari bandara ke hotel syariah di Curup?</h3>

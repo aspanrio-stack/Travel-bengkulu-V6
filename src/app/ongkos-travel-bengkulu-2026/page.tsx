@@ -49,7 +49,7 @@ const routes = [
   {
     from: 'Bengkulu',
     to: 'Curup',
-    price: 80000,
+    price: 100000,
     duration: '2–2,5 jam',
     via: null,
     href: '/travel-bengkulu-curup',
@@ -58,7 +58,7 @@ const routes = [
   {
     from: 'Curup',
     to: 'Bengkulu',
-    price: 80000,
+    price: 100000,
     duration: '2–2,5 jam',
     via: null,
     href: '/travel-curup-bengkulu',
@@ -103,7 +103,7 @@ const routes = [
   {
     from: 'Curup',
     to: 'Bandara Bengkulu',
-    price: 125000,
+    price: 150000,
     duration: '2–2,5 jam',
     via: null,
     href: '/travel-curup-bandara-bengkulu',
@@ -112,7 +112,7 @@ const routes = [
   {
     from: 'Bandara Bengkulu',
     to: 'Curup',
-    price: 125000,
+    price: 150000,
     duration: '2–2,5 jam',
     via: null,
     href: '/antar-jemput-bandara-curup',
@@ -207,8 +207,8 @@ export default function OngkosTravelBengkulu2026() {
           <tr>
             <td>Bengkulu ↔ Curup</td>
             <td>±85 km</td>
-            <td>Rp 80.000</td>
-            <td>±Rp 941/km</td>
+            <td>Rp 100.000</td>
+            <td>±Rp 1.176/km</td>
           </tr>
           <tr>
             <td>Bengkulu ↔ Lebong</td>

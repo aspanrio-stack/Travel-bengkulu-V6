@@ -75,7 +75,7 @@ export default function MakananKhasCurup() {
         <p className="text-amber-700 text-sm">
           Curup berjarak hanya 2–2,5 jam dari Kota Bengkulu. Gunakan layanan{' '}
           <Link href="/travel-bengkulu-curup" className="font-bold underline">travel Bengkulu–Curup</Link>{' '}
-          kami (Rp 80.000) untuk perjalanan yang nyaman dan langsung diantar ke tujuan wisata kuliner Anda!
+          kami (Rp 100.000) untuk perjalanan yang nyaman dan langsung diantar ke tujuan wisata kuliner Anda!
         </p>
       </div>
 
@@ -118,14 +118,14 @@ export default function MakananKhasCurup() {
           <Link href="/travel-bengkulu-curup" className="text-primary-600 font-semibold hover:underline">
             travel Bengkulu–Curup door to door
           </Link>{' '}
-          yang nyaman. Cukup <strong>Rp 80.000 per orang</strong>, Anda dijemput dari pintu rumah di Bengkulu dan diantar langsung ke titik kuliner favorit di Curup. Armada Toyota Avanza, Innova, dan HiAce ber-AC siap mengantar!
+          yang nyaman. Cukup <strong>Rp 100.000 per orang</strong>, Anda dijemput dari pintu rumah di Bengkulu dan diantar langsung ke titik kuliner favorit di Curup. Armada Toyota Avanza, Innova, dan HiAce ber-AC siap mengantar!
         </p>
         <div className="flex flex-col sm:flex-row gap-3 mt-4">
           <Link href="/travel-bengkulu-curup" className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-bold px-5 py-3 rounded-xl transition-colors text-center text-sm">
-            🎫 Pesan Travel Bengkulu → Curup (Rp 80.000)
+            🎫 Pesan Travel Bengkulu → Curup (Rp 100.000)
           </Link>
           <Link href="/travel-curup-bengkulu" className="flex-1 bg-slate-700 hover:bg-slate-800 text-white font-bold px-5 py-3 rounded-xl transition-colors text-center text-sm">
-            🎫 Pesan Travel Curup → Bengkulu (Rp 80.000)
+            🎫 Pesan Travel Curup → Bengkulu (Rp 100.000)
           </Link>
         </div>
       </div>
@@ -148,7 +148,7 @@ export default function MakananKhasCurup() {
         <Link href="/travel-bengkulu-curup" className="text-primary-600 hover:underline">
           travel Bengkulu–Curup
         </Link>{' '}
-        kami. Hanya Rp 80.000 per orang, dijemput dari Bengkulu dan diantar langsung ke Curup dalam 2–2,5 jam perjalanan yang nyaman.
+        kami. Hanya Rp 100.000 per orang, dijemput dari Bengkulu dan diantar langsung ke Curup dalam 2–2,5 jam perjalanan yang nyaman.
       </p>
     </ArticleLayout>
   );

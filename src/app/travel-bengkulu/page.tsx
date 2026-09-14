@@ -6,14 +6,14 @@ import ArticleLayout from '@/components/ArticleLayout';
 export const metadata: Metadata = {
   title: 'Travel Bengkulu – Jasa Antar Jemput Door to Door Terpercaya',
   description:
-    'Travel Bengkulu terpercaya. Melayani Bengkulu–Palembang, Bengkulu–Jambi, Bengkulu–Curup. Antar jemput door to door mulai Rp 80.000. Pesan WA 0852-6864-5461.',
+    'Travel Bengkulu terpercaya. Melayani Bengkulu–Palembang, Bengkulu–Jambi, Bengkulu–Curup. Antar jemput door to door mulai Rp 100.000. Pesan WA 0852-6864-5461.',
   alternates: { canonical: 'https://bengkulutravel.com/travel-bengkulu' },
 };
 
 const routes = [
   { from: 'Bengkulu', to: 'Palembang', price: 'Rp 250.000', duration: '8–10 jam', href: '/travel-bengkulu-palembang', img: '/images/innova.jpg' },
   { from: 'Bengkulu', to: 'Jambi', price: 'Rp 250.000', duration: '9–12 jam', href: '/travel-bengkulu-jambi', img: '/images/avanza.jpg' },
-  { from: 'Bengkulu', to: 'Curup', price: 'Rp 80.000', duration: '2–2,5 jam', href: '/travel-bengkulu-curup', img: '/images/avanza.jpg' },
+  { from: 'Bengkulu', to: 'Curup', price: 'Rp 100.000', duration: '2–2,5 jam', href: '/travel-bengkulu-curup', img: '/images/avanza.jpg' },
   { from: 'Palembang', to: 'Bengkulu', price: 'Rp 250.000', duration: '8–10 jam', href: '/travel-palembang-bengkulu', img: '/images/innova.jpg' },
   { from: 'Jambi', to: 'Bengkulu', price: 'Rp 250.000', duration: '9–12 jam', href: '/travel-jambi-bengkulu', img: '/images/hiace.jpg' },
 ];
@@ -56,7 +56,7 @@ export default function TravelBengkulu() {
             Travel Bengkulu<br />Terpercaya & Terjangkau
           </h1>
           <p className="text-primary-100 text-lg max-w-2xl mx-auto mb-8">
-            Jasa travel antar jemput <strong className="text-white">door to door</strong> dari dan ke Bengkulu. Armada Toyota Avanza, Innova & HiAce. Tarif mulai <strong className="text-white">Rp 80.000</strong>.
+            Jasa travel antar jemput <strong className="text-white">door to door</strong> dari dan ke Bengkulu. Armada Toyota Avanza, Innova & HiAce. Tarif mulai <strong className="text-white">Rp 100.000</strong>.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <a
@@ -138,7 +138,7 @@ export default function TravelBengkulu() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             {[
               { icon: '🚗', title: 'Door to Door', desc: 'Dijemput dari rumah, diantar ke tujuan' },
-              { icon: '💰', title: 'Tarif Terjangkau', desc: 'Mulai Rp 80.000, harga pasti tanpa biaya tersembunyi' },
+              { icon: '💰', title: 'Tarif Terjangkau', desc: 'Mulai Rp 100.000, harga pasti tanpa biaya tersembunyi' },
               { icon: '⏰', title: 'Tepat Waktu', desc: 'Pengemudi selalu hadir on-time' },
               { icon: '🛡️', title: 'Aman & Terpercaya', desc: 'Ratusan penumpang sudah membuktikan' },
               { icon: '📞', title: 'Siap 24 Jam', desc: 'Pesan kapan saja via WhatsApp' },
@@ -166,7 +166,7 @@ export default function TravelBengkulu() {
             <p>Kami melayani rute Bengkulu–Palembang, Bengkulu–Jambi, Bengkulu–Curup, serta rute sebaliknya. Tersedia juga rental mobil dan antar jemput bandara Curup.</p>
 
             <h3>Berapa tarif travel Bengkulu?</h3>
-            <p>Tarif bervariasi tergantung rute: Bengkulu–Curup Rp 80.000, Bengkulu–Palembang dan Bengkulu–Jambi Rp 250.000 per orang.</p>
+            <p>Tarif bervariasi tergantung rute: Bengkulu–Curup Rp 100.000, Bengkulu–Palembang dan Bengkulu–Jambi Rp 250.000 per orang.</p>
 
             <h3>Bagaimana cara pesan travel Bengkulu?</h3>
             <p>Cukup hubungi kami via WhatsApp di <strong>0852-6864-5461</strong>. Beritahukan rute, tanggal, jumlah penumpang, dan alamat jemput. Kami konfirmasi dalam hitungan menit.</p>
