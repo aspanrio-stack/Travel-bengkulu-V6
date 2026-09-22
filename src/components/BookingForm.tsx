@@ -167,7 +167,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
       ].filter(Boolean).join('\n');
 
       // Redirect ke WA admin (nomor utama)
-      window.location.href = `https://wa.me/6285268645461?text=${encodeURIComponent(msgAdmin)}`;
+      window.location.href = `https://wa.me/6282374497929?text=${encodeURIComponent(msgAdmin)}`;
 
     } catch {
       setError('Gagal menghubungi server. Periksa koneksi internet Anda.');
