@@ -1,7 +1,8 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ROUTES, formatPrice, formatDepartureTime, Route } from '@/lib/routes';
 import LocationPicker from '@/components/LocationPicker';
+import SavedAddressBox from '@/components/SavedAddressBox';
 import LoginPrompt, { type AuthStatus } from '@/components/LoginPrompt';
 
 const REQUIRE_LOGIN = process.env.NEXT_PUBLIC_REQUIRE_LOGIN_TO_BOOK === 'true';
@@ -35,6 +36,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
   });
 
   const [wantEmail, setWantEmail] = useState(false);
+  const saveAddressRef = useRef<null | (() => Promise<void>)>(null);
   const [authStatus, setAuthStatus] = useState<AuthStatus>('loading');
   const blocked = REQUIRE_LOGIN && authStatus === 'out';
 
@@ -143,6 +145,8 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
         return;
       }
 
+      await saveAddressRef.current?.(); // simpan alamat (jika dicentang & login)
+
       // Buat pesan WA otomatis ke admin
       const orderId = data.orderId || '-';
       const dep = form.departureTime
@@ -203,6 +207,8 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
         setError(data.error || 'Terjadi kesalahan. Silakan coba lagi.');
         return;
       }
+
+      await saveAddressRef.current?.();
 
       const params = new URLSearchParams();
       params.set('orderId', data.orderId);
@@ -476,6 +482,13 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
                 placeholder="Contoh: Jl. Veteran No. 12, Curup, Rejang Lebong"
                 className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none" />
             </div>
+
+            <SavedAddressBox
+              address={form.pickupAddress}
+              phone={form.phone}
+              saverRef={saveAddressRef}
+              onPick={a => setForm(prev => ({ ...prev, pickupAddress: a.address, phone: a.phone || prev.phone }))}
+            />
 
             {/* ── BARU: Location Picker GPS ── */}
             <LocationPicker onChange={setGpsLocation} />

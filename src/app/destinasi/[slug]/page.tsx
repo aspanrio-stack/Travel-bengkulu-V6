@@ -20,6 +20,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${d.name}, ${d.area} – Info & Cara ke Sana`,
     description: `${d.short} Info fasilitas, akses, dan pemesanan travel atau rental mobil ke ${d.name}.`,
     alternates: { canonical: `${BASE}/destinasi/${d.slug}` },
+    // noindex sementara: konten masih tipis & tumpang tindih dengan artikel wisata yang sudah ada
+    robots: { index: false, follow: true },
     openGraph: {
       title: `${d.name}, ${d.area} | Travel Bengkulu`,
       description: d.short,
