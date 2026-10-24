@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import SavedAddressBox from '@/components/SavedAddressBox';
 import {
   RENTAL_PRICES,
   VEHICLE_LABELS,
@@ -43,6 +44,7 @@ export default function RentalForm() {
     email: '',
   });
   const [wantEmail, setWantEmail] = useState(false);
+  const saveAddressRef = useRef<null | (() => Promise<void>)>(null);
   const [paymentMethod, setPaymentMethod] = useState<'tunai' | 'qris'>('tunai');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -132,6 +134,8 @@ export default function RentalForm() {
       });
     } catch (e) { console.error('Gagal simpan rental tunai:', e); }
 
+    await saveAddressRef.current?.();
+
     const vehicleLabel = VEHICLE_LABELS[form.vehicle as RentalVehicle];
     const rentalLabel  = RENTAL_TYPE_LABELS[form.rentalType as RentalType];
     const areaLabel    = form.rentalType === 'with_driver' ? AREA_LABELS[form.area] : '';
@@ -168,6 +172,8 @@ export default function RentalForm() {
   const handleBayarQRIS = async () => {
     const err = validateStep2();
     if (err) { setError(err); return; }
+
+    await saveAddressRef.current?.();
 
     const params = new URLSearchParams();
     params.set('type', 'rental');
@@ -406,6 +412,13 @@ export default function RentalForm() {
               />
               <p className="text-xs text-slate-400 mt-1">KTP akan diminta saat unit diserahkan</p>
             </div>
+
+            <SavedAddressBox
+              address={form.pickupAddress}
+              phone={form.phone}
+              saverRef={saveAddressRef}
+              onPick={a => setForm(p => ({ ...p, pickupAddress: a.address, phone: a.phone || p.phone }))}
+            />
 
             {/* Catatan */}
             <div>

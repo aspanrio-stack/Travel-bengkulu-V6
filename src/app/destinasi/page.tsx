@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description:
     'Jelajahi destinasi wisata Bengkulu: Pantai Panjang, Benteng Marlborough, Bukit Kaba, Air Terjun Suban, Pulau Tikus dan lainnya. Lengkap dengan akses travel dan rental mobil.',
   alternates: { canonical: 'https://bengkulutravel.com/destinasi' },
+  // noindex sementara: konten masih tipis. Hapus baris ini setelah tiap destinasi punya artikel lengkap.
+  robots: { index: false, follow: true },
 };
 
 export default async function DestinasiPage({

@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/supabase/server';
 import { getOrdersByUser, formatRp, type Order } from '@/lib/orders';
 import LogoutButton from '@/components/LogoutButton';
+import SavedAddressList from '@/components/SavedAddressList';
 
 export const metadata: Metadata = { title: 'Profil & Pesanan Saya', robots: { index: false, follow: false } };
 export const dynamic = 'force-dynamic';
@@ -73,6 +74,8 @@ export default async function ProfilPage() {
             ))}
           </ul>
         </section>
+
+        <SavedAddressList />
 
         <section className="overflow-hidden rounded-2xl bg-white shadow-sm">
           {[
