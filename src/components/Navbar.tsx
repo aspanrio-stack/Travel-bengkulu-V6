@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { ROUTES, getRouteById } from '@/lib/routes';
+import UserMenu from '@/components/UserMenu';
 
 const navLinks = [
   {
@@ -50,6 +51,7 @@ const navLinks = [
       { href: '/makanan-khas-lebong', label: 'Makanan Khas Lebong' },
     ],
   },
+  { href: '/destinasi', label: 'Destinasi' },
   { href: '/#kontak', label: 'Kontak' },
 ];
 
@@ -168,7 +170,7 @@ export default function Navbar() {
     timeoutRef.current = setTimeout(() => setDropdown(null), 120);
   };
 
-  if (pathname === '/credits') return null;
+  if (pathname === '/credits' || pathname === '/masuk') return null;
 
   return (
     <header
@@ -255,6 +257,7 @@ export default function Navbar() {
 
         {/* ── CTA + Hamburger ── */}
         <div className="flex items-center gap-2 shrink-0">
+          <UserMenu />
           <PesanButton href={pesanHref} />
 
           {/* Hamburger */}

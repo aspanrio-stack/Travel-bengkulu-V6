@@ -1,9 +1,10 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Playfair_Display, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
+import BottomNav from '@/components/BottomNav';
 
 const fontDisplay = Playfair_Display({
   subsets: ['latin'],
@@ -20,6 +21,8 @@ const fontBody = Plus_Jakarta_Sans({
   display: 'swap',
   preload: true,
 });
+
+export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#0f766e' };
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.bengkulutravel.com'),
@@ -62,6 +65,7 @@ export default function RootLayout({
         <main>{children}</main>
         <Footer />
         <WhatsAppFloat />
+        <BottomNav />
       </body>
     </html>
   );

@@ -2,6 +2,10 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import ServiceCard from '@/components/ServiceCard';
+import DestinationCard from '@/components/DestinationCard';
+import HomeGreeting from '@/components/HomeGreeting';
+import { DESTINATIONS } from '@/lib/destinations';
+import { getRouteById, formatPrice } from '@/lib/routes';
 
 export const metadata: Metadata = {
   title: 'Travel Bengkulu | Antar Jemput Door to Door – Curup, Palembang, Jambi',
@@ -20,6 +24,15 @@ const services = [
   { icon: null, title: 'Rental Mobil Curup', description: 'Butuh mobil seharian di Curup? Tersedia Avanza, Innova, dan HiAce. Bisa lepas kunci atau pakai pengemudi.', price: 'Rp 300.000', href: '/rental-mobil-curup', image: '/images/hiace.jpg' },
   { icon: null, title: 'Antar Jemput Bandara Curup', description: 'Layanan khusus penjemputan dan pengantaran ke Bandara Curup. Tidak perlu khawatir ketinggalan penerbangan.', price: 'Rp 150.000', href: '/antar-jemput-bandara-curup', image: '/images/innova.jpg', badge: '✈️ Airport' },
   { icon: null, title: 'Kirim Paket Bengkulu–Palembang', description: 'Titipkan paket Anda bersama armada travel kami. Aman, terlacak, dan sampai tepat waktu.', price: 'Hubungi Kami', href: '/kirim-paket-bengkulu-palembang', image: '/images/hiace.jpg' },
+];
+
+const quickCategories = [
+  { icon: '🚐', label: 'Travel', href: '#layanan', bg: 'bg-sky-50' },
+  { icon: '🚗', label: 'Rental', href: '/rental-mobil-curup', bg: 'bg-amber-50' },
+  { icon: '✈️', label: 'Bandara', href: '/antar-jemput-bandara-curup', bg: 'bg-indigo-50' },
+  { icon: '📦', label: 'Paket', href: '/kirim-paket-bengkulu-palembang', bg: 'bg-orange-50' },
+  { icon: '🏨', label: 'Hotel', href: '/daftar-hotel-di-bengkulu', bg: 'bg-primary-50' },
+  { icon: '🍽️', label: 'Kuliner', href: '/makanan-khas-bengkulu', bg: 'bg-rose-50' },
 ];
 
 const stats = [
@@ -67,7 +80,7 @@ export default function HomePage() {
   return (
     <>
       {/* HERO */}
-      <section className="relative min-h-[90vh] flex items-center bg-slate-900 overflow-hidden">
+      <section className="relative flex flex-col justify-center min-h-0 md:min-h-[90vh] bg-slate-900 overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-primary-900 via-primary-800 to-slate-900"></div>
           <div className="absolute top-0 right-0 w-1/2 h-full pattern-dots opacity-20"></div>
@@ -75,13 +88,14 @@ export default function HomePage() {
           <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gold-500/10 rounded-full blur-3xl"></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="relative w-full max-w-7xl mx-auto px-4 pt-20 pb-8 md:py-20 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-12 items-center">
+          <div className="lg:col-span-2"><HomeGreeting /></div>
           <div>
             <div className="inline-flex items-center gap-2 bg-primary-600/30 border border-primary-500/40 text-primary-300 text-sm font-medium px-4 py-2 rounded-full mb-6">
               <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
               Siap Jemput 24 Jam
             </div>
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-5">
+            <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4 md:mb-5">
               Dari Bengkulu<br />
               <span className="text-primary-400">Diantar Sampai</span><br />
               ke Tujuan Anda
@@ -115,7 +129,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 bg-white/10 backdrop-blur border-t border-white/10">
+        <div className="relative md:absolute bottom-0 left-0 right-0 bg-white/10 backdrop-blur border-t border-white/10">
           <div className="max-w-7xl mx-auto px-4 py-4 grid grid-cols-2 md:grid-cols-4 gap-4">
             {stats.map((s) => (
               <div key={s.label} className="text-center">
@@ -123,6 +137,46 @@ export default function HomePage() {
                 <p className="text-slate-400 text-xs">{s.label}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* QUICK START — search, kategori, destinasi populer, penawaran (mobile-first) */}
+      <section aria-label="Mulai jelajah" className="relative z-10 bg-slate-50 pt-5 pb-2 md:pt-12">
+        <div className="max-w-7xl mx-auto px-4">
+          <form action="/destinasi" role="search" className="flex items-center gap-2 rounded-2xl bg-white p-2 pl-4 shadow-lg shadow-slate-300/40 ring-1 ring-slate-100">
+            <svg className="h-5 w-5 shrink-0 text-slate-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M11 18a7 7 0 100-14 7 7 0 000 14z" /></svg>
+            <label htmlFor="home-q" className="sr-only">Cari destinasi</label>
+            <input id="home-q" name="q" placeholder="Cari destinasi wisata Bengkulu…" className="min-w-0 flex-1 bg-transparent py-2 text-slate-800 placeholder:text-slate-500 focus:outline-none" />
+            <button className="rounded-xl bg-primary-700 px-4 py-2 text-sm font-semibold text-white">Cari</button>
+          </form>
+
+          <ul className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-6">
+            {quickCategories.map(c => (
+              <li key={c.label}>
+                <Link href={c.href} className="flex flex-col items-center gap-1.5 rounded-2xl bg-white py-3 shadow-sm ring-1 ring-slate-100 transition-transform active:scale-95">
+                  <span aria-hidden className={`flex h-12 w-12 items-center justify-center rounded-2xl text-2xl ${c.bg}`}>{c.icon}</span>
+                  <span className="text-xs font-semibold text-slate-700">{c.label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-7 flex items-center justify-between">
+            <h2 className="font-display text-xl font-bold text-slate-800">Destinasi Populer</h2>
+            <Link href="/destinasi" className="text-sm font-semibold text-primary-700">Lihat semua</Link>
+          </div>
+          <div className="-mx-4 mt-3 flex snap-x gap-3 overflow-x-auto px-4 pb-3">
+            {DESTINATIONS.filter(d => d.popular).map(d => <DestinationCard key={d.slug} d={d} compact />)}
+          </div>
+
+          <div className="mt-3 flex items-center justify-between gap-4 overflow-hidden rounded-3xl bg-gradient-to-br from-primary-700 to-primary-900 p-5 text-white">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary-100">Rute Hemat</p>
+              <p className="mt-1 font-display text-lg font-bold">Bengkulu – Curup</p>
+              <p className="text-sm text-primary-100">Mulai {formatPrice(getRouteById('bkl-crp')?.price ?? 100000)} / orang, berangkat setiap jam</p>
+            </div>
+            <Link href="/pesan?rute=bkl-crp" className="shrink-0 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-primary-800">Pesan</Link>
           </div>
         </div>
       </section>

@@ -33,6 +33,8 @@ export interface Order {
   paymentMethod: 'qris' | 'tunai';
   createdAt: string;
   confirmedAt?: string;
+  /** ID user Supabase jika pemesan login (opsional — tamu tetap bisa pesan) */
+  userId?: string;
 }
 
 // ─────────────────────────────────────────────
@@ -100,7 +102,17 @@ export async function saveOrder(order: Order): Promise<void> {
   const pipeline = redis.pipeline();
   pipeline.set(`order:${order.id}`, JSON.stringify(order));
   pipeline.zadd('orders', Date.now(), order.id);
+  if (order.userId) pipeline.zadd(`user_orders:${order.userId}`, Date.now(), order.id);
   await pipeline.exec();
+}
+
+/** Riwayat pesanan (travel + rental) milik satu user, terbaru dulu. */
+export async function getOrdersByUser(userId: string): Promise<Order[]> {
+  const redis = getRedis();
+  const ids = await redis.zrevrange(`user_orders:${userId}`, 0, 49);
+  if (ids.length === 0) return [];
+  const values = await redis.mget(...ids.map(id => `order:${id}`));
+  return values.filter((v): v is string => v !== null).map(v => JSON.parse(v) as Order);
 }
 
 export async function getAllOrders(): Promise<Order[]> {

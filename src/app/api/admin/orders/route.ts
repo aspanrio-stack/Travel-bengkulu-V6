@@ -10,6 +10,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllOrders, saveOrder, Order } from '@/lib/orders';
 import { getSession } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/supabase/server';
 import {
   sendWA,
   sendWABulk,
@@ -82,6 +83,8 @@ export async function POST(req: NextRequest) {
     };
 
     // ── Simpan ke Redis ──
+    const user = await getCurrentUser().catch(() => null);
+    if (user) order.userId = user.id;
     await saveOrder(order);
 
     // ── Susun data untuk template WA ──
