@@ -72,7 +72,7 @@ const colorMap: Record<string, { card: string; badge: string; btn: string; link:
 
 export default function DaftarHotelDiBengkulu() {
   return (
-    <div className="min-h-screen pt-16">
+    <div className="min-h-screen md:pt-16">
       {/* Hero */}
       <div className="bg-gradient-to-br from-primary-800 via-primary-700 to-primary-600 text-white py-16">
         <div className="max-w-4xl mx-auto px-4 text-center">

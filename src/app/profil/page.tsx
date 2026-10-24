@@ -29,7 +29,7 @@ export default async function ProfilPage() {
   const upcoming = orders.filter(o => o.status !== 'cancelled' && o.date >= new Date().toISOString().slice(0, 10));
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-20 pb-10">
+    <div className="min-h-screen bg-slate-50 pt-6 md:pt-20 pb-10">
       <div className="mx-auto max-w-2xl space-y-5 px-4">
         <section className="flex items-center gap-4 rounded-2xl bg-white p-4 shadow-sm">
           {meta.avatar_url

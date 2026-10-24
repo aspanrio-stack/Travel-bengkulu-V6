@@ -74,7 +74,7 @@ function PembayaranContent() {
   // ── Error: data tidak lengkap ──
   if (!route || !totalHarga) {
     return (
-      <div className="min-h-screen pt-20 flex items-center justify-center px-4">
+      <div className="min-h-screen pt-6 md:pt-20 flex items-center justify-center px-4">
         <div className="text-center max-w-sm">
           <p className="text-5xl mb-4">❌</p>
           <h1 className="font-bold text-slate-800 text-xl mb-2">Data Pesanan Tidak Ditemukan</h1>
@@ -97,7 +97,7 @@ function PembayaranContent() {
   ].filter(Boolean).join(' · ');
 
   return (
-    <div className="min-h-screen pt-16 bg-slate-50">
+    <div className="min-h-screen md:pt-16 bg-slate-50">
 
       {/* ── Header ── */}
       <div className="bg-gradient-to-br from-primary-800 to-primary-600 text-white py-10">

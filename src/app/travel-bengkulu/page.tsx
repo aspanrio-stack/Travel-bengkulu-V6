@@ -40,7 +40,7 @@ const breadcrumbJsonLd = {
 
 export default function TravelBengkulu() {
   return (
-    <div className="min-h-screen pt-16">
+    <div className="min-h-screen md:pt-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}

@@ -65,7 +65,7 @@ export default async function DestinasiDetail({ params }: { params: Promise<{ sl
   ];
 
   return (
-    <div className="min-h-screen bg-white md:bg-slate-50 pt-[62px]">
+    <div className="min-h-screen bg-white md:bg-slate-50 md:pt-[62px]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="mx-auto max-w-3xl md:py-6">
         <DestImage d={d} priority sizes="(max-width:768px) 100vw, 768px" className="h-72 md:h-96 md:rounded-3xl" />

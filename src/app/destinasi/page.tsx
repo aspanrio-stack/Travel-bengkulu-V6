@@ -25,7 +25,7 @@ export default async function DestinasiPage({
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-20 pb-10">
+    <div className="min-h-screen bg-slate-50 pt-6 md:pt-20 pb-10">
       <div className="mx-auto max-w-6xl px-4">
         <h1 className="font-display text-2xl font-bold text-slate-800 md:text-3xl">Destinasi Wisata Bengkulu</h1>
         <p className="mt-1 text-slate-500">Pilih tujuan, lalu pesan travel atau sewa mobil ke sana.</p>

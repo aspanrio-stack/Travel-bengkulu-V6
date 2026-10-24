@@ -88,7 +88,12 @@ export default function HomePage() {
           <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gold-500/10 rounded-full blur-3xl"></div>
         </div>
 
-        <div className="relative w-full max-w-7xl mx-auto px-4 pt-20 pb-8 md:py-20 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-12 items-center">
+        <div className="relative w-full max-w-7xl mx-auto px-4 pt-6 pb-8 md:py-20 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-12 items-center">
+          {/* Nama brand (HP) — navbar atas disembunyikan di HP */}
+          <div className="md:hidden lg:col-span-2 leading-tight">
+            <p className="font-display text-xl font-bold tracking-tight text-white">BENGKULU</p>
+            <p className="-mt-0.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-primary-300">Travel.COM</p>
+          </div>
           <div className="lg:col-span-2"><HomeGreeting /></div>
           <div>
             <div className="inline-flex items-center gap-2 bg-primary-600/30 border border-primary-500/40 text-primary-300 text-sm font-medium px-4 py-2 rounded-full mb-6">

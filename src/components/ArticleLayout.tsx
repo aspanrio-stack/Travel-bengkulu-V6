@@ -54,7 +54,7 @@ export default function ArticleLayout({
   const pesanHref = usePesanHref();
 
   return (
-    <div className="min-h-screen pt-16">
+    <div className="min-h-screen md:pt-16">
       {/* ── Keyframe animations ── */}
       <style>{`
         @keyframes shimmer-sweep {

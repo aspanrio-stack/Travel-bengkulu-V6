@@ -21,7 +21,7 @@ export default async function PesanPage({
   const isRental = mode === 'rental';
 
   return (
-    <div className="min-h-screen pt-16 bg-slate-50">
+    <div className="min-h-screen md:pt-16 bg-slate-50">
 
       {/* Hero Header */}
       <div className={`text-white py-10 ${

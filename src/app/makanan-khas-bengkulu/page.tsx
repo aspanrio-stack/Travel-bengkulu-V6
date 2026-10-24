@@ -57,7 +57,7 @@ const colorMap: Record<string, { btn: string; badge: string; border: string }> =
 
 export default function MakananKhasBengkulu() {
   return (
-    <div className="min-h-screen pt-16">
+    <div className="min-h-screen md:pt-16">
       {/* Hero */}
       <div className="bg-gradient-to-br from-orange-700 via-orange-600 to-amber-500 text-white py-16">
         <div className="max-w-4xl mx-auto px-4 text-center">
