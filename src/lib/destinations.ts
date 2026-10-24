@@ -50,6 +50,7 @@ export const DESTINATIONS: Destination[] = [
       { icon: '🅿️', label: 'Parkir' },
     ],
     access: { type: 'rental' },
+    images: ['/images/destinasi/pantai-panjang-1.webp', '/images/destinasi/pantai-panjang-2.webp'],
     popular: true,
   },
   {
@@ -68,7 +69,7 @@ export const DESTINATIONS: Destination[] = [
       { icon: '🅿️', label: 'Parkir' },
     ],
     access: { type: 'rental' },
-    images: ['/images/destinasi/benteng-marlborough-1.webp'],
+    images: ['/images/destinasi/benteng-marlborough-1.webp', '/images/destinasi/benteng-marlborough-2.webp'],
     popular: true,
   },
   {
