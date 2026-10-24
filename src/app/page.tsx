@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import ServiceCard from '@/components/ServiceCard';
+import ServiceCarousel from '@/components/ServiceCarousel';
 import DestinationCard from '@/components/DestinationCard';
 import HomeGreeting from '@/components/HomeGreeting';
 import { DESTINATIONS } from '@/lib/destinations';
@@ -187,21 +188,21 @@ export default function HomePage() {
       </section>
 
       {/* SERVICES */}
-      <section id="layanan" className="py-20 bg-slate-50">
+      <section id="layanan" className="py-12 md:py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
+          <div className="text-center mb-6 md:mb-12">
             <h2 className="section-title">Rute & Layanan Travel Kami</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <ServiceCarousel label="Rute dan layanan travel">
             {services.map((s) => (
-              <ServiceCard key={s.href} {...s} />
+              <ServiceCard key={s.href} {...s} className="w-[72%] max-w-[300px] shrink-0 snap-start sm:w-[44%] md:w-auto md:max-w-none" />
             ))}
-          </div>
+          </ServiceCarousel>
         </div>
       </section>
 
       {/* KENAPA PILIH KAMI */}
-      <section className="relative py-20 bg-gradient-to-br from-primary-900 via-primary-800 to-slate-900 overflow-hidden">
+      <section className="relative py-12 md:py-20 bg-gradient-to-br from-primary-900 via-primary-800 to-slate-900 overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-0 right-0 w-1/2 h-full pattern-dots opacity-10"></div>
           <div className="absolute -top-24 -right-24 w-[28rem] h-[28rem] bg-primary-400/20 rounded-full blur-3xl"></div>
@@ -209,7 +210,7 @@ export default function HomePage() {
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4">
-          <div className="text-center max-w-2xl mx-auto mb-14">
+          <div className="text-center max-w-2xl mx-auto mb-8 md:mb-14">
             <span className="inline-flex items-center gap-2 bg-primary-600/30 border border-primary-500/40 text-primary-300 text-sm font-medium px-4 py-2 rounded-full mb-5">
               Kenapa Travel Bengkulu
             </span>
@@ -221,14 +222,16 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
             {whyUs.map((item) => (
-              <div key={item.title} className="card p-6 bg-white/95">
-                <div className="w-12 h-12 rounded-xl bg-primary-50 flex items-center justify-center text-2xl mb-4">
+              <div key={item.title} className="card flex items-start gap-3.5 p-4 md:block md:p-6 bg-white/95">
+                <div className="w-11 h-11 md:w-12 md:h-12 shrink-0 rounded-xl bg-primary-50 flex items-center justify-center text-xl md:text-2xl md:mb-4">
                   {item.icon}
                 </div>
-                <h3 className="font-display font-bold text-slate-800 text-lg mb-2">{item.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
+                <div>
+                  <h3 className="font-display font-bold text-slate-800 text-base md:text-lg mb-0.5 md:mb-2">{item.title}</h3>
+                  <p className="text-slate-500 text-[13px] md:text-sm leading-relaxed">{item.desc}</p>
+                </div>
               </div>
             ))}
           </div>
