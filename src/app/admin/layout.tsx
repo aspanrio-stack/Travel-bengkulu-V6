@@ -22,7 +22,6 @@ export default function AdminLayout({
         body > main > div.admin-layout ~ * { display: none !important; }
         body > header { display: none !important; }
         body > footer { display: none !important; }
-        .wa-float { display: none !important; }
         [class*="fixed bottom"] { display: none !important; }
       `}} />
       <div className="admin-layout min-h-screen bg-slate-50">

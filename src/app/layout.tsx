@@ -3,7 +3,6 @@ import { Playfair_Display, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import WhatsAppFloat from '@/components/WhatsAppFloat';
 import BottomNav from '@/components/BottomNav';
 
 const fontDisplay = Playfair_Display({
@@ -64,7 +63,6 @@ export default function RootLayout({
         <Navbar />
         <main>{children}</main>
         <Footer />
-        <WhatsAppFloat />
         <BottomNav />
       </body>
     </html>
