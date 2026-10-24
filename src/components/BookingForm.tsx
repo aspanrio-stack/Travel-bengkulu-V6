@@ -35,6 +35,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
     email: '',
   });
 
+  const [pickedFrom, setPickedFrom] = useState('');
   const [wantEmail, setWantEmail] = useState(false);
   const saveAddressRef = useRef<null | (() => Promise<void>)>(null);
   const [authStatus, setAuthStatus] = useState<AuthStatus>('loading');
@@ -51,6 +52,36 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
   }, [preselectedRouteId]);
 
   const selectedRoute: Route | undefined = ROUTES.find(r => r.id === form.routeId);
+
+  // ── Dari & Tujuan (routeId diturunkan dari keduanya) ──
+  const fromOptions = Array.from(new Set(ROUTES.map(r => r.from)));
+  const fromCity = selectedRoute?.from ?? pickedFrom;
+  const toOptions = ROUTES.filter(r => r.from === fromCity).map(r => r.to);
+  const toCity = selectedRoute?.to ?? '';
+
+  const setRoute = (routeId: string) =>
+    setForm(prev => ({ ...prev, routeId, departureTime: '', flightInfo: '' }));
+
+  const handleFromChange = (city: string) => {
+    setPickedFrom(city);
+    const options = ROUTES.filter(r => r.from === city);
+    // Jika hanya ada satu tujuan, langsung pilih; jika tidak, reset tujuan
+    setRoute(options.length === 1 ? options[0].id : '');
+    setError('');
+  };
+
+  const handleToChange = (city: string) => {
+    const r = ROUTES.find(x => x.from === fromCity && x.to === city);
+    setRoute(r ? r.id : '');
+    setError('');
+  };
+
+  const handleSwap = () => {
+    if (!selectedRoute) return;
+    const reverse = ROUTES.find(r => r.from === selectedRoute.to && r.to === selectedRoute.from);
+    if (reverse) { setPickedFrom(reverse.from); setRoute(reverse.id); }
+  };
+  const hasReverse = !!selectedRoute && ROUTES.some(r => r.from === selectedRoute.to && r.to === selectedRoute.from);
   const fullPhone = form.phone ? '+62' + form.phone.replace(/^0+/, '') : '';
   const totalPrice = selectedRoute ? selectedRoute.price * parseInt(form.passengers) : 0;
 
@@ -316,22 +347,48 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
         {step === 1 && (
           <div className="space-y-5">
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
-                Rute Perjalanan <span className="text-red-500">*</span>
-              </label>
-              <select
-                name="routeId"
-                value={form.routeId}
-                onChange={handleChange}
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
-              >
-                <option value="">-- Pilih Rute --</option>
-                {ROUTES.map(r => (
-                  <option key={r.id} value={r.id}>
-                    {r.from} → {r.to}{r.via ? ` (via ${r.via})` : ''} — {formatPrice(r.price)}/orang
-                  </option>
-                ))}
-              </select>
+              <div className="flex items-end gap-2">
+                <div className="flex-1 min-w-0">
+                  <label htmlFor="fromCity" className="block text-sm font-semibold text-slate-700 mb-2">
+                    Dari <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    id="fromCity"
+                    value={fromCity}
+                    onChange={e => handleFromChange(e.target.value)}
+                    className="w-full border border-slate-200 rounded-xl px-3 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  >
+                    <option value="">-- Kota asal --</option>
+                    {fromOptions.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleSwap}
+                  disabled={!hasReverse}
+                  aria-label="Tukar kota asal dan tujuan"
+                  className="shrink-0 mb-0.5 w-10 h-12 rounded-xl border border-slate-200 text-primary-700 hover:bg-primary-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                >
+                  ⇄
+                </button>
+
+                <div className="flex-1 min-w-0">
+                  <label htmlFor="toCity" className="block text-sm font-semibold text-slate-700 mb-2">
+                    Tujuan <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    id="toCity"
+                    value={toCity}
+                    onChange={e => handleToChange(e.target.value)}
+                    disabled={!fromCity}
+                    className="w-full border border-slate-200 rounded-xl px-3 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:bg-slate-50 disabled:text-slate-400"
+                  >
+                    <option value="">{fromCity ? '-- Kota tujuan --' : 'Pilih asal dulu'}</option>
+                    {toOptions.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+              </div>
 
               {selectedRoute && (
                 <div className="mt-2 flex items-center justify-between px-1">
@@ -344,27 +401,6 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
                   </span>
                 </div>
               )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Tanggal Berangkat <span className="text-red-500">*</span>
-                </label>
-                <input type="date" name="date" value={form.date} min={today} onChange={handleChange}
-                  className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500" />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Jumlah Penumpang <span className="text-red-500">*</span>
-                </label>
-                <select name="passengers" value={form.passengers} onChange={handleChange}
-                  className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                  {[1,2,3,4,5,6,7,8,9,10,11,12,13].map(n => (
-                    <option key={n} value={n}>{n} orang</option>
-                  ))}
-                </select>
-              </div>
             </div>
 
             {selectedRoute && (
@@ -410,6 +446,27 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
                 )}
               </>
             )}
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Tanggal Berangkat <span className="text-red-500">*</span>
+                </label>
+                <input type="date" name="date" value={form.date} min={today} onChange={handleChange}
+                  className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Jumlah Penumpang <span className="text-red-500">*</span>
+                </label>
+                <select name="passengers" value={form.passengers} onChange={handleChange}
+                  className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                  {[1,2,3,4,5,6,7,8,9,10,11,12,13].map(n => (
+                    <option key={n} value={n}>{n} orang</option>
+                  ))}
+                </select>
+              </div>
+            </div>
 
             {selectedRoute && (
               <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
