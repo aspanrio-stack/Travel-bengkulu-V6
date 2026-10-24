@@ -9,11 +9,12 @@ const REQUIRE_LOGIN = process.env.NEXT_PUBLIC_REQUIRE_LOGIN_TO_BOOK === 'true';
 
 interface BookingFormProps {
   preselectedRouteId?: string;
+  preselectedPassengers?: number;
 }
 
 const today = new Date().toISOString().split('T')[0];
 
-export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
+export default function BookingForm({ preselectedRouteId, preselectedPassengers }: BookingFormProps) {
   const [step, setStep] = useState(1);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -24,7 +25,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
 
   const [form, setForm] = useState({
     routeId: preselectedRouteId || '',
-    passengers: '1',
+    passengers: String(Math.min(13, Math.max(1, preselectedPassengers || 1))),
     name: '',
     phone: '',
     date: '',

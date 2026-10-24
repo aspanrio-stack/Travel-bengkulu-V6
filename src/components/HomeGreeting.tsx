@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-/** Sapaan di Home. SDK Supabase hanya dimuat jika cookie sesi ada (menjaga PageSpeed). */
+/** Pill akun di pojok kanan atas hero (HP). SDK Supabase hanya dimuat jika cookie sesi ada (menjaga PageSpeed). */
 export default function HomeGreeting() {
   const [name, setName] = useState<string | null>(null);
 
@@ -16,15 +16,17 @@ export default function HomeGreeting() {
     });
   }, []);
 
+  const first = name?.trim().split(/\s+/)[0];
+
   return (
-    <div className="flex items-center justify-between md:hidden">
-      <div>
-        <p className="text-sm text-primary-100">Halo, {name ?? 'Traveler'} 👋</p>
-        <p className="text-base font-semibold text-white">Mau ke mana hari ini?</p>
-      </div>
-      {!name && (
-        <Link href="/masuk" className="rounded-full bg-white/15 px-4 py-2 text-sm font-semibold text-white ring-1 ring-white/30">Masuk</Link>
-      )}
-    </div>
+    <Link
+      href={name ? '/profil' : '/masuk'}
+      className="md:hidden flex max-w-[45vw] items-center gap-2 rounded-full bg-white/15 py-1.5 pl-1.5 pr-4 text-sm font-semibold text-white ring-1 ring-white/30"
+    >
+      <span aria-hidden className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/25 text-xs font-bold uppercase">
+        {first ? first[0] : '👤'}
+      </span>
+      <span className="truncate">{first ?? 'Masuk'}</span>
+    </Link>
   );
 }
