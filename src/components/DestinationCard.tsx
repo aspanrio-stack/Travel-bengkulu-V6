@@ -23,7 +23,9 @@ export default function DestinationCard({ d, compact = false }: { d: Destination
         compact ? 'h-52 w-40 shrink-0 snap-start' : 'h-56 w-full'
       }`}
     >
-      <DestImage d={d} className="absolute inset-0" />
+      <div className="absolute inset-0">
+        <DestImage d={d} className="h-full w-full" sizes="(max-width:768px) 50vw, 25vw" />
+      </div>
       <div className="absolute inset-x-0 bottom-0 p-3.5 text-white">
         <h3 className="font-display text-base font-bold leading-tight">{d.name}</h3>
         <p className="mt-0.5 text-xs text-white/90">{d.area}</p>
