@@ -191,6 +191,14 @@ export default function Footer() {
         <Link href="/credits" className="text-slate-300 underline hover:text-primary-400 transition-colors">
           Credits
         </Link>
+        {' · '}
+        <Link href="/kebijakan-privasi" className="text-slate-300 underline hover:text-primary-400 transition-colors">
+          Kebijakan Privasi
+        </Link>
+        {' · '}
+        <Link href="/syarat-ketentuan" className="text-slate-300 underline hover:text-primary-400 transition-colors">
+          Syarat &amp; Ketentuan
+        </Link>
       </div>
     </footer>
   );
