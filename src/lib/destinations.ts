@@ -2,7 +2,7 @@
  * lib/destinations.ts
  * Data destinasi wisata Bengkulu (sumber: artikel /tempat-wisata-bengkulu).
  *
- * Foto: taruh file di /public/images/destinasi/<slug>-1.jpg (dst.) lalu isi
+ * Foto: taruh file di /public/images/destinasi/<slug>-1.webp, -2.webp (dst.) lalu isi
  * `images`. Selama kosong, UI memakai gradient + emoji sebagai placeholder.
  */
 
@@ -68,6 +68,7 @@ export const DESTINATIONS: Destination[] = [
       { icon: '🅿️', label: 'Parkir' },
     ],
     access: { type: 'rental' },
+    images: ['/images/destinasi/benteng-marlborough-1.webp'],
     popular: true,
   },
   {
