@@ -11,6 +11,9 @@ export default function robots(): MetadataRoute.Robots {
         '/*?alt=rss',
         '/site.webmanifest',
         '/search',
+        '/masuk',
+        '/profil',
+        '/auth/',
         // '/orang' → dihapus, sudah ditangani redirect 301
       ],
     },

@@ -31,7 +31,7 @@ export default function WhatsAppFloat() {
   const pathname = usePathname();
 
   // Jangan tampilkan di halaman admin & credits
-  if (pathname?.startsWith('/admin') || pathname === '/credits') return null;
+  if (pathname?.startsWith('/admin') || pathname === '/credits' || pathname === '/masuk') return null;
 
   // Ambil pesan sesuai halaman, fallback ke default
   const pesan = pesanMap[pathname ?? ''] || pesanDefault;
@@ -53,7 +53,7 @@ export default function WhatsAppFloat() {
       rel="noopener noreferrer"
       onClick={handleClick}
       aria-label="Hubungi Admin Travel Bengkulu via WhatsApp"
-      className="fixed bottom-6 right-6 z-50 flex items-center gap-2 wa-float group"
+      className="fixed bottom-[calc(5.25rem+env(safe-area-inset-bottom))] md:bottom-6 right-4 md:right-6 z-50 flex items-center gap-2 wa-float group"
       title="Chat WhatsApp Admin Travel Bengkulu"
     >
       {/* Label tooltip — muncul saat hover (desktop) */}

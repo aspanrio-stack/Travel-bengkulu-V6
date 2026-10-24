@@ -11,6 +11,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { saveOrder, Order } from '@/lib/orders';
+import { getCurrentUser } from '@/lib/supabase/server';
 import {
   sendWA,
   sendWABulk,
@@ -71,7 +72,8 @@ export async function POST(req: NextRequest) {
       createdAt: new Date().toISOString(),
     } as Order & { departureTime?: string };
 
-    await saveOrder(order as Order);
+    const user = await getCurrentUser().catch(() => null);
+    await saveOrder({ ...(order as Order), ...(user ? { userId: user.id } : {}) });
 
     // ── Susun pesan WA ke pemesan ──
     const msgPemesan = [

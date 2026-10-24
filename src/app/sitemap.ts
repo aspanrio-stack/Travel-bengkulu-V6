@@ -1,11 +1,15 @@
 import { MetadataRoute } from 'next';
 
+import { DESTINATIONS } from '@/lib/destinations';
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://bengkulutravel.com';
   const lastModified = new Date();
 
   return [
     { url: baseUrl, lastModified, changeFrequency: 'weekly', priority: 1 },
+    { url: `${baseUrl}/destinasi`, lastModified, changeFrequency: 'weekly', priority: 0.8 },
+    ...DESTINATIONS.map(d => ({ url: `${baseUrl}/destinasi/${d.slug}`, lastModified, changeFrequency: 'monthly' as const, priority: 0.7 })),
     // Halaman layanan utama
     { url: `${baseUrl}/travel-bengkulu`, lastModified, changeFrequency: 'weekly', priority: 1 },
     { url: `${baseUrl}/travel-bengkulu-palembang`, lastModified, changeFrequency: 'monthly', priority: 0.9 },

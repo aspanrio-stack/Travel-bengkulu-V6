@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
+import { createServerClient } from '@supabase/ssr';
 
 function getSecret(): Uint8Array {
   const secret = process.env.ADMIN_JWT_SECRET || '';
@@ -23,6 +24,30 @@ export async function proxy(request: NextRequest) {
       res.cookies.delete('admin_session');
       return res;
     }
+  }
+
+  // ── PROTEKSI /profil (user Supabase) — hanya path ini yang memanggil Supabase,
+  //    supaya halaman publik/SEO tidak kena tambahan latency ──
+  if (pathname.startsWith('/profil')) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const toLogin = () => NextResponse.redirect(new URL('/masuk?next=/profil', request.url));
+    if (!url || !key) return toLogin();
+
+    let response = NextResponse.next({ request });
+    const supabase = createServerClient(url, key, {
+      cookies: {
+        getAll: () => request.cookies.getAll(),
+        setAll: (list) => {
+          list.forEach(({ name, value }) => request.cookies.set(name, value));
+          response = NextResponse.next({ request });
+          list.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+        },
+      },
+    });
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) return toLogin();
+    return response; // sesi ter-refresh lewat cookie di atas
   }
 
   // ============================================================

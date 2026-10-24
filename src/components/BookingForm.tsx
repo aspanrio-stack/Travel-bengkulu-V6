@@ -2,6 +2,9 @@
 import { useState, useEffect } from 'react';
 import { ROUTES, formatPrice, formatDepartureTime, Route } from '@/lib/routes';
 import LocationPicker from '@/components/LocationPicker';
+import LoginPrompt, { type AuthStatus } from '@/components/LoginPrompt';
+
+const REQUIRE_LOGIN = process.env.NEXT_PUBLIC_REQUIRE_LOGIN_TO_BOOK === 'true';
 
 interface BookingFormProps {
   preselectedRouteId?: string;
@@ -32,6 +35,12 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
   });
 
   const [wantEmail, setWantEmail] = useState(false);
+  const [authStatus, setAuthStatus] = useState<AuthStatus>('loading');
+  const blocked = REQUIRE_LOGIN && authStatus === 'out';
+
+  // Prefill dari akun (hanya jika kolom masih kosong)
+  const prefillUser = (u: { name: string; email: string }) =>
+    setForm(prev => ({ ...prev, name: prev.name || u.name, email: prev.email || u.email }));
 
   useEffect(() => {
     if (preselectedRouteId) {
@@ -397,9 +406,16 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
             )}
 
             {selectedRoute && (
-              <div className="bg-slate-800 rounded-xl p-4 flex justify-between items-center">
-                <span className="text-slate-300 text-sm">{form.passengers} orang × {formatPrice(selectedRoute.price)}</span>
-                <span className="text-white font-bold text-xl">{formatPrice(totalPrice)}</span>
+              <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                <p className="mb-2 text-sm font-semibold text-slate-700">Ringkasan Harga</p>
+                <div className="flex justify-between text-sm text-slate-600">
+                  <span>{formatPrice(selectedRoute.price)} × {form.passengers} orang</span>
+                  <span>{formatPrice(totalPrice)}</span>
+                </div>
+                <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3">
+                  <span className="font-semibold text-slate-700">Total</span>
+                  <span className="text-xl font-bold text-primary-700">{formatPrice(totalPrice)}</span>
+                </div>
               </div>
             )}
 
@@ -429,6 +445,14 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
                 </div>
               </div>
             )}
+
+            <LoginPrompt
+              status={authStatus}
+              onStatus={setAuthStatus}
+              onUser={prefillUser}
+              nextUrl={`/pesan?rute=${form.routeId}`}
+              required={REQUIRE_LOGIN}
+            />
 
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">Nama <span className="text-red-500">*</span></label>
@@ -495,7 +519,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
                 <span>Untuk QRIS, tiket dikirim otomatis setelah admin verifikasi pembayaran. Untuk tunai, Anda langsung terhubung ke WhatsApp admin.</span>
               </div>
 
-              <button onClick={handleBayarQRIS} disabled={submitting}
+              <button onClick={handleBayarQRIS} disabled={submitting || blocked}
                 className="w-full bg-primary-600 hover:bg-primary-700 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-3 shadow-sm">
                 <span className="text-2xl">📱</span>
                 <div className="text-left">
@@ -504,7 +528,7 @@ export default function BookingForm({ preselectedRouteId }: BookingFormProps) {
                 </div>
               </button>
 
-              <button onClick={handleKirimWA} disabled={submitting}
+              <button onClick={handleKirimWA} disabled={submitting || blocked}
                 className="w-full bg-green-500 hover:bg-green-600 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-3 shadow-sm">
                 {submitting ? (
                   <span className="animate-pulse">Memproses & Membuka WhatsApp...</span>
