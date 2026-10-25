@@ -14,8 +14,9 @@ interface ServiceCardProps {
 
 export default function ServiceCard({ icon, title, description, price, href, badge, image, className = '' }: ServiceCardProps) {
   return (
-    <Link href={href} role="listitem"
-      className={`card group cursor-pointer block hover:-translate-y-1 transition-all duration-300 overflow-hidden ${className}`}>
+    <div role="listitem" className={className}>
+    <Link href={href}
+      className="card group cursor-pointer block h-full hover:-translate-y-1 transition-all duration-300 overflow-hidden">
       {/* Image area */}
       {image ? (
         <div className="relative h-32 md:h-40 w-full overflow-hidden bg-slate-100">
@@ -70,5 +71,6 @@ export default function ServiceCard({ icon, title, description, price, href, bad
         </div>
       </div>
     </Link>
+    </div>
   );
 }

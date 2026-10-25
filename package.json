@@ -34,5 +34,11 @@
     "@types/react-dom": "^18",
     "@types/uuid": "^9.0.0",
     "typescript": "^5"
-  }
+  },
+  "browserslist": [
+    "chrome >= 111",
+    "edge >= 111",
+    "firefox >= 111",
+    "safari >= 16.4"
+  ]
 }
