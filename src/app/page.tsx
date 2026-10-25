@@ -85,7 +85,18 @@ export default function HomePage() {
       <section className="relative flex flex-col justify-center min-h-0 md:min-h-[90vh] bg-slate-900 overflow-hidden rounded-b-[2rem] md:rounded-none">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-primary-900 via-primary-800 to-slate-900"></div>
-          <div className="absolute top-0 right-0 w-1/2 h-full pattern-dots opacity-20"></div>
+          {/* Foto latar ikon kota — ganti file public/images/hero-bengkulu.webp (nama tetap) */}
+          <Image
+            src="/images/hero-bengkulu.webp"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-bottom md:object-center"
+          />
+          {/* Lapisan gelap: pekat di area teks, menipis di bawah supaya ikon kota tetap terlihat */}
+          <div className="absolute inset-0 bg-gradient-to-b from-primary-900/90 via-primary-900/75 to-primary-900/30 md:bg-gradient-to-r md:from-primary-900/95 md:via-primary-900/80 md:to-primary-900/35"></div>
+          <div className="absolute top-0 right-0 w-1/2 h-full pattern-dots opacity-10"></div>
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl"></div>
           <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gold-500/10 rounded-full blur-3xl"></div>
         </div>
@@ -104,15 +115,15 @@ export default function HomePage() {
               <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
               Siap Jemput 24 Jam
             </div>
-            <h1 className="font-display text-[28px] md:text-5xl lg:text-6xl font-bold text-white leading-[1.15] mb-3 md:mb-5">
+            <h1 className="font-display text-[28px] md:text-5xl lg:text-6xl font-bold text-white leading-[1.15] mb-3 md:mb-5 [text-shadow:0_2px_12px_rgba(0,0,0,0.35)]">
               Dari Bengkulu<br className="hidden md:block" />{' '}
               <span className="text-primary-400">Diantar Sampai</span><br className="hidden md:block" />{' '}
               ke Tujuan Anda
             </h1>
-            <p className="md:hidden text-slate-300 text-[15px] leading-relaxed">
+            <p className="md:hidden text-slate-200 text-[15px] leading-relaxed [text-shadow:0_1px_8px_rgba(0,0,0,0.4)]">
               Travel <strong className="text-white">door to door</strong> Bengkulu · Palembang · Jambi · Curup. Pesan tiket dalam hitungan detik.
             </p>
-            <p className="hidden md:block text-slate-300 text-lg leading-relaxed mb-8 max-w-xl">
+            <p className="hidden md:block text-slate-200 text-lg leading-relaxed mb-8 max-w-xl [text-shadow:0_1px_8px_rgba(0,0,0,0.4)]">
               Layanan travel <strong className="text-white">door to door</strong> yang menjemput dari rumah Anda dan mengantar langsung ke tempat tujuan. Melayani rute Bengkulu–Palembang, Bengkulu–Jambi, dan Bengkulu–Curup.
             </p>
             <div className="hidden md:flex flex-wrap gap-3">
@@ -123,17 +134,6 @@ export default function HomePage() {
               <Link href="#layanan" className="border border-white/30 text-white hover:bg-white/10 font-semibold px-7 py-3.5 rounded-xl transition-all inline-flex items-center gap-2">
                 Cek Rute & Tarif
               </Link>
-            </div>
-          </div>
-
-          <div className="md:hidden relative h-44 overflow-hidden rounded-3xl ring-1 ring-white/15">
-            <Image src="/images/hiace.jpg" alt="Toyota HiAce armada Travel Bengkulu" fill priority sizes="(max-width: 768px) 100vw, 1px" className="object-cover" />
-            <div className="absolute inset-x-3 bottom-3 flex items-center justify-between rounded-2xl bg-slate-900/55 px-4 py-2.5 backdrop-blur-md ring-1 ring-white/15">
-              <div>
-                <p className="font-display text-base font-bold leading-tight text-white">Toyota HiAce</p>
-                <p className="text-xs font-medium text-primary-300">Armada Unggulan</p>
-              </div>
-              <p className="text-sm font-bold text-primary-300">12–14 Pax</p>
             </div>
           </div>
 
