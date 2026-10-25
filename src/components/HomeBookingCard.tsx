@@ -26,7 +26,7 @@ export default function HomeBookingCard() {
         {/* Dari → Tujuan */}
         <div className="flex items-center justify-between gap-2">
           <div className="min-w-0 flex-1">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-400">Dari</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-500">Dari</p>
             <p className="font-display text-[22px] font-bold leading-tight text-slate-900 break-words">{route.from}</p>
           </div>
           <button
@@ -42,13 +42,13 @@ export default function HomeBookingCard() {
             </svg>
           </button>
           <div className="min-w-0 flex-1 text-right">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-400">Tujuan</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-500">Tujuan</p>
             <p className="font-display text-[22px] font-bold leading-tight text-slate-900 break-words">{route.to}</p>
           </div>
         </div>
 
         {/* Pilih rute */}
-        <label htmlFor="home-rute" className="mt-4 block text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-400">
+        <label htmlFor="home-rute" className="mt-4 block text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-500">
           Pilih Rute
         </label>
         <select
@@ -65,7 +65,7 @@ export default function HomeBookingCard() {
         {/* Penumpang */}
         <div className="mt-3 flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 py-2.5 pl-4 pr-2.5">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-400">Penumpang</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-500">Penumpang</p>
             <p className="text-base font-semibold text-slate-800">
               {pax} orang · {formatPrice(route.price * pax)}
             </p>
