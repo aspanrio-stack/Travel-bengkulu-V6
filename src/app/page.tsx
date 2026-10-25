@@ -85,15 +85,19 @@ export default function HomePage() {
       <section className="relative flex flex-col justify-center min-h-0 md:min-h-[90vh] bg-slate-900 overflow-hidden rounded-b-[2rem] md:rounded-none">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-primary-900 via-primary-800 to-slate-900"></div>
-          {/* Foto latar ikon kota — ganti file public/images/hero-bengkulu.webp (nama tetap) */}
-          <Image
-            src="/images/hero-bengkulu.webp"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-bottom md:object-center"
-          />
+          {/* Foto latar ikon kota — 2 file: public/images/hero-bengkulu-mobile.webp (HP) & hero-bengkulu-desktop.webp (≥768px).
+              <picture> memastikan browser hanya mengunduh satu. */}
+          <picture>
+            <source media="(min-width: 768px)" srcSet="/images/hero-bengkulu-desktop.webp" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/hero-bengkulu-mobile.webp"
+              alt=""
+              fetchPriority="high"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover object-bottom md:object-center"
+            />
+          </picture>
           {/* Lapisan gelap: pekat di area teks, menipis di bawah supaya ikon kota tetap terlihat */}
           <div className="absolute inset-0 bg-gradient-to-b from-primary-900/90 via-primary-900/75 to-primary-900/30 md:bg-gradient-to-r md:from-primary-900/95 md:via-primary-900/80 md:to-primary-900/35"></div>
           <div className="absolute top-0 right-0 w-1/2 h-full pattern-dots opacity-10"></div>
