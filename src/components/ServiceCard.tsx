@@ -60,7 +60,7 @@ export default function ServiceCard({ icon, title, description, price, href, bad
         <p className="text-slate-500 text-[13px] leading-relaxed mb-3 line-clamp-3">{description}</p>
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[10px] uppercase tracking-wide text-slate-400">Mulai dari</p>
+            <p className="text-[10px] uppercase tracking-wide text-slate-500">Mulai dari</p>
             <p className="text-primary-700 font-bold text-base leading-tight">{price}</p>
           </div>
           <div className="w-8 h-8 bg-primary-50 rounded-lg flex items-center justify-center text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-all duration-300 group-hover:translate-x-1">
