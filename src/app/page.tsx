@@ -93,6 +93,8 @@ export default function HomePage() {
             <img
               src="/images/hero-bengkulu-mobile.webp"
               alt=""
+              width={720}
+              height={1234}
               fetchPriority="high"
               decoding="async"
               className="absolute inset-0 h-full w-full object-cover object-bottom md:object-center"

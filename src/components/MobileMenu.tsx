@@ -30,7 +30,7 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
 
   return (
     <div
-      className={`md:hidden fixed inset-0 z-[60] transition-opacity duration-200 ${open ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      className={`md:hidden fixed inset-0 z-[60] transition-[opacity,visibility] duration-200 ${open ? 'visible opacity-100' : 'invisible opacity-0 pointer-events-none'}`}
       aria-hidden={!open}
     >
       <button aria-label="Tutup menu" onClick={onClose} className="absolute inset-0 bg-slate-900/50" tabIndex={open ? 0 : -1} />
