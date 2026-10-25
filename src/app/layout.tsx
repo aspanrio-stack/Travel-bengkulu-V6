@@ -57,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className={`${fontDisplay.variable} ${fontBody.variable} scroll-smooth`}>
+    <html lang="id" data-scroll-behavior="smooth" className={`${fontDisplay.variable} ${fontBody.variable} scroll-smooth`}>
       <head />
       <body className="antialiased font-body bg-white text-slate-900">
         <Navbar />

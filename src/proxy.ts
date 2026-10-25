@@ -45,8 +45,10 @@ export async function proxy(request: NextRequest) {
         },
       },
     });
-    const { data } = await supabase.auth.getUser();
-    if (!data.user) return toLogin();
+    // getClaims: verifikasi JWT lokal (JWKS ter-cache) → tanpa round-trip ke Supabase.
+    // Verifikasi penuh (getUser) tetap dilakukan di halaman lewat getCurrentUser().
+    const { data } = await supabase.auth.getClaims();
+    if (!data?.claims) return toLogin();
     return response; // sesi ter-refresh lewat cookie di atas
   }
 

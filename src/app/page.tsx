@@ -101,8 +101,8 @@ export default function HomePage() {
           {/* Lapisan gelap: pekat di area teks, menipis di bawah supaya ikon kota tetap terlihat */}
           <div className="absolute inset-0 bg-gradient-to-b from-primary-900/90 via-primary-900/75 to-primary-900/30 md:bg-gradient-to-r md:from-primary-900/95 md:via-primary-900/80 md:to-primary-900/35"></div>
           <div className="absolute top-0 right-0 w-1/2 h-full pattern-dots opacity-10"></div>
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gold-500/10 rounded-full blur-3xl"></div>
+          <div className="hidden md:block absolute bottom-0 left-0 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl"></div>
+          <div className="hidden md:block absolute top-1/4 right-1/4 w-64 h-64 bg-gold-500/10 rounded-full blur-3xl"></div>
         </div>
 
         <div className="relative w-full max-w-7xl mx-auto px-4 pt-5 pb-14 md:py-20 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-12 items-center">
@@ -228,8 +228,8 @@ export default function HomePage() {
       <section className="relative py-12 md:py-20 bg-gradient-to-br from-primary-900 via-primary-800 to-slate-900 overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-0 right-0 w-1/2 h-full pattern-dots opacity-10"></div>
-          <div className="absolute -top-24 -right-24 w-[28rem] h-[28rem] bg-primary-400/20 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-1/4 w-72 h-72 bg-gold-500/10 rounded-full blur-3xl"></div>
+          <div className="hidden md:block absolute -top-24 -right-24 w-[28rem] h-[28rem] bg-primary-400/20 rounded-full blur-3xl"></div>
+          <div className="hidden md:block absolute bottom-0 left-1/4 w-72 h-72 bg-gold-500/10 rounded-full blur-3xl"></div>
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4">
