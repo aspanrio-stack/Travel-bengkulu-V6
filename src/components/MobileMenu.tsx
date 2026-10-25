@@ -66,7 +66,7 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
                 {expanded === link.label && (
                   <div className="ml-3 mt-0.5 space-y-0.5 border-l-2 border-primary-100 pl-3">
                     {link.children.map((c) => (
-                      <Link key={c.href} href={c.href} className="block rounded-lg px-2 py-2 text-sm text-slate-600 hover:bg-primary-50 hover:text-primary-600">
+                      <Link key={c.href} href={c.href} onClick={onClose} className="block rounded-lg px-2 py-2 text-sm text-slate-600 hover:bg-primary-50 hover:text-primary-600">
                         {c.label}
                       </Link>
                     ))}
@@ -74,7 +74,7 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
                 )}
               </div>
             ) : (
-              <Link key={link.href} href={link.href!} className="block rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-600">
+              <Link key={link.href} href={link.href!} onClick={onClose} className="block rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-600">
                 {link.label}
               </Link>
             )
@@ -83,6 +83,7 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
 
         <Link
           href={pesanHref}
+          onClick={onClose}
           className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-600 via-primary-500 to-primary-700 py-3 text-sm font-bold text-white shadow-md shadow-primary-500/20"
         >
           🎫 Pesan Tiket Sekarang
