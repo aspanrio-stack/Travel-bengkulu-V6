@@ -50,7 +50,7 @@ export const DESTINATIONS: Destination[] = [
       { icon: '🅿️', label: 'Parkir' },
     ],
     access: { type: 'rental' },
-    images: ['/images/destinasi/pantai-panjang-1.webp', '/images/destinasi/pantai-panjang-2.webp'],
+    images: ['/images/destinasi/pantai-panjang-1.webp', '/images/destinasi/pantai-panjang-2.webp', '/images/destinasi/pantai-panjang-3.webp', '/images/destinasi/pantai-panjang-4.webp'],
     popular: true,
   },
   {
@@ -140,6 +140,7 @@ export const DESTINATIONS: Destination[] = [
       { icon: '⛺', label: 'Area camping' },
     ],
     access: { type: 'route', routeId: 'bkl-crp' },
+    images: ['/images/destinasi/bukit-kaba-1.webp'],
     popular: true,
   },
   {
@@ -175,6 +176,8 @@ export const DESTINATIONS: Destination[] = [
       { icon: '🌤️', label: 'Udara sejuk' },
     ],
     access: { type: 'route', routeId: 'bkl-crp' },
+     images: ['/images/destinasi/ebun-teh-kabawetan-1.webp', '/images/destinasi/ebun-teh-kabawetan-2.webp','/images/destinasi/ebun-teh-kabawetan-3.webp',],
+    popular: true,
   },
 ];
 
