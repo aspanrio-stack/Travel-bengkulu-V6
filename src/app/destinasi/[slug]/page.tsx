@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { DESTINATIONS, getDestination } from '@/lib/destinations';
 import { DestImage } from '@/components/DestinationCard';
+import Gallery from '@/components/Gallery';
 import { getRouteById, formatPrice } from '@/lib/routes';
 import { RENTAL_PRICES } from '@/lib/rental-config';
 
@@ -100,13 +100,7 @@ export default async function DestinasiDetail({ params }: { params: Promise<{ sl
           {d.images && d.images.length > 1 && (
             <>
               <h2 className="mb-3 mt-6 font-display text-lg font-bold text-slate-800">Galeri</h2>
-              <div className="grid grid-cols-3 gap-2">
-                {d.images.slice(1, 4).map((src, i) => (
-                  <div key={src} className="relative aspect-square overflow-hidden rounded-2xl">
-                    <Image src={src} alt={`${d.name} ${i + 2}`} fill sizes="33vw" className="object-cover" />
-                  </div>
-                ))}
-              </div>
+              <Gallery images={d.images} name={d.name} />
             </>
           )}
         </article>
