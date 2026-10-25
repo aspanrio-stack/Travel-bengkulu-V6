@@ -48,7 +48,7 @@ export default function HomeBookingCard() {
         </div>
 
         {/* Pilih rute */}
-        <label htmlFor="home-rute" className="mt-4 block text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-400">
+        <label htmlFor="home-rute" className="mt-4 block text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-500">
           Pilih Rute
         </label>
         <select
