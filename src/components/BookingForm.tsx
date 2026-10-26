@@ -7,6 +7,9 @@ import LoginPrompt, { type AuthStatus } from '@/components/LoginPrompt';
 
 const REQUIRE_LOGIN = process.env.NEXT_PUBLIC_REQUIRE_LOGIN_TO_BOOK === 'true';
 
+// QRIS sedang gangguan → ubah ke true untuk mengaktifkan kembali tombol Bayar via QRIS
+const QRIS_ENABLED = false;
+
 interface BookingFormProps {
   preselectedRouteId?: string;
   preselectedPassengers?: number;
@@ -157,8 +160,9 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers 
     gpsLng: gpsLocation?.lng ?? null,
   });
 
-  // ── TUNAI: simpan ke DB lalu langsung redirect ke WA admin ──
-  const handleKirimWA = async () => {
+  // ── TUNAI (default): simpan pesanan lalu tampilkan halaman sukses ──
+  // Notifikasi WA ke pemesan & admin dikirim server (POST /api/admin/orders)
+  const handleKonfirmasi = async () => {
     const err = validateStep2();
     if (err) { setError(err); return; }
     if (!selectedRoute) return;
@@ -174,46 +178,15 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers 
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || 'Terjadi kesalahan. Silakan coba lagi.');
+        setSubmitting(false);
         return;
       }
 
       await saveAddressRef.current?.(); // simpan alamat (jika dicentang & login)
 
-      // Buat pesan WA otomatis ke admin
-      const orderId = data.orderId || '-';
-      const dep = form.departureTime
-        ? `\nJam: ${formatDepartureTime(form.departureTime)}`
-        : form.flightInfo
-        ? `\nPenerbangan: ${form.flightInfo}`
-        : '';
-
-      const msgAdmin = [
-        `Halo Admin Travel Bengkulu 👋`,
-        ``,
-        `Saya ingin memesan travel dengan pembayaran *Tunai ke Driver*.`,
-        ``,
-        `*Detail Pesanan:*`,
-        `🚗 Rute: ${selectedRoute.from} → ${selectedRoute.to}`,
-        `📅 Tanggal: ${form.date}${dep}`,
-        `👥 Penumpang: ${form.passengers} orang`,
-        `📍 Jemput di: ${form.pickupAddress}`,
-        form.dropoffAddress ? `🏁 Antar ke: ${form.dropoffAddress}` : '',
-        ``,
-        `*Data Pemesan:*`,
-        `👤 Nama: ${form.name}`,
-        `📞 No. HP: ${fullPhone}`,
-        wantEmail && form.email ? `📧 Email: ${form.email}` : '',
-        ``,
-        `💰 Total: ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(totalPrice)}`,
-        `💳 Pembayaran: Tunai ke Driver`,
-        `🔖 No. Pesanan: *${orderId}*`,
-        ``,
-        `Mohon dikonfirmasi ketersediaan dan jadwal keberangkatan. Terima kasih!`,
-      ].filter(Boolean).join('\n');
-
-      // Redirect ke WA admin (nomor utama)
-      window.location.href = `https://wa.me/6282374497929?text=${encodeURIComponent(msgAdmin)}`;
-
+      setSukses({ orderId: data.orderId || '-', paymentMethod: 'tunai' });
+      setSubmitting(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch {
       setError('Gagal menghubungi server. Periksa koneksi internet Anda.');
       setSubmitting(false);
@@ -583,33 +556,44 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers 
             </div>
 
             <div className="space-y-3">
-              <p className="text-sm font-semibold text-slate-700">Pilih Metode Pembayaran</p>
+              <p className="text-sm font-semibold text-slate-700">Metode Pembayaran</p>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 flex items-start gap-2 text-sm text-blue-700">
+              <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-2 text-sm text-amber-800">
                 <span className="shrink-0 mt-0.5">ℹ️</span>
-                <span>Untuk QRIS, tiket dikirim otomatis setelah admin verifikasi pembayaran. Untuk tunai, Anda langsung terhubung ke WhatsApp admin.</span>
+                <span>Pembayaran QRIS sedang gangguan. Untuk sementara, bayar tunai langsung ke driver saat dijemput.</span>
               </div>
 
-              <button onClick={handleBayarQRIS} disabled={submitting || blocked}
-                className="w-full bg-primary-600 hover:bg-primary-700 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-3 shadow-sm">
-                <span className="text-2xl">📱</span>
+              <div className="w-full border-2 border-primary-600 bg-primary-50 rounded-xl px-4 py-3 flex items-center gap-3">
+                <span className="text-2xl" aria-hidden="true">💵</span>
+                <div className="flex-1 text-left">
+                  <p className="font-bold text-primary-800">Tunai ke Driver</p>
+                  <p className="text-xs text-primary-700">Bayar langsung saat dijemput</p>
+                </div>
+                <span className="text-primary-700 font-bold text-lg" aria-hidden="true">✓</span>
+              </div>
+
+              <button onClick={handleBayarQRIS} disabled={!QRIS_ENABLED || submitting || blocked}
+                aria-disabled={!QRIS_ENABLED}
+                className="w-full bg-slate-100 border border-slate-200 enabled:bg-primary-600 enabled:border-primary-600 enabled:text-white text-slate-600 disabled:cursor-not-allowed font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-3">
+                <span className="text-2xl grayscale opacity-60" aria-hidden="true">📱</span>
                 <div className="text-left">
                   <p className="font-bold">Bayar via QRIS</p>
-                  <p className="text-xs text-primary-200">GoPay · OVO · Dana · ShopeePay · Bank</p>
+                  <p className="text-xs font-semibold text-red-700">Sedang gangguan</p>
                 </div>
               </button>
 
-              <button onClick={handleKirimWA} disabled={submitting || blocked}
-                className="w-full bg-green-500 hover:bg-green-600 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-3 shadow-sm">
+              <button onClick={handleKonfirmasi} disabled={submitting || blocked}
+                className="w-full bg-gradient-to-r from-primary-600 to-primary-800 hover:from-primary-700 hover:to-primary-900 active:scale-[0.97] disabled:opacity-60 disabled:cursor-not-allowed text-white font-extrabold text-lg py-5 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-lg shadow-primary-700/40 ring-2 ring-primary-300 ring-offset-2">
                 {submitting ? (
-                  <span className="animate-pulse">Memproses & Membuka WhatsApp...</span>
+                  <span className="animate-pulse">Memproses pesanan...</span>
                 ) : (
                   <>
-                    <span className="text-2xl">💬</span>
+                    <span className="text-2xl" aria-hidden="true">✅</span>
                     <div className="text-left">
-                      <p className="font-bold">Pesan via WhatsApp (Tunai)</p>
-                      <p className="text-xs text-green-100">Langsung terhubung ke admin · Bayar saat dijemput</p>
+                      <p className="font-extrabold leading-tight">Konfirmasi Pesanan</p>
+                      <p className="text-xs font-medium text-primary-100">Bayar tunai saat dijemput</p>
                     </div>
+                    <span className="text-xl" aria-hidden="true">→</span>
                   </>
                 )}
               </button>

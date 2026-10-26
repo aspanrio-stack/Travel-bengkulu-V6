@@ -9,6 +9,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllOrders, saveOrder, Order } from '@/lib/orders';
+import { autoConfirmDueOrders } from '@/lib/auto-confirm';
 import { getSession } from '@/lib/auth';
 import { getCurrentUser } from '@/lib/supabase/server';
 import {
@@ -30,7 +31,8 @@ export async function GET() {
   }
 
   try {
-    const orders = await getAllOrders();
+    // Tunai: otomatis 'success' 2 jam setelah jadwal keberangkatan
+    const orders = await autoConfirmDueOrders(await getAllOrders());
     return NextResponse.json({ orders });
   } catch (error) {
     console.error('Get orders error:', error);

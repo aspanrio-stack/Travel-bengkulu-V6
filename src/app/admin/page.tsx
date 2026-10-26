@@ -11,7 +11,7 @@ function formatRp(n: number) {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n);
 }
 
-function StatusBadge({ status }: { status: Order['status'] }) {
+function StatusBadge({ status, auto }: { status: Order['status']; auto?: boolean }) {
   const map = {
     pending:   { label: 'Menunggu',     cls: 'bg-amber-100 text-amber-700 border-amber-200' },
     success:   { label: 'Dikonfirmasi', cls: 'bg-green-100 text-green-700 border-green-200' },
@@ -20,7 +20,7 @@ function StatusBadge({ status }: { status: Order['status'] }) {
   const { label, cls } = map[status];
   return (
     <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${cls}`}>
-      {label}
+      {label}{status === 'success' && auto ? ' (otomatis)' : ''}
     </span>
   );
 }
@@ -851,7 +851,7 @@ export default function AdminDashboard() {
                             </span>
                           </td>
                           <td className="px-4 py-3">
-                            <StatusBadge status={order.status} />
+                            <StatusBadge status={order.status} auto={order.autoConfirmed} />
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex flex-wrap gap-1.5">
@@ -912,7 +912,7 @@ export default function AdminDashboard() {
                             💬 {order.phone}
                           </a>
                         </div>
-                        <StatusBadge status={order.status} />
+                        <StatusBadge status={order.status} auto={order.autoConfirmed} />
                       </div>
                       <p className="text-sm text-slate-700 mb-0.5">📍 {order.route}</p>
                       {(order as Order & { departureTime?: string }).departureTime && (

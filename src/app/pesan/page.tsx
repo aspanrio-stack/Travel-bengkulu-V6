@@ -48,7 +48,7 @@ export default async function PesanPage({
           <div className="flex flex-wrap justify-center gap-3 mt-5 text-sm">
             {(isRental
               ? ['✅ Avanza · Innova · HiAce', '👨‍✈️ Dengan Sopir / Lepas Kunci', '📱 Bayar QRIS atau Tunai', '🚗 Unit Diantar ke Lokasi']
-              : ['✅ Mudah & Cepat', '💬 Konfirmasi via WhatsApp', '📱 Bayar via QRIS', '🚗 Door to Door']
+              : ['✅ Mudah & Cepat', '💬 Konfirmasi via WhatsApp', '💵 Bayar Tunai ke Driver', '🚗 Door to Door']
             ).map(f => (
               <span key={f} className="bg-white/20 px-3 py-1.5 rounded-full font-medium">{f}</span>
             ))}

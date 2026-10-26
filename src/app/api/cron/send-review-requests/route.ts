@@ -20,6 +20,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { timingSafeEqual } from 'crypto';
 import { Resend } from 'resend';
+import { autoConfirmDueOrders } from '@/lib/auto-confirm';
 import { getOrdersCreatedSince, getOrderById, markReviewEmailSent, getRedis, type Order } from '@/lib/orders';
 import {
   createReviewToken,
@@ -118,7 +119,7 @@ export async function GET(req: NextRequest) {
   const stats = { scanned: 0, eligible: 0, sent: 0, failed: 0, skippedLocked: 0 };
 
   try {
-    const orders = await getOrdersCreatedSince(now - SCAN_WINDOW_DAYS * DAY, 500);
+    const orders = await autoConfirmDueOrders(await getOrdersCreatedSince(now - SCAN_WINDOW_DAYS * DAY, 500), now);
     stats.scanned = orders.length;
 
     const due = orders.filter(o => {

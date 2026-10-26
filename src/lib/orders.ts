@@ -33,6 +33,8 @@ export interface Order {
   paymentMethod: 'qris' | 'tunai';
   createdAt: string;
   confirmedAt?: string;
+  /** true jika dikonfirmasi otomatis (tunai, 2 jam setelah keberangkatan), bukan manual oleh admin */
+  autoConfirmed?: boolean;
   /** ID user Supabase jika pemesan login (opsional — tamu tetap bisa pesan) */
   userId?: string;
   /** true jika email permintaan ulasan sudah dikirim (anti-duplikasi; undefined dianggap false) */
