@@ -11,5 +11,11 @@
       "destination": "https://bengkulutravel.com/:path*",
       "permanent": true
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/send-review-requests",
+      "schedule": "0 1 * * *"
+    }
   ]
 }

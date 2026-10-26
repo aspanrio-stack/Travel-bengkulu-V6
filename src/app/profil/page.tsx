@@ -5,6 +5,8 @@ import { getCurrentUser } from '@/lib/supabase/server';
 import { getOrdersByUser, formatRp, type Order } from '@/lib/orders';
 import LogoutButton from '@/components/LogoutButton';
 import SavedAddressList from '@/components/SavedAddressList';
+import OrderReviewBox from '@/components/OrderReviewBox';
+import { getReviewsByOrderIds, type OwnReview } from '@/lib/reviews';
 
 export const metadata: Metadata = { title: 'Profil & Pesanan Saya', robots: { index: false, follow: false } };
 export const dynamic = 'force-dynamic';
@@ -25,6 +27,10 @@ export default async function ProfilPage() {
   let orders: Order[] = [];
   let loadError = false;
   try { orders = await getOrdersByUser(user.id); } catch { loadError = true; }
+
+  // Ulasan untuk semua pesanan di atas (satu query). Gagal ≠ halaman error: tombol ulasan saja yang tidak muncul.
+  let reviews: Record<string, OwnReview> = {};
+  try { reviews = await getReviewsByOrderIds(orders.map(o => o.id)); } catch { /* abaikan */ }
 
   const upcoming = orders.filter(o => o.status !== 'cancelled' && o.date >= new Date().toISOString().slice(0, 10));
 
@@ -70,6 +76,7 @@ export default async function ProfilPage() {
                   <span className="text-slate-500">{o.paymentMethod === 'qris' ? 'QRIS' : 'Tunai ke driver'}</span>
                   <span className="font-bold text-primary-700">{formatRp(o.total)}</span>
                 </div>
+                <OrderReviewBox order={o} review={reviews[o.id]} />
               </li>
             ))}
           </ul>
