@@ -6,6 +6,7 @@ import ServiceCarousel from '@/components/ServiceCarousel';
 import DestinationCard from '@/components/DestinationCard';
 import HomeGreeting from '@/components/HomeGreeting';
 import HomeBookingCard from '@/components/HomeBookingCard';
+import CustomerReviewsCard from '@/components/CustomerReviewsCard';
 import { DESTINATIONS } from '@/lib/destinations';
 import { getRouteById, formatPrice } from '@/lib/routes';
 
@@ -14,6 +15,9 @@ export const metadata: Metadata = {
   description:
     'Travel Bengkulu melayani antar jemput door to door rute Bengkulu–Palembang, Bengkulu–Jambi, dan Bengkulu–Curup. Armada bersih, pengemudi berpengalaman, harga pas di kantong. Pesan sekarang via WhatsApp!',
 };
+
+// Beranda statis (ISR): dibangun ulang paling cepat tiap 5 menit → ulasan baru / yang disembunyikan ikut tampil/hilang.
+export const revalidate = 300;
 
 const WA = 'https://wa.me/6282374497929?text=Halo%20Travel%20Bengkulu%2C%20saya%20ingin%20pesan%20travel';
 
@@ -298,6 +302,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ULASAN PELANGGAN — otomatis hilang jika belum ada ulasan terpublikasi */}
+      <CustomerReviewsCard />
     </>
   );
 }

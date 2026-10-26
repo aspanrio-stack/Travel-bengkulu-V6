@@ -35,6 +35,10 @@ export interface Order {
   confirmedAt?: string;
   /** ID user Supabase jika pemesan login (opsional — tamu tetap bisa pesan) */
   userId?: string;
+  /** true jika email permintaan ulasan sudah dikirim (anti-duplikasi; undefined dianggap false) */
+  reviewEmailSent?: boolean;
+  /** ISO waktu email permintaan ulasan terkirim */
+  reviewEmailSentAt?: string;
 }
 
 // ─────────────────────────────────────────────
@@ -100,7 +104,8 @@ export function getRedis(): Redis {
 export async function saveOrder(order: Order): Promise<void> {
   const redis = getRedis();
   const pipeline = redis.pipeline();
-  pipeline.set(`order:${order.id}`, JSON.stringify(order));
+  // reviewEmailSent default false untuk pesanan baru (spread di belakang agar nilai eksplisit tetap menang)
+  pipeline.set(`order:${order.id}`, JSON.stringify({ reviewEmailSent: false, ...order }));
   pipeline.zadd('orders', Date.now(), order.id);
   if (order.userId) pipeline.zadd(`user_orders:${order.userId}`, Date.now(), order.id);
   await pipeline.exec();
@@ -122,6 +127,30 @@ export async function getAllOrders(): Promise<Order[]> {
   const keys = ids.map(id => `order:${id}`);
   const values = await redis.mget(...keys);
   return values.filter((v): v is string => v !== null).map(v => JSON.parse(v) as Order);
+}
+
+/**
+ * Pesanan yang DIBUAT sejak `sinceMs` (score sorted set `orders` = waktu pembuatan).
+ * Dipakai cron ulasan. Dibatasi `limit` agar ringan.
+ */
+export async function getOrdersCreatedSince(sinceMs: number, limit = 500): Promise<Order[]> {
+  const redis = getRedis();
+  const ids = await redis.zrevrangebyscore('orders', '+inf', sinceMs, 'LIMIT', 0, limit);
+  if (ids.length === 0) return [];
+  const values = await redis.mget(...ids.map(id => `order:${id}`));
+  return values.filter((v): v is string => v !== null).map(v => JSON.parse(v) as Order);
+}
+
+/** Tandai email ulasan sudah terkirim. Baca ulang order terbaru agar tidak menimpa perubahan lain. */
+export async function markReviewEmailSent(id: string): Promise<void> {
+  const redis = getRedis();
+  const raw = await redis.get(`order:${id}`);
+  if (!raw) return;
+  const order = JSON.parse(raw) as Order;
+  await redis.set(
+    `order:${id}`,
+    JSON.stringify({ ...order, reviewEmailSent: true, reviewEmailSentAt: new Date().toISOString() })
+  );
 }
 
 export async function getOrderById(id: string): Promise<Order | null> {
