@@ -127,6 +127,7 @@ export default function TravelBengkuluCurup() {
         <ul style={{listStyle: "none", padding: 0, margin: 0, display: "flex", flexWrap: "wrap", gap: "0.5rem"}}>
           <li><Link href="/travel-curup-bengkulu" style={{color: "#16a34a", textDecoration: "underline"}}>Travel Curup → Bengkulu</Link></li>
           <li><Link href="/travel-curup-bandung" style={{color: "#16a34a", textDecoration: "underline"}}>Travel Curup → Bandung (HiAce)</Link></li>
+          <li><Link href="/travel-bengkulu-padang" style={{color: "#16a34a", textDecoration: "underline"}}>Travel Bengkulu → Padang (Hiace)</Link></li>
           <li><Link href="/rental-mobil-curup" style={{color: "#16a34a", textDecoration: "underline"}}>Rental Mobil Curup</Link></li>
           <li><Link href="/antar-jemput-bandara-curup" style={{color: "#16a34a", textDecoration: "underline"}}>Antar Jemput Bandara Curup</Link></li>
           <li><Link href="/travel-curup-bandara-bengkulu" style={{color: "#16a34a", textDecoration: "underline"}}>Travel Curup–Bandara Bengkulu</Link></li>

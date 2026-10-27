@@ -14,6 +14,11 @@ export interface Route {
    * Pesan khusus untuk rute ini (ditampilkan di bawah dropdown jam)
    */
   departureNote?: string;
+  /**
+   * Info per jam keberangkatan: jenis armada + pemberitahuan khusus
+   * yang muncul di form pemesanan saat jam tersebut dipilih.
+   */
+  timeInfo?: Record<string, { car: string; notice?: string }>;
 }
 
 export const ROUTES: Route[] = [
@@ -153,6 +158,62 @@ export const ROUTES: Route[] = [
     departureNote: 'Berangkat 2 kali seminggu. Hubungi kami untuk konfirmasi hari, jam, dan sisa kursi.',
   },
   {
+    id: 'bkl-pdg',
+    from: 'Bengkulu',
+    to: 'Padang',
+    price: 300000,
+    duration: '18–22 jam',
+    via: 'Curup, Lubuklinggau',
+    departureTimes: ['14:00', '18:30'],
+    departureNote: 'Pukul 18.30 menggunakan mobil Hiace. Pukul 14.00 menggunakan mobil random (bukan Hiace).',
+    timeInfo: {
+      '14:00': { car: 'Mobil Random', notice: 'Perhatian: keberangkatan pukul 14.00 menggunakan mobil random, bukan Hiace. Pilih pukul 18.30 jika Anda ingin naik Hiace.' },
+      '18:30': { car: 'Hiace' },
+    },
+  },
+  {
+    id: 'pdg-bkl',
+    from: 'Padang',
+    to: 'Bengkulu',
+    price: 300000,
+    duration: '18–22 jam',
+    via: 'Curup, Lubuklinggau',
+    departureTimes: ['14:00', '18:30'],
+    departureNote: 'Pukul 18.30 menggunakan mobil Hiace. Pukul 14.00 menggunakan mobil random (bukan Hiace).',
+    timeInfo: {
+      '14:00': { car: 'Mobil Random', notice: 'Perhatian: keberangkatan pukul 14.00 menggunakan mobil random, bukan Hiace. Pilih pukul 18.30 jika Anda ingin naik Hiace.' },
+      '18:30': { car: 'Hiace' },
+    },
+  },
+  {
+    id: 'crp-pdg',
+    from: 'Curup',
+    to: 'Padang',
+    price: 300000,
+    duration: '16–20 jam',
+    via: 'Lubuklinggau',
+    departureTimes: ['14:00', '18:30'],
+    departureNote: 'Pukul 18.30 menggunakan mobil Hiace. Pukul 14.00 menggunakan mobil random (bukan Hiace).',
+    timeInfo: {
+      '14:00': { car: 'Mobil Random', notice: 'Perhatian: keberangkatan pukul 14.00 menggunakan mobil random, bukan Hiace. Pilih pukul 18.30 jika Anda ingin naik Hiace.' },
+      '18:30': { car: 'Hiace' },
+    },
+  },
+  {
+    id: 'pdg-crp',
+    from: 'Padang',
+    to: 'Curup',
+    price: 300000,
+    duration: '16–20 jam',
+    via: 'Lubuklinggau',
+    departureTimes: ['14:00', '18:30'],
+    departureNote: 'Pukul 18.30 menggunakan mobil Hiace. Pukul 14.00 menggunakan mobil random (bukan Hiace).',
+    timeInfo: {
+      '14:00': { car: 'Mobil Random', notice: 'Perhatian: keberangkatan pukul 14.00 menggunakan mobil random, bukan Hiace. Pilih pukul 18.30 jika Anda ingin naik Hiace.' },
+      '18:30': { car: 'Hiace' },
+    },
+  },
+  {
     id: 'bkl-lbg',
     from: 'Bengkulu',
     to: 'Lebong',
@@ -207,6 +268,10 @@ export function formatPrice(price: number): string {
 }
 
 /** Format jam "10:00" → "10.00 WIB" */
+export function getTimeInfo(route: Route | undefined, time: string) {
+  return route?.timeInfo?.[time];
+}
+
 export function formatDepartureTime(time: string): string {
   return time.replace(':', '.') + ' WIB';
 }
