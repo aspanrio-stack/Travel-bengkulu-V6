@@ -20,9 +20,9 @@ const routes = [
   { from: 'Bandung', to: 'Curup (Hiace)', price: 'Rp 800.000', duration: '30–36 jam', href: '/travel-bandung-curup', img: '/images/curup-bandung/hiace-curup-bandung-malam.webp' },
   { from: 'Bandung', to: 'Bengkulu (Hiace)', price: 'Rp 800.000', duration: '32–38 jam', href: '/travel-bandung-bengkulu', img: '/images/curup-bandung/hiace-curup-bandung-malam.webp' },
   { from: 'Bengkulu', to: 'Padang (Hiace)', price: 'Rp 350.000', duration: '18–22 jam', href: '/travel-bengkulu-padang', img: '/images/hiace-padang/hiace-silver-samping.webp' },
-  { from: 'Padang', to: 'Bengkulu (Hiace)', price: 'Rp 300.000', duration: '18–22 jam', href: '/travel-padang-bengkulu', img: '/images/hiace-padang/hiace-silver-depan.webp' },
+  { from: 'Padang', to: 'Bengkulu (Hiace)', price: 'Rp 350.000', duration: '18–22 jam', href: '/travel-padang-bengkulu', img: '/images/hiace-padang/hiace-silver-depan.webp' },
   { from: 'Curup', to: 'Padang (Hiace)', price: 'Rp 350.000', duration: '16–20 jam', href: '/travel-curup-padang', img: '/images/hiace-padang/hiace-silver-samping.webp' },
-  { from: 'Padang', to: 'Curup (Hiace)', price: 'Rp 300.000', duration: '16–20 jam', href: '/travel-padang-curup', img: '/images/hiace-padang/hiace-silver-depan.webp' },
+  { from: 'Padang', to: 'Curup (Hiace)', price: 'Rp 350.000', duration: '16–20 jam', href: '/travel-padang-curup', img: '/images/hiace-padang/hiace-silver-depan.webp' },
 ];
 
 

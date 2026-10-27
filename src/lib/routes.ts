@@ -32,8 +32,8 @@ export interface Route {
 /** Selisih tarif untuk kendaraan selain Hiace (rute koridor Padang) */
 export const KURANG_NON_HIACE = 50000;
 
-const NOTICE_RANDOM =
-  'Perhatian: keberangkatan pukul 14.00 menggunakan mobil random (bukan Hiace), tarif Rp 50.000 lebih murah. Pilih jam Hiace jika Anda ingin naik Hiace.';
+const noticeRandom = (jam: string) =>
+  `Perhatian: keberangkatan pukul ${jam.replace(':', '.')} menggunakan mobil random (bukan Hiace), tarif Rp 50.000 lebih murah. Pilih jam Hiace jika Anda ingin naik Hiace.`;
 
 /** Tujuan di koridor Padang — tarif Hiace per orang dari Bengkulu (Curup mengikuti tarif yang sama) */
 export const TUJUAN_KORIDOR_PADANG: { slug: string; nama: string; hiace: number }[] = [
@@ -47,8 +47,8 @@ export const TUJUAN_KORIDOR_PADANG: { slug: string; nama: string; hiace: number 
 
 function koridorPadangRoutes(): Route[] {
   const asal = [
-    { prefix: 'bkl', nama: 'Bengkulu', jamHiace: '12:15', via: 'Curup, Lubuklinggau' },
-    { prefix: 'crp', nama: 'Curup', jamHiace: '14:15', via: 'Lubuklinggau' },
+    { prefix: 'bkl', nama: 'Bengkulu', jamHiace: '12:15', jamRandom: '11:00', via: 'Curup, Lubuklinggau' },
+    { prefix: 'crp', nama: 'Curup', jamHiace: '14:15', jamRandom: '13:00', via: 'Lubuklinggau' },
   ];
   return asal.flatMap(a =>
     TUJUAN_KORIDOR_PADANG.map((t): Route => ({
@@ -59,11 +59,11 @@ function koridorPadangRoutes(): Route[] {
       duration: 'Estimasi dikonfirmasi admin',
       via: a.via,
       hideOnHome: true,
-      departureTimes: [a.jamHiace, '14:00'],
-      departureNote: `Hiace berangkat pukul ${a.jamHiace.replace(':', '.')} (Rp ${(t.hiace / 1000).toFixed(0)}.000). Mobil random pukul 14.00 (Rp ${((t.hiace - KURANG_NON_HIACE) / 1000).toFixed(0)}.000, bukan Hiace).`,
+      departureTimes: [a.jamHiace, a.jamRandom],
+      departureNote: `Hiace berangkat pukul ${a.jamHiace.replace(':', '.')} (Rp ${(t.hiace / 1000).toFixed(0)}.000). Mobil random pukul ${a.jamRandom.replace(':', '.')} (Rp ${((t.hiace - KURANG_NON_HIACE) / 1000).toFixed(0)}.000, bukan Hiace).`,
       timeInfo: {
         [a.jamHiace]: { car: 'Hiace' },
-        '14:00': { car: 'Mobil Random', price: t.hiace - KURANG_NON_HIACE, notice: NOTICE_RANDOM },
+        [a.jamRandom]: { car: 'Mobil Random', price: t.hiace - KURANG_NON_HIACE, notice: noticeRandom(a.jamRandom) },
       },
     })),
   );
@@ -206,8 +206,10 @@ export const ROUTES: Route[] = [
     price: 800000,
     duration: '30–36 jam',
     via: 'Tol Palembang, Bakauheni–Merak',
-    departureTimes: [],
-    departureNote: 'Berangkat 2 kali seminggu. Hubungi kami untuk konfirmasi hari, jam, dan sisa kursi.',
+    departureTimes: ['13:00'],
+    departureDays: [3, 5],
+    departureDaysLabel: 'Rabu dan Jumat',
+    departureNote: 'Berangkat setiap Rabu dan Jumat pukul 13.00 dari Bandung. Hubungi kami untuk konfirmasi sisa kursi.',
   },
   {
     id: 'bdg-bkl',
@@ -216,8 +218,10 @@ export const ROUTES: Route[] = [
     price: 800000,
     duration: '32–38 jam',
     via: 'Tol Palembang, Curup',
-    departureTimes: [],
-    departureNote: 'Berangkat 2 kali seminggu. Hubungi kami untuk konfirmasi hari, jam, dan sisa kursi.',
+    departureTimes: ['13:00'],
+    departureDays: [3, 5],
+    departureDaysLabel: 'Rabu dan Jumat',
+    departureNote: 'Berangkat setiap Rabu dan Jumat pukul 13.00 dari Bandung. Hubungi kami untuk konfirmasi sisa kursi.',
   },
   {
     id: 'bkl-pdg',
@@ -226,25 +230,25 @@ export const ROUTES: Route[] = [
     price: 350000,
     duration: '18–22 jam',
     via: 'Curup, Lubuklinggau',
-    departureTimes: ['12:15', '14:00'],
-    departureNote: 'Hiace berangkat pukul 12.15 (Rp 350.000). Mobil random pukul 14.00 (Rp 300.000, bukan Hiace).',
+    departureTimes: ['12:15', '11:00'],
+    departureNote: 'Hiace berangkat pukul 12.15 (Rp 350.000). Mobil random pukul 11.00 (Rp 300.000, bukan Hiace).',
     timeInfo: {
       '12:15': { car: 'Hiace' },
-      '14:00': { car: 'Mobil Random', price: 300000, notice: NOTICE_RANDOM },
+      '11:00': { car: 'Mobil Random', price: 300000, notice: noticeRandom('11:00') },
     },
   },
   {
     id: 'pdg-bkl',
     from: 'Padang',
     to: 'Bengkulu',
-    price: 300000,
+    price: 350000,
     duration: '18–22 jam',
     via: 'Curup, Lubuklinggau',
-    departureTimes: ['14:00', '18:30'],
-    departureNote: 'Pukul 18.30 menggunakan mobil Hiace. Pukul 14.00 menggunakan mobil random (bukan Hiace).',
+    departureTimes: ['11:00', '10:00'],
+    departureNote: 'Hiace berangkat pukul 11.00 (Rp 350.000). Mobil random pukul 10.00 (Rp 300.000, bukan Hiace).',
     timeInfo: {
-      '14:00': { car: 'Mobil Random', notice: 'Perhatian: keberangkatan pukul 14.00 menggunakan mobil random, bukan Hiace. Pilih pukul 18.30 jika Anda ingin naik Hiace.' },
-      '18:30': { car: 'Hiace' },
+      '11:00': { car: 'Hiace' },
+      '10:00': { car: 'Mobil Random', price: 300000, notice: noticeRandom('10:00') },
     },
   },
   {
@@ -254,25 +258,25 @@ export const ROUTES: Route[] = [
     price: 350000,
     duration: '16–20 jam',
     via: 'Lubuklinggau',
-    departureTimes: ['14:15', '14:00'],
-    departureNote: 'Hiace berangkat pukul 14.15 (Rp 350.000). Mobil random pukul 14.00 (Rp 300.000, bukan Hiace).',
+    departureTimes: ['14:15', '13:00'],
+    departureNote: 'Hiace berangkat pukul 14.15 (Rp 350.000). Mobil random pukul 13.00 (Rp 300.000, bukan Hiace).',
     timeInfo: {
       '14:15': { car: 'Hiace' },
-      '14:00': { car: 'Mobil Random', price: 300000, notice: NOTICE_RANDOM },
+      '13:00': { car: 'Mobil Random', price: 300000, notice: noticeRandom('13:00') },
     },
   },
   {
     id: 'pdg-crp',
     from: 'Padang',
     to: 'Curup',
-    price: 300000,
+    price: 350000,
     duration: '16–20 jam',
     via: 'Lubuklinggau',
-    departureTimes: ['14:00', '18:30'],
-    departureNote: 'Pukul 18.30 menggunakan mobil Hiace. Pukul 14.00 menggunakan mobil random (bukan Hiace).',
+    departureTimes: ['11:00', '10:00'],
+    departureNote: 'Hiace berangkat pukul 11.00 (Rp 350.000). Mobil random pukul 10.00 (Rp 300.000, bukan Hiace).',
     timeInfo: {
-      '14:00': { car: 'Mobil Random', notice: 'Perhatian: keberangkatan pukul 14.00 menggunakan mobil random, bukan Hiace. Pilih pukul 18.30 jika Anda ingin naik Hiace.' },
-      '18:30': { car: 'Hiace' },
+      '11:00': { car: 'Hiace' },
+      '10:00': { car: 'Mobil Random', price: 300000, notice: noticeRandom('10:00') },
     },
   },
   {
