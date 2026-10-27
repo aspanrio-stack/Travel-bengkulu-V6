@@ -4,7 +4,6 @@ import ArticleLayout from '@/components/ArticleLayout';
 import type { BandungRoute } from '@/lib/bandung-routes';
 
 const BASE = 'https://bengkulutravel.com';
-const IMG_DIR = '/images/curup-bandung';
 
 const INTERIOR = [
   { src: 'interior-hiace-karaoke-tv.webp', w: 750, h: 1000, alt: 'Interior Hiace dengan TV, speaker, dan lampu LED biru', cap: 'Kabin dengan TV, speaker, dan lampu LED.' },
@@ -15,6 +14,10 @@ const INTERIOR = [
 const rp = (n: number) => 'Rp ' + n.toLocaleString('id-ID');
 
 export default function BandungRoutePage({ r }: { r: BandungRoute }) {
+  const IMG_DIR = r.imgDir ?? '/images/curup-bandung';
+  const via = r.via ?? 'Tol Palembang';
+  const jadwal = r.jadwal ?? '2 kali seminggu';
+  const jadwalFaq = r.jadwalFaq ?? 'Berangkat 2 kali seminggu. Hubungi admin untuk hari, jam, dan sisa kursi terbaru.';
   const url = `${BASE}/${r.slug}`;
   const nama = `${r.from} ${r.to}`;
   const harga = rp(r.price);
@@ -22,13 +25,13 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
   const extra = heroIsMalam
     ? { src: 'hiace-curup-bandung-hero.webp', w: 750, h: 1000, alt: `Hiace hitam armada travel ${nama} di atas kapal`, cap: 'Armada Hiace di atas kapal penyeberangan.' }
     : { src: 'hiace-curup-bandung-malam.webp', w: 562, h: 1000, alt: `Hiace putih armada travel ${nama} saat penyeberangan malam`, cap: 'Armada saat penyeberangan malam.' };
-  const galeri = [...INTERIOR, extra];
+  const galeri = r.galeri ?? [...INTERIOR, extra];
 
   const faq: [string, string][] = [
     [`Berapa tarif travel ${nama}?`, `Tarif travel Hiace ${nama} adalah ${harga} per orang.`],
-    ['Kapan jadwal keberangkatannya?', 'Berangkat 2 kali seminggu. Hubungi admin untuk hari, jam, dan sisa kursi terbaru.'],
+    ['Kapan jadwal keberangkatannya?', jadwalFaq],
     [`Lewat mana rute travel ${nama}?`, r.jalur],
-    ['Berapa lama perjalanannya?', `Estimasi ${r.duration} termasuk penyeberangan Bakauheni–Merak, istirahat, dan makan. Waktu aktual bisa berubah karena kondisi jalan, antrean pelabuhan, dan cuaca.`],
+    ['Berapa lama perjalanannya?', `Estimasi ${r.duration} termasuk ${r.durasiFaq ?? 'penyeberangan Bakauheni–Merak, istirahat, dan makan'}. Waktu aktual bisa berubah karena ${r.durasiNote ?? 'kondisi jalan, antrean pelabuhan, dan cuaca'}.`],
     ['Bagaimana cara memesan?', 'Lewat form online di website ini atau WhatsApp admin.'],
   ];
 
@@ -65,7 +68,7 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
       title={r.h1}
       description={r.lead}
       breadcrumbs={[{ label: 'Travel Bengkulu', href: '/travel-bengkulu' }, { label: `${r.from}–${r.to}` }]}
-      badge="🚐 Rute Baru · Via Tol"
+      badge={r.badge ?? '🚐 Rute Baru · Via Tol'}
       price={harga}
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
@@ -76,13 +79,13 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
           alt={r.heroAlt}
           fill
           priority
-          className={heroIsMalam ? 'object-cover object-[50%_65%]' : 'object-cover object-bottom'}
+          className={r.heroPos ? `object-cover ${r.heroPos}` : heroIsMalam ? 'object-cover object-[50%_65%]' : 'object-cover object-bottom'}
           sizes="(max-width: 1024px) 100vw, 700px"
         />
       </div>
 
       <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
-        <p className="text-primary-800 font-semibold text-sm">Berangkat 2x seminggu. Isi form untuk cek kursi.</p>
+        <p className="text-primary-800 font-semibold text-sm">{r.ctaText ?? 'Berangkat 2x seminggu. Isi form untuk cek kursi.'}</p>
         <Link href={`/pesan?rute=${r.routeId}`} className="shrink-0 bg-primary-600 hover:bg-primary-700 text-white font-bold px-6 py-2.5 rounded-xl transition-colors text-sm">
           🎫 Pesan Sekarang
         </Link>
@@ -90,25 +93,31 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
 
       <p>
         <strong>Travel {nama} Hiace</strong> melayani perjalanan dari {r.from} langsung ke {r.tujuan} lewat{' '}
-        <strong>Tol Palembang</strong> dengan armada <strong>Toyota Hiace</strong>. Tarif <strong>{harga} per orang</strong>,
-        berangkat <strong>2 kali seminggu</strong>. Banyak penumpang memilih Hiace karena kabinnya lebih lega dan nyaman
+        <strong>{via}</strong> dengan armada <strong>Toyota Hiace</strong>. Tarif <strong>{harga} per orang</strong>,
+        jadwal <strong>{jadwal}</strong>. Banyak penumpang memilih Hiace karena kabinnya lebih lega dan nyaman
         untuk perjalanan jauh.
       </p>
+
+      {r.catatanArmada && (
+        <p className="p-3 bg-amber-50 border border-amber-300 rounded-xl text-amber-900 text-sm">
+          <strong>Catatan armada:</strong> {r.catatanArmada}
+        </p>
+      )}
 
       <h2>Tarif dan Informasi Perjalanan</h2>
       <table>
         <thead><tr><th>Informasi</th><th>Detail</th></tr></thead>
         <tbody>
-          <tr><td>Rute</td><td><strong>{r.from} → {r.to}</strong> via Tol Palembang</td></tr>
+          <tr><td>Rute</td><td><strong>{r.from} → {r.to}</strong> via {via}</td></tr>
           <tr><td>Tarif</td><td><strong>{harga}/orang</strong></td></tr>
-          <tr><td>Jadwal</td><td>2 kali seminggu (hari &amp; jam: konfirmasi admin)</td></tr>
-          <tr><td>Estimasi waktu</td><td>{r.duration}, tergantung jalan, antrean pelabuhan, dan cuaca</td></tr>
-          <tr><td>Armada</td><td>Toyota Hiace, sabuk pengaman, TV &amp; audio</td></tr>
+          <tr><td>Jadwal</td><td>{r.jadwalRow ?? `${jadwal} (hari & jam: konfirmasi admin)`}</td></tr>
+          <tr><td>Estimasi waktu</td><td>{r.duration}, tergantung {r.durasiNote ?? 'jalan, antrean pelabuhan, dan cuaca'}</td></tr>
+          <tr><td>Armada</td><td>{r.armadaRow ?? 'Toyota Hiace, sabuk pengaman, TV & audio'}</td></tr>
           <tr><td>Penjemputan</td><td>{r.jemput}, titik disepakati saat pesan</td></tr>
         </tbody>
       </table>
 
-      <h2>Rute Perjalanan {r.from} ke {r.to} via Tol Palembang</h2>
+      <h2>Rute Perjalanan {r.from} ke {r.to} via {via}</h2>
       <p>{r.jalur}</p>
       <p>
         Sopir berhenti di rumah makan dan SPBU untuk istirahat, makan, dan ibadah agar penumpang tidak kelelahan.
@@ -130,8 +139,8 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
       <h2>Kenapa Pilih Travel Hiace {nama}</h2>
       <ul>
         <li><strong>Hiace kabin lega</strong> — atap tinggi, kursi bersabuk pengaman, TV dan audio</li>
-        <li><strong>Via tol</strong> — rute Palembang–Lampung lewat Tol Trans Sumatera</li>
-        <li><strong>Jadwal rutin</strong> — 2 kali seminggu, bisa direncanakan jauh hari</li>
+        <li><strong>{via}</strong> — {r.perkVia ?? 'rute Palembang–Lampung lewat Tol Trans Sumatera'}</li>
+        <li><strong>Jadwal jelas</strong> — {r.perkJadwal ?? '2 kali seminggu, bisa direncanakan jauh hari'}</li>
         <li><strong>Tarif jelas</strong> — {harga}/orang, admin menjelaskan yang termasuk sebelum Anda membayar</li>
         <li><strong>Pesan 24 jam</strong> — admin siap dihubungi kapan saja</li>
       </ul>

@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import { ROUTES, formatPrice, formatDepartureTime, Route } from '@/lib/routes';
+import { ROUTES, formatPrice, formatDepartureTime, getTimeInfo, Route } from '@/lib/routes';
 import LocationPicker from '@/components/LocationPicker';
 import SavedAddressBox from '@/components/SavedAddressBox';
 import LoginPrompt, { type AuthStatus } from '@/components/LoginPrompt';
@@ -132,8 +132,9 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const selectedTimeInfo = form.departureTime ? getTimeInfo(selectedRoute, form.departureTime) : undefined;
   const departureTimeLabel = (() => {
-    if (hasFixedTimes && form.departureTime) return `Pukul ${formatDepartureTime(form.departureTime)}`;
+    if (hasFixedTimes && form.departureTime) return `Pukul ${formatDepartureTime(form.departureTime)}${selectedTimeInfo ? ` · ${selectedTimeInfo.car}` : ''}`;
     if (isAirportRoute && form.flightInfo) return form.flightInfo;
     if (isFlexibleRoute) return 'Konfirmasi via WhatsApp';
     return '';
@@ -147,7 +148,9 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers 
     routeId: form.routeId,
     route: `${selectedRoute!.from} → ${selectedRoute!.to}`,
     date: form.date,
-    departureTime: form.departureTime || form.flightInfo || '',
+    departureTime: form.departureTime
+      ? `${form.departureTime}${selectedTimeInfo ? ` (${selectedTimeInfo.car})` : ''}`
+      : form.flightInfo || '',
     passengers: form.passengers,
     pickup: form.pickupAddress,
     dropoff: form.dropoffAddress,
@@ -185,7 +188,7 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers 
       // Buat pesan WA otomatis ke admin
       const orderId = data.orderId || '-';
       const dep = form.departureTime
-        ? `\nJam: ${formatDepartureTime(form.departureTime)}`
+        ? `\nJam: ${formatDepartureTime(form.departureTime)}${selectedTimeInfo ? `\nArmada: ${selectedTimeInfo.car}` : ''}`
         : form.flightInfo
         ? `\nPenerbangan: ${form.flightInfo}`
         : '';
@@ -418,9 +421,15 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers 
                       className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500">
                       <option value="">-- Pilih Jam --</option>
                       {selectedRoute.departureTimes!.map(t => (
-                        <option key={t} value={t}>🕐 {formatDepartureTime(t)}</option>
+                        <option key={t} value={t}>🕐 {formatDepartureTime(t)}{getTimeInfo(selectedRoute, t) ? ` · ${getTimeInfo(selectedRoute, t)!.car}` : ''}</option>
                       ))}
                     </select>
+                    {selectedTimeInfo?.notice && (
+                      <div role="alert" className="mt-2 bg-amber-50 border border-amber-300 rounded-xl px-4 py-3 flex items-start gap-2">
+                        <span className="text-amber-500 shrink-0 mt-0.5">⚠️</span>
+                        <p className="text-sm text-amber-800 font-medium">{selectedTimeInfo.notice}</p>
+                      </div>
+                    )}
                     {selectedRoute.departureNote && (
                       <p className="text-xs text-primary-600 mt-1.5 flex items-start gap-1">
                         <span className="mt-0.5">ℹ️</span>{selectedRoute.departureNote}
