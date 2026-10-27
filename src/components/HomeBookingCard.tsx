@@ -21,7 +21,7 @@ export default function HomeBookingCard() {
   };
 
   return (
-    <section aria-label="Pesan cepat" className="md:hidden relative z-10 -mt-9 px-4">
+    <section aria-label="Pesan cepat" className="md:hidden relative z-10 mt-3 px-4">
       <div className="rounded-3xl bg-white p-4 shadow-xl shadow-slate-900/10 ring-1 ring-slate-100">
         {/* Dari → Tujuan */}
         <div className="flex items-center justify-between gap-2">
