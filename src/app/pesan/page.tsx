@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default async function PesanPage({
   searchParams,
 }: {
-  searchParams: Promise<{ rute?: string; mode?: string; penumpang?: string }>;
+  searchParams: Promise<{ rute?: string; mode?: string; penumpang?: string; jam?: string }>;
 }) {
   const params = await searchParams;
   const routeId = params.rute || '';
@@ -79,7 +79,7 @@ export default async function PesanPage({
       <div className="max-w-3xl mx-auto px-4 py-6 pb-10">
         {isRental
           ? <RentalForm />
-          : <BookingForm preselectedRouteId={routeId} preselectedPassengers={penumpang} />
+          : <BookingForm preselectedRouteId={routeId} preselectedPassengers={penumpang} preselectedTime={params.jam} />
         }
       </div>
     </div>

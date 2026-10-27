@@ -1,6 +1,8 @@
 // Konfigurasi 3 halaman rute HiAce Bandung: dipakai BandungRoutePage.
 // Ubah tarif/estimasi di sini (dan di routes.ts) agar seragam.
 export const HARGA_BANDUNG = 800000;
+// Isi jumlah kursi Hiace yang sebenarnya, mis. '12 Penumpang'.
+export const KAPASITAS_HIACE = 'Konfirmasi admin';
 
 export interface BandungRoute {
   slug: string;
@@ -31,6 +33,9 @@ export interface BandungRoute {
   ctaText?: string;
   perkVia?: string;
   perkJadwal?: string;
+  kapasitas?: string;    // kartu 'Kapasitas' di ringkasan
+  armadaCard?: string;   // kartu 'Armada' di ringkasan
+  jadwalCards?: { jam?: string; time?: string; judul: string; sub: string; armada: string; icon: string; tone: 'hiace' | 'random' }[];
   jadwalRow?: string;
   armadaRow?: string;
   catatanArmada?: string; // kotak catatan di bawah intro
@@ -152,6 +157,11 @@ const PADANG_BASE = {
   via: 'Curup & Lubuklinggau',
   jadwal: '2 jam keberangkatan, 14.00 dan 18.30',
   jadwalFaq: 'Ada 2 jam keberangkatan: pukul 18.30 dengan mobil Hiace dan pukul 14.00 dengan mobil random (bukan Hiace). Hubungi admin untuk sisa kursi.',
+  armadaCard: 'Hiace · Mobil Random',
+  jadwalCards: [
+    { jam: '14.00 WIB', time: '14:00', judul: 'Keberangkatan Siang', sub: 'Menggunakan mobil random (bukan Hiace)', armada: 'Mobil Random', icon: '☀️', tone: 'random' as const },
+    { jam: '18.30 WIB', time: '18:30', judul: 'Keberangkatan Malam', sub: 'Menggunakan Toyota Hiace', armada: 'Hiace', icon: '🌙', tone: 'hiace' as const },
+  ],
   jadwalRow: 'Pukul 14.00 (mobil random) dan 18.30 (Hiace)',
   armadaRow: 'Toyota Hiace untuk jam 18.30 (sabuk pengaman, TV & audio). Jam 14.00 memakai mobil random',
   catatanArmada: 'Pilih keberangkatan pukul 18.30 jika Anda ingin naik Hiace. Keberangkatan pukul 14.00 menggunakan mobil random (bukan Hiace).',

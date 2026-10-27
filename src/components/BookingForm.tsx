@@ -13,11 +13,12 @@ const QRIS_ENABLED = false;
 interface BookingFormProps {
   preselectedRouteId?: string;
   preselectedPassengers?: number;
+  preselectedTime?: string;
 }
 
 const today = new Date().toISOString().split('T')[0];
 
-export default function BookingForm({ preselectedRouteId, preselectedPassengers }: BookingFormProps) {
+export default function BookingForm({ preselectedRouteId, preselectedPassengers, preselectedTime }: BookingFormProps) {
   const [step, setStep] = useState(1);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -51,9 +52,10 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers 
 
   useEffect(() => {
     if (preselectedRouteId) {
-      setForm(prev => ({ ...prev, routeId: preselectedRouteId, departureTime: '', flightInfo: '' }));
+      const valid = preselectedTime && ROUTES.find(r => r.id === preselectedRouteId)?.departureTimes?.includes(preselectedTime);
+      setForm(prev => ({ ...prev, routeId: preselectedRouteId, departureTime: valid ? preselectedTime! : '', flightInfo: '' }));
     }
-  }, [preselectedRouteId]);
+  }, [preselectedRouteId, preselectedTime]);
 
   const selectedRoute: Route | undefined = ROUTES.find(r => r.id === form.routeId);
 
