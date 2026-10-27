@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ArticleLayout from '@/components/ArticleLayout';
 import type { BandungRoute } from '@/lib/bandung-routes';
+import { KAPASITAS_HIACE } from '@/lib/bandung-routes';
 
 const BASE = 'https://bengkulutravel.com';
 
@@ -9,6 +10,23 @@ const INTERIOR = [
   { src: 'interior-hiace-karaoke-tv.webp', w: 750, h: 1000, alt: 'Interior Hiace dengan TV, speaker, dan lampu LED biru', cap: 'Kabin dengan TV, speaker, dan lampu LED.' },
   { src: 'kursi-hiace-penumpang.webp', w: 750, h: 1000, alt: 'Kursi penumpang Hiace dengan sabuk pengaman', cap: 'Kursi penumpang dengan sabuk pengaman.' },
   { src: 'kabin-hiace-lega.webp', w: 712, h: 1000, alt: 'Kabin Hiace atap tinggi dengan ruang gerak lega', cap: 'Atap tinggi dan ruang gerak lega.' },
+];
+
+const CORRIDOR_WEST = ['Bengkulu', 'Curup', 'Lubuklinggau', 'Padang'];
+const CORRIDOR_JAWA = ['Bandung', 'Tol Cipularang', 'Bakauheni–Merak', 'Tol Palembang', 'Lubuklinggau', 'Curup', 'Bengkulu'];
+
+function routeStops(from: string, to: string): string[] {
+  const kor = [CORRIDOR_WEST, CORRIDOR_JAWA].find((k) => k.includes(from) && k.includes(to));
+  if (!kor) return [from, to];
+  const a = kor.indexOf(from), b = kor.indexOf(to);
+  return a < b ? kor.slice(a, b + 1) : kor.slice(b, a + 1).reverse();
+}
+
+const STEPS = [
+  { icon: '📝', t: 'Isi form pesan', d: 'Pilih rute, tanggal, jam, dan jumlah penumpang.' },
+  { icon: '📍', t: 'Kirim titik jemput', d: 'Alamat jemput dan alamat tujuan Anda.' },
+  { icon: '✅', t: 'Admin konfirmasi', d: 'Kursi, jadwal, dan pembayaran dikonfirmasi admin.' },
+  { icon: '🚐', t: 'Berangkat', d: 'Siap di titik jemput sesuai jam yang disepakati.' },
 ];
 
 const rp = (n: number) => 'Rp ' + n.toLocaleString('id-ID');
@@ -63,6 +81,19 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
     ],
   };
 
+  const stops = routeStops(r.from, r.to);
+  const pesanHref = `/pesan?rute=${r.routeId}`;
+  const cards = r.jadwalCards ?? [
+    { jam: jadwal.charAt(0).toUpperCase() + jadwal.slice(1), judul: 'Jadwal Rutin', sub: 'Hari & jam keberangkatan dikonfirmasi admin', armada: 'Hiace', icon: '📅', tone: 'hiace' as const, time: undefined },
+  ];
+  const ringkasan = [
+    { k: 'Rute', v: `${r.from} → ${r.to}` },
+    { k: 'Armada', v: r.armadaCard ?? 'Toyota Hiace' },
+    { k: 'Kapasitas', v: r.kapasitas ?? KAPASITAS_HIACE },
+    { k: 'Harga', v: `${harga}/orang` },
+  ];
+  const H2 = 'text-2xl font-bold text-slate-800 mt-12 mb-5 pb-3 border-b-2 border-amber-300 inline-block';
+
   return (
     <ArticleLayout
       title={r.h1}
@@ -73,7 +104,8 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <div className="relative w-full h-64 md:h-80 rounded-2xl overflow-hidden mb-6">
+      {/* ── Foto utama ── */}
+      <div className="relative w-full h-64 md:h-80 rounded-2xl overflow-hidden mb-5 shadow-sm">
         <Image
           src={`${IMG_DIR}/${r.heroSrc}`}
           alt={r.heroAlt}
@@ -84,95 +116,173 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
         />
       </div>
 
-      <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
-        <p className="text-primary-800 font-semibold text-sm">{r.ctaText ?? 'Berangkat 2x seminggu. Isi form untuk cek kursi.'}</p>
-        <Link href={`/pesan?rute=${r.routeId}`} className="shrink-0 bg-primary-600 hover:bg-primary-700 text-white font-bold px-6 py-2.5 rounded-xl transition-colors text-sm">
-          🎫 Pesan Sekarang
-        </Link>
+      {/* ── Ringkasan: Rute / Armada / Kapasitas / Harga ── */}
+      <div className="grid grid-cols-2 gap-px bg-slate-200 rounded-2xl overflow-hidden border border-slate-200 mb-6">
+        {ringkasan.map((x) => (
+          <div key={x.k} className="bg-stone-50 px-4 py-4 text-center">
+            <div className="text-[11px] tracking-widest uppercase text-slate-400 mb-1">{x.k}</div>
+            <div className="font-bold text-slate-800 leading-snug">{x.v}</div>
+          </div>
+        ))}
       </div>
 
       <p>
         <strong>Travel {nama} Hiace</strong> melayani perjalanan dari {r.from} langsung ke {r.tujuan} lewat{' '}
-        <strong>{via}</strong> dengan armada <strong>Toyota Hiace</strong>. Tarif <strong>{harga} per orang</strong>,
-        jadwal <strong>{jadwal}</strong>. Banyak penumpang memilih Hiace karena kabinnya lebih lega dan nyaman
-        untuk perjalanan jauh.
+        <strong>{via}</strong>. Tarif <strong>{harga} per orang</strong>, jadwal <strong>{jadwal}</strong>. Banyak
+        penumpang memilih Hiace karena kabinnya lebih lega dan nyaman untuk perjalanan jauh.
       </p>
 
-      {r.catatanArmada && (
-        <p className="p-3 bg-amber-50 border border-amber-300 rounded-xl text-amber-900 text-sm">
-          <strong>Catatan armada:</strong> {r.catatanArmada}
-        </p>
-      )}
+      {/* ── Jadwal ── */}
+      <h2 className={H2}>Jadwal Keberangkatan</h2>
+      <div className={`grid gap-4 ${cards.length > 1 ? 'sm:grid-cols-2' : ''}`}>
+        {cards.map((c) => (
+          <Link
+            key={c.judul}
+            href={c.time ? `${pesanHref}&jam=${c.time}` : pesanHref}
+            className="group block rounded-2xl bg-slate-900 p-5 text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-300"
+          >
+            <div className="flex items-center gap-4">
+              <span className="text-4xl shrink-0" aria-hidden="true">{c.icon}</span>
+              <div className="min-w-0">
+                <div className="text-2xl font-bold text-amber-300 leading-tight">{c.jam}</div>
+                <div className="font-semibold">{c.judul}</div>
+                <div className="text-sm text-slate-300">{c.sub}</div>
+              </div>
+            </div>
+            <div className="mt-4 flex items-center justify-between">
+              <span className={`text-xs font-bold px-3 py-1 rounded-full ${c.tone === 'hiace' ? 'bg-emerald-400 text-emerald-950' : 'bg-amber-200 text-amber-900'}`}>
+                {c.armada}
+              </span>
+              <span className="text-sm text-slate-300 group-hover:text-white transition">Pilih jadwal ini →</span>
+            </div>
+          </Link>
+        ))}
+      </div>
 
-      <h2>Tarif dan Informasi Perjalanan</h2>
+      {r.catatanArmada && (
+        <div role="note" className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 flex gap-3">
+          <span className="text-xl shrink-0" aria-hidden="true">⚠️</span>
+          <div className="text-amber-900 text-sm leading-relaxed">
+            <strong>Catatan armada:</strong> {r.catatanArmada}
+          </div>
+        </div>
+      )}
+      <div role="note" className="mt-4 rounded-2xl border border-sky-200 bg-sky-50 px-5 py-4 flex gap-3">
+        <span className="text-xl shrink-0" aria-hidden="true">ℹ️</span>
+        <div className="text-sky-900 text-sm leading-relaxed">
+          Jadwal dapat berubah pada hari tertentu. Konfirmasi ketersediaan kursi lewat WhatsApp atau form sebelum berangkat.
+        </div>
+      </div>
+
+      <Link
+        href={pesanHref}
+        className="cta-btn-shimmer mt-5 flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 text-lg font-extrabold text-white shadow-lg"
+        style={{ backgroundColor: '#16a34a' }}
+      >
+        🎫 Pesan Sekarang
+      </Link>
+      <div className="mt-3 text-center text-sm text-slate-500">
+        Atau hubungi admin: <a href="tel:+6285268645461">0852-6864-5461</a> / <a href="tel:+6282374497929">0823-7449-7929</a>
+      </div>
+
+      {/* ── Rute ── */}
+      <h2 className={H2}>Rute Perjalanan {r.from} ke {r.to} via {via}</h2>
+      <div className="flex flex-wrap items-center gap-2 mb-4" aria-label="Titik yang dilewati">
+        {stops.map((s, i) => (
+          <span key={s} className="flex items-center gap-2">
+            <span className={`rounded-full px-3 py-1 text-sm font-semibold ${i === 0 || i === stops.length - 1 ? 'bg-primary-700 text-white' : 'bg-slate-100 text-slate-700'}`}>{s}</span>
+            {i < stops.length - 1 && <span className="text-slate-400" aria-hidden="true">→</span>}
+          </span>
+        ))}
+      </div>
+      <p>{r.jalur}</p>
       <table>
-        <thead><tr><th>Informasi</th><th>Detail</th></tr></thead>
         <tbody>
-          <tr><td>Rute</td><td><strong>{r.from} → {r.to}</strong> via {via}</td></tr>
-          <tr><td>Tarif</td><td><strong>{harga}/orang</strong></td></tr>
-          <tr><td>Jadwal</td><td>{r.jadwalRow ?? `${jadwal} (hari & jam: konfirmasi admin)`}</td></tr>
           <tr><td>Estimasi waktu</td><td>{r.duration}, tergantung {r.durasiNote ?? 'jalan, antrean pelabuhan, dan cuaca'}</td></tr>
-          <tr><td>Armada</td><td>{r.armadaRow ?? 'Toyota Hiace, sabuk pengaman, TV & audio'}</td></tr>
           <tr><td>Penjemputan</td><td>{r.jemput}, titik disepakati saat pesan</td></tr>
+          <tr><td>Pembayaran</td><td>Tunai atau QRIS</td></tr>
+          <tr><td>Pemesanan</td><td>Form online atau WhatsApp admin</td></tr>
         </tbody>
       </table>
 
-      <h2>Rute Perjalanan {r.from} ke {r.to} via {via}</h2>
-      <p>{r.jalur}</p>
-      <p>
-        Sopir berhenti di rumah makan dan SPBU untuk istirahat, makan, dan ibadah agar penumpang tidak kelelahan.
-        Lihat juga rute searah: {r.related.slice(0, 2).map((x, i) => (
-          <span key={x.href}>{i > 0 && ' dan '}<Link href={x.href}>{x.label}</Link></span>
-        ))}.
-      </p>
+      {/* ── Keunggulan ── */}
+      <h2 className={H2}>Kenapa Pilih Travel Hiace {nama}</h2>
+      <div className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
+        {[
+          ['Hiace kabin lega', 'atap tinggi, sabuk pengaman, TV dan audio'],
+          [via, r.perkVia ?? 'rute Palembang–Lampung lewat Tol Trans Sumatera'],
+          ['Jadwal jelas', r.perkJadwal ?? '2 kali seminggu, bisa direncanakan jauh hari'],
+          ['Tarif transparan', `${harga}/orang, dijelaskan sebelum Anda membayar`],
+          ['Dijemput', `titik jemput di ${r.jemput.replace(/^Area /, '')} disepakati saat pesan`],
+          ['Pesan 24 jam', 'admin siap dihubungi kapan saja'],
+        ].map(([t, d]) => (
+          <div key={t} className="flex gap-3 text-sm">
+            <span className="mt-0.5 text-emerald-600 font-bold" aria-hidden="true">✓</span>
+            <div><span className="font-semibold text-slate-800">{t}</span><span className="text-slate-600"> — {d}</span></div>
+          </div>
+        ))}
+      </div>
 
-      <h2>Galeri Armada Hiace</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+      {/* ── Galeri ── */}
+      <h2 className={H2}>Galeri Armada Hiace</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {galeri.map((g) => (
           <figure key={g.src} className="m-0">
-            <Image src={`${IMG_DIR}/${g.src}`} alt={g.alt} width={g.w} height={g.h} loading="lazy" className="w-full h-64 object-cover rounded-xl" sizes="(max-width: 640px) 100vw, 340px" />
-            <figcaption className="text-sm text-slate-500 mt-1.5">{g.cap}</figcaption>
+            <Image src={`${IMG_DIR}/${g.src}`} alt={g.alt} width={g.w} height={g.h} loading="lazy" className="w-full h-44 object-cover rounded-xl" sizes="(max-width: 640px) 50vw, 220px" />
+            <figcaption className="text-xs text-slate-500 mt-1.5 leading-snug">{g.cap}</figcaption>
           </figure>
         ))}
       </div>
 
-      <h2>Kenapa Pilih Travel Hiace {nama}</h2>
-      <ul>
-        <li><strong>Hiace kabin lega</strong> — atap tinggi, kursi bersabuk pengaman, TV dan audio</li>
-        <li><strong>{via}</strong> — {r.perkVia ?? 'rute Palembang–Lampung lewat Tol Trans Sumatera'}</li>
-        <li><strong>Jadwal jelas</strong> — {r.perkJadwal ?? '2 kali seminggu, bisa direncanakan jauh hari'}</li>
-        <li><strong>Tarif jelas</strong> — {harga}/orang, admin menjelaskan yang termasuk sebelum Anda membayar</li>
-        <li><strong>Pesan 24 jam</strong> — admin siap dihubungi kapan saja</li>
-      </ul>
+      {/* ── Cara memesan ── */}
+      <h2 className={H2}>Cara Memesan</h2>
+      <div className="grid gap-3 sm:grid-cols-2">
+        {STEPS.map((s, i) => (
+          <div key={s.t} className="flex gap-4 rounded-2xl border border-slate-200 bg-white p-4">
+            <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl bg-primary-50 text-primary-800">
+              <span className="text-lg leading-none" aria-hidden="true">{s.icon}</span>
+            </div>
+            <div>
+              <div className="text-[11px] font-bold uppercase tracking-widest text-amber-600">Langkah {i + 1}</div>
+              <div className="font-semibold text-slate-800">{s.t}</div>
+              <div className="text-sm text-slate-600 leading-snug">{s.d}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <Link href={pesanHref} className="mt-4 inline-flex items-center gap-2 rounded-xl bg-primary-700 px-6 py-3 font-bold text-white hover:bg-primary-800 transition">
+        Mulai Pesan →
+      </Link>
 
-      <h2>Cara Memesan</h2>
-      <ol>
-        <li>Klik <strong>&quot;Pesan Sekarang&quot;</strong> atau hubungi admin: <a href="tel:+6285268645461">0852-6864-5461</a> / <a href="tel:+6282374497929">0823-7449-7929</a></li>
-        <li>Informasikan tanggal berangkat dan jumlah penumpang</li>
-        <li>Kirim titik penjemputan di {r.from} dan alamat tujuan di {r.tujuan}</li>
-        <li>Admin mengonfirmasi kursi, jadwal, dan pembayaran</li>
-      </ol>
+      {/* ── FAQ ── */}
+      <h2 className={H2}>Pertanyaan yang Sering Diajukan</h2>
+      <div className="space-y-3">
+        {faq.map(([q, a]) => (
+          <details key={q} className="group rounded-2xl border border-slate-200 bg-stone-50 open:bg-white open:shadow-sm">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-semibold text-slate-800 [&::-webkit-details-marker]:hidden">
+              <span>{q}</span>
+              <span className="shrink-0 text-slate-400 transition-transform group-open:rotate-180" aria-hidden="true">▾</span>
+            </summary>
+            <div className="px-5 pb-4 text-slate-600 leading-relaxed">{a}</div>
+          </details>
+        ))}
+      </div>
 
-      <h2>Pertanyaan yang Sering Diajukan</h2>
-      {faq.map(([q, a]) => (
-        <details key={q} className="mb-3 border border-slate-200 rounded-xl px-4 py-3">
-          <summary className="font-semibold cursor-pointer">{q}</summary>
-          <p className="mt-2 mb-0">{a}</p>
-        </details>
-      ))}
-
-      <p className="text-sm text-slate-500 mt-8">
+      <div className="mt-8 text-xs text-slate-500">
         Diperbarui 27 Oktober 2026 oleh tim Travel Bengkulu, BTN Air Bang Curup. Informasi tarif dan jadwal dikelola langsung oleh admin kami.
-      </p>
+      </div>
 
-      <section style={{marginTop: '2rem', padding: '1.25rem', background: '#f0f9f0', borderRadius: '8px', borderLeft: '4px solid #16a34a'}}>
-        <h3 style={{marginBottom: '0.75rem', color: '#15803d', fontSize: '1rem', fontWeight: 700}}>Rute &amp; Info Terkait</h3>
-        <ul style={{listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexWrap: 'wrap', gap: '0.5rem'}}>
+      {/* ── Terkait ── */}
+      <div className="mt-8 rounded-2xl bg-slate-50 p-5">
+        <div className="mb-3 font-bold text-slate-800">Rute &amp; Info Terkait</div>
+        <div className="flex flex-wrap gap-2">
           {r.related.map((x) => (
-            <li key={x.href}><Link href={x.href} style={{color: '#16a34a', textDecoration: 'underline'}}>{x.label}</Link></li>
+            <Link key={x.href} href={x.href} className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm text-primary-700 hover:border-primary-400 hover:bg-primary-50 transition">
+              {x.label}
+            </Link>
           ))}
-        </ul>
-      </section>
+        </div>
+      </div>
     </ArticleLayout>
   );
 }
