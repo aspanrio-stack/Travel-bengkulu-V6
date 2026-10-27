@@ -161,10 +161,19 @@ export default function FleetGallery() {
     <section
       id="armada"
       aria-label="Armada Hiace Travel Bengkulu"
-      className="relative z-10 -mt-9 px-4 pb-2 md:mt-0 md:bg-white md:py-12"
+      className="relative z-10 mt-3 px-4 pb-2 md:mt-0 md:bg-white md:py-12"
     >
       <div className="mx-auto max-w-6xl">
-        <h2 className="sr-only">Armada Hiace Travel Bengkulu: tampilan luar dan kabin</h2>
+        <div className="mb-3 px-1">
+          <p className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-gold-600">
+            <span aria-hidden className="h-px w-10 bg-gold-500/60"></span>
+            Armada Unggulan
+          </p>
+          <h2 className="mt-1 font-display text-2xl font-bold leading-tight text-slate-900 md:text-3xl">
+            Toyota Hiace
+            <span className="sr-only"> — armada Hiace Travel Bengkulu: tampilan luar dan kabin</span>
+          </h2>
+        </div>
 
         {/* EKSTERIOR */}
         <Row id="eksterior" label="Foto eksterior Hiace" photos={EXTERIOR} onOpen={openAt} priority />
