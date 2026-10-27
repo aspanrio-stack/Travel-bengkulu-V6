@@ -1,51 +1,138 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 
 /**
- * Galeri armada Hiace di beranda: tab Eksterior / Interior, tile bento,
- * ketuk foto → tampilan penuh (geser kiri/kanan, panah, Esc).
- * Foto di-lazy-load oleh next/image; hanya tab aktif yang dirender.
+ * Galeri armada Hiace di beranda — gaya carousel geser (seperti RPM Travel):
+ * baris Eksterior → chip fasilitas → baris Interior. Kartu bisa digeser ke samping
+ * (scroll-snap), kartu berikutnya sedikit mengintip sebagai petunjuk geser.
+ * Ketuk foto → tampilan penuh (geser kiri/kanan, panah, Esc).
+ * Foto di-lazy-load oleh next/image; hanya foto pertama (eksterior) yang prioritas.
  */
 type Photo = { src: string; alt: string; caption: string; pos?: string };
+type GroupId = 'eksterior' | 'interior';
 
 const EXTERIOR: Photo[] = [
-  { src: '/images/hiace-padang/hiace-silver-depan.webp', alt: 'Toyota Hiace silver tampak depan', caption: 'Hiace silver · tampak depan', pos: '50% 60%' },
-  { src: '/images/hiace-padang/hiace-silver-samping.webp', alt: 'Toyota Hiace silver tampak samping', caption: 'Hiace silver · tampak samping', pos: '50% 60%' },
-  { src: '/images/curup-bandung/hiace-curup-bandung-malam.webp', alt: 'Toyota Hiace putih dengan lampu LED di malam hari', caption: 'Hiace putih · lampu LED', pos: '50% 55%' },
+  { src: '/images/hiace-padang/hiace-silver-depan.webp', alt: 'Toyota Hiace silver tampak depan', caption: 'Hiace silver · tampak depan', pos: '50% 62%' },
+  { src: '/images/hiace-padang/hiace-silver-samping.webp', alt: 'Toyota Hiace silver tampak samping', caption: 'Hiace silver · tampak samping', pos: '50% 62%' },
+  { src: '/images/curup-bandung/hiace-curup-bandung-malam.webp', alt: 'Toyota Hiace putih dengan lampu LED di malam hari', caption: 'Hiace putih · lampu LED', pos: '50% 58%' },
   { src: '/images/curup-bandung/hiace-curup-bandung-hero.webp', alt: 'Toyota Hiace hitam tampak depan', caption: 'Hiace hitam · tampak depan', pos: '50% 65%' },
 ];
 
 const INTERIOR: Photo[] = [
   { src: '/images/curup-bandung/interior-hiace-karaoke-tv.webp', alt: 'Kabin Hiace lega dengan TV, speaker, dan lampu ambient', caption: 'Kabin lega dengan TV & speaker', pos: '50% 45%' },
-  { src: '/images/curup-bandung/kabin-hiace-lega.webp', alt: 'Kursi kulit baris tengah Hiace', caption: 'Kursi kulit baris tengah' },
-  { src: '/images/curup-bandung/kursi-hiace-penumpang.webp', alt: 'Kursi penumpang Hiace yang nyaman', caption: 'Kursi penumpang nyaman' },
-  { src: '/images/hiace-padang/area-depan-tv-speaker.webp', alt: 'Area depan Hiace dengan TV dan speaker', caption: 'Area depan: TV & speaker' },
-  { src: '/images/hiace-padang/kabin-led-tv.webp', alt: 'Plafon lampu LED dan TV di kabin Hiace', caption: 'Plafon lampu LED & TV' },
-  { src: '/images/hiace-padang/kursi-belakang-lantai.webp', alt: 'Kursi belakang dan lantai kayu Hiace', caption: 'Lantai kayu & kursi belakang' },
-  { src: '/images/hiace-padang/kursi-sabuk-pengaman.webp', alt: 'Kursi Hiace dilengkapi sabuk pengaman', caption: 'Kursi dengan sabuk pengaman' },
+  { src: '/images/curup-bandung/kabin-hiace-lega.webp', alt: 'Kursi kulit baris tengah Hiace', caption: 'Kursi kulit baris tengah', pos: '50% 55%' },
+  { src: '/images/curup-bandung/kursi-hiace-penumpang.webp', alt: 'Kursi penumpang Hiace yang nyaman', caption: 'Kursi penumpang nyaman', pos: '50% 55%' },
+  { src: '/images/hiace-padang/area-depan-tv-speaker.webp', alt: 'Area depan Hiace dengan TV dan speaker', caption: 'Area depan: TV & speaker', pos: '50% 50%' },
+  { src: '/images/hiace-padang/kabin-led-tv.webp', alt: 'Plafon lampu LED dan TV di kabin Hiace', caption: 'Plafon lampu LED & TV', pos: '50% 40%' },
+  { src: '/images/hiace-padang/kursi-belakang-lantai.webp', alt: 'Kursi belakang dan lantai kayu Hiace', caption: 'Lantai kayu & kursi belakang', pos: '50% 55%' },
+  { src: '/images/hiace-padang/kursi-sabuk-pengaman.webp', alt: 'Kursi Hiace dilengkapi sabuk pengaman', caption: 'Kursi dengan sabuk pengaman', pos: '50% 55%' },
 ];
 
 const FACILITIES = ['🛋️ Kursi kulit', '📺 LED TV', '🔊 Speaker audio', '💡 Lampu ambient', '🛡️ Sabuk pengaman', '🧳 Bagasi luas'];
 
-type TabId = 'eksterior' | 'interior';
-const TABS: { id: TabId; label: string; icon: string; photos: Photo[] }[] = [
-  { id: 'eksterior', label: 'Eksterior', icon: '🚐', photos: EXTERIOR },
-  { id: 'interior', label: 'Interior', icon: '🛋️', photos: INTERIOR },
-];
+const GROUPS: Record<GroupId, Photo[]> = { eksterior: EXTERIOR, interior: INTERIOR };
+
+/** Satu baris carousel: scroll-snap horizontal + indikator titik yang mengikuti posisi geser. */
+function Row({
+  id, label, photos, onOpen, priority = false,
+}: {
+  id: GroupId; label: string; photos: Photo[]; onOpen: (g: GroupId, i: number, el: HTMLElement) => void; priority?: boolean;
+}) {
+  const scroller = useRef<HTMLUListElement>(null);
+  const [active, setActive] = useState(0);
+
+  const onScroll = useCallback(() => {
+    const el = scroller.current;
+    if (!el) return;
+    const kids = Array.from(el.children) as HTMLElement[];
+    const center = el.scrollLeft + el.clientWidth / 2;
+    let best = 0;
+    let bestDist = Infinity;
+    kids.forEach((k, i) => {
+      const d = Math.abs(k.offsetLeft + k.offsetWidth / 2 - center);
+      if (d < bestDist) { bestDist = d; best = i; }
+    });
+    setActive(best);
+  }, []);
+
+  const scrollTo = (i: number) => {
+    const el = scroller.current;
+    const k = el?.children[i] as HTMLElement | undefined;
+    if (!el || !k) return;
+    el.scrollTo({ left: k.offsetLeft - (el.clientWidth - k.offsetWidth) / 2, behavior: 'smooth' });
+  };
+
+  // Eksterior: kartu lebar (jenis armada langsung terlihat). Interior: sedikit lebih kecil.
+  const cardW = id === 'eksterior' ? 'w-[80%] sm:w-[56%] md:w-[38%] lg:w-[31%]' : 'w-[64%] sm:w-[44%] md:w-[30%] lg:w-[24%]';
+  const cardH = id === 'eksterior' ? 'aspect-[4/3]' : 'aspect-[5/4]';
+
+  return (
+    <div role="group" aria-label={label}>
+      <ul
+        ref={scroller}
+        onScroll={onScroll}
+        tabIndex={0}
+        aria-label={`${label} — geser ke samping`}
+        className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth px-4 pb-3 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 md:mx-0 md:px-0"
+        style={{ scrollPaddingLeft: '1rem', WebkitOverflowScrolling: 'touch' }}
+      >
+        {photos.map((p, i) => (
+          <li key={p.src} className={`${cardW} shrink-0 snap-start`}>
+            <button
+              type="button"
+              onClick={e => onOpen(id, i, e.currentTarget)}
+              aria-label={`Perbesar foto: ${p.caption}`}
+              className={`group relative block w-full overflow-hidden rounded-3xl bg-slate-200 shadow-lg shadow-slate-400/30 ring-1 ring-slate-200/70 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 active:scale-[0.98] ${cardH}`}
+            >
+              <Image
+                src={p.src}
+                alt={p.alt}
+                fill
+                priority={priority && i === 0}
+                sizes="(max-width: 640px) 80vw, (max-width: 1024px) 40vw, 360px"
+                className="object-cover transition-transform duration-500 md:group-hover:scale-105"
+                style={{ objectPosition: p.pos }}
+              />
+              <span aria-hidden className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/70 to-transparent" />
+              <span className="absolute inset-x-0 bottom-0 p-3.5 text-left font-display text-[15px] font-bold leading-snug text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.5)] md:text-base">
+                {p.caption}
+              </span>
+            </button>
+          </li>
+        ))}
+        {/* ruang akhir supaya kartu terakhir bisa rata ke tepi kiri */}
+        <li aria-hidden className="w-1 shrink-0" />
+      </ul>
+
+      <div className="flex items-center justify-center gap-1.5 md:hidden" aria-hidden>
+        {photos.map((p, i) => (
+          <button
+            key={p.src}
+            type="button"
+            tabIndex={-1}
+            onClick={() => scrollTo(i)}
+            className={`h-1.5 rounded-full transition-all duration-300 ${i === active ? 'w-5 bg-primary-700' : 'w-1.5 bg-slate-300'}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function FleetGallery() {
-  const [tab, setTab] = useState<TabId>('eksterior');
-  const [open, setOpen] = useState<number | null>(null);
+  const [open, setOpen] = useState<{ g: GroupId; i: number } | null>(null);
   const touchX = useRef<number | null>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
 
-  const photos = TABS.find(t => t.id === tab)!.photos;
+  const photos = open ? GROUPS[open.g] : [];
   const total = photos.length;
 
-  const go = useCallback((dir: 1 | -1) => setOpen(i => (i === null ? i : (i + dir + total) % total)), [total]);
+  const go = useCallback(
+    (dir: 1 | -1) => setOpen(o => (o ? { g: o.g, i: (o.i + dir + GROUPS[o.g].length) % GROUPS[o.g].length } : o)),
+    [],
+  );
   const close = useCallback(() => setOpen(null), []);
 
   useEffect(() => {
@@ -66,108 +153,38 @@ export default function FleetGallery() {
     };
   }, [open === null, close, go]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const openAt = (i: number, el: HTMLElement) => { lastFocus.current = el; setOpen(i); };
-
-  const tile = (p: Photo, i: number, featured = false) => (
-    <button
-      key={p.src}
-      type="button"
-      onClick={e => openAt(i, e.currentTarget)}
-      aria-label={`Perbesar foto: ${p.caption}`}
-      className={`group relative overflow-hidden rounded-2xl bg-slate-200 shadow-md shadow-slate-300/50 ring-1 ring-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 active:scale-[0.98] transition-transform ${
-        featured ? 'col-span-2 aspect-[4/3] md:row-span-2 md:aspect-auto' : 'aspect-[3/4]'
-      }`}
-    >
-      <Image
-        src={p.src}
-        alt={p.alt}
-        fill
-        sizes={featured ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 50vw, 25vw'}
-        className="object-cover transition-transform duration-500 md:group-hover:scale-105"
-        style={{ objectPosition: p.pos }}
-      />
-      <span aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 to-transparent" />
-      <span className={`absolute inset-x-0 bottom-0 p-3 text-left font-semibold leading-snug text-white ${featured ? 'text-sm md:p-4 md:text-base' : 'text-[13px]'}`}>
-        {p.caption}
-      </span>
-    </button>
-  );
+  const openAt = (g: GroupId, i: number, el: HTMLElement) => { lastFocus.current = el; setOpen({ g, i }); };
 
   const btn = 'flex h-11 w-11 items-center justify-center rounded-full bg-black/50 text-2xl text-white backdrop-blur hover:bg-black/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-white';
 
   return (
-    <section id="armada" aria-labelledby="armada-title" className="bg-white py-12 md:py-20">
-      <div className="mx-auto max-w-5xl px-4">
-        <div className="mx-auto mb-6 max-w-2xl text-center md:mb-8">
-          <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-primary-50 px-3.5 py-1.5 text-xs font-semibold text-primary-800 ring-1 ring-primary-100">
-            🚐 Armada Hiace Kami
-          </span>
-          <h2 id="armada-title" className="section-title">Lihat Dulu Mobilnya, <span className="text-primary-700">Baru Berangkat</span></h2>
-          <p className="mt-3 text-[15px] leading-relaxed text-slate-600">
-            Foto asli armada Hiace kami — dari tampilan luar sampai kabin penumpang. Tanpa kejutan di hari keberangkatan.
-          </p>
-        </div>
+    <section
+      id="armada"
+      aria-label="Armada Hiace Travel Bengkulu"
+      className="relative z-10 -mt-9 px-4 pb-2 md:mt-0 md:bg-white md:py-12"
+    >
+      <div className="mx-auto max-w-6xl">
+        <h2 className="sr-only">Armada Hiace Travel Bengkulu: tampilan luar dan kabin</h2>
 
-        <ul aria-label="Fasilitas armada" className="mb-6 flex flex-wrap justify-center gap-2">
+        {/* EKSTERIOR */}
+        <Row id="eksterior" label="Foto eksterior Hiace" photos={EXTERIOR} onOpen={openAt} priority />
+
+        {/* FASILITAS — tepat di bawah foto eksterior */}
+        <ul aria-label="Fasilitas armada" className="mb-4 mt-2 flex flex-wrap justify-center gap-2">
           {FACILITIES.map(f => (
-            <li key={f} className="rounded-full bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 ring-1 ring-slate-200">{f}</li>
+            <li key={f} className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm ring-1 ring-slate-200">{f}</li>
           ))}
         </ul>
 
-        <div role="tablist" aria-label="Pilih jenis foto" className="mx-auto mb-4 grid w-full max-w-xs grid-cols-2 rounded-full bg-slate-100 p-1">
-          {TABS.map(t => (
-            <button
-              key={t.id}
-              role="tab"
-              id={`tab-${t.id}`}
-              aria-selected={tab === t.id}
-              aria-controls="armada-panel"
-              type="button"
-              onClick={() => { setTab(t.id); setOpen(null); }}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 ${
-                tab === t.id ? 'bg-primary-700 text-white shadow' : 'text-slate-700 hover:text-primary-800'
-              }`}
-            >
-              <span aria-hidden>{t.icon}</span> {t.label} <span className={tab === t.id ? 'text-primary-100' : 'text-slate-600'}>({t.photos.length})</span>
-            </button>
-          ))}
-        </div>
-
-        <div id="armada-panel" role="tabpanel" aria-labelledby={`tab-${tab}`} className="grid grid-cols-2 gap-2.5 md:grid-cols-4 md:gap-3">
-          {tab === 'interior' ? (
-            <>
-              {tile(INTERIOR[0], 0, true)}
-              {INTERIOR.slice(1).map((p, i) => tile(p, i + 1))}
-              <div className="col-span-2 flex min-h-[9rem] flex-col justify-center gap-3 rounded-2xl bg-gradient-to-br from-primary-700 to-primary-900 p-5 text-white">
-                <p className="font-display text-lg font-bold leading-snug">Nyaman untuk perjalanan jauh</p>
-                <p className="text-sm text-primary-100">Kabin lega, kursi empuk, hiburan selama di jalan.</p>
-                <Link href="/pesan" className="inline-flex w-fit items-center rounded-xl bg-white px-4 py-2 text-sm font-bold text-primary-800 transition-transform active:scale-95">
-                  Pesan Tiket
-                </Link>
-              </div>
-            </>
-          ) : (
-            EXTERIOR.map((p, i) => tile(p, i))
-          )}
-        </div>
-
-        <p className="mt-3 text-center text-xs text-slate-600">Ketuk foto untuk memperbesar</p>
-
-        <div className="mt-6 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-          <Link href="/travel-bengkulu" className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-700 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-primary-700/20 transition-transform active:scale-95">
-            Lihat Semua Rute & Tarif <span aria-hidden>→</span>
-          </Link>
-          <Link href="/pesan" className="inline-flex items-center justify-center rounded-xl border border-primary-700 px-6 py-3 text-sm font-bold text-primary-800 transition-colors hover:bg-primary-50">
-            Pesan Sekarang
-          </Link>
-        </div>
+        {/* INTERIOR */}
+        <Row id="interior" label="Foto interior Hiace" photos={INTERIOR} onOpen={openAt} />
       </div>
 
       {open !== null && (
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={`Galeri foto Hiace — ${tab}`}
+          aria-label={`Galeri foto Hiace — ${open.g}`}
           className="fixed inset-0 z-[80] flex flex-col items-center justify-center bg-black/90"
           onClick={close}
           onTouchStart={e => { touchX.current = e.touches[0].clientX; }}
@@ -179,12 +196,12 @@ export default function FleetGallery() {
           }}
         >
           <div className="relative w-full max-w-3xl flex-1" onClick={e => e.stopPropagation()}>
-            <Image key={photos[open].src} src={photos[open].src} alt={photos[open].alt} fill sizes="100vw" className="object-contain" priority />
+            <Image key={photos[open.i].src} src={photos[open.i].src} alt={photos[open.i].alt} fill sizes="100vw" className="object-contain" priority />
           </div>
-          <p className="w-full bg-black/60 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] text-center text-sm font-medium text-white">{photos[open].caption}</p>
+          <p className="w-full bg-black/60 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] text-center text-sm font-medium text-white">{photos[open.i].caption}</p>
 
           <div className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-between p-3 pt-[calc(0.75rem+env(safe-area-inset-top))]">
-            <span className="pointer-events-auto rounded-full bg-black/50 px-3 py-1.5 text-sm font-medium text-white">{open + 1} / {total}</span>
+            <span className="pointer-events-auto rounded-full bg-black/50 px-3 py-1.5 text-sm font-medium text-white">{open.i + 1} / {total}</span>
             <button ref={closeRef} type="button" onClick={e => { e.stopPropagation(); close(); }} aria-label="Tutup galeri" className={`${btn} pointer-events-auto`}>✕</button>
           </div>
 

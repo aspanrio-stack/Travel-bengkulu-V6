@@ -136,6 +136,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ARMADA — langsung terlihat begitu beranda dibuka (tanpa scroll) */}
+      <FleetGallery />
+
       <HomeBookingCard />
 
       {/* QUICK START — search, kategori, destinasi populer, penawaran (mobile-first) */}
@@ -161,9 +164,6 @@ export default function HomePage() {
 
         </div>
       </section>
-
-      {/* ARMADA UNGGULAN — layanan utama kami, tampil sebelum destinasi */}
-      <FleetGallery />
 
       {/* DESTINASI POPULER */}
       <section aria-label="Destinasi populer" className="bg-slate-50 pb-4 pt-8 md:pb-10 md:pt-12">
