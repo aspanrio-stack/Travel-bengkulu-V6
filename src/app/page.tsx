@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
 import FleetGallery from '@/components/FleetGallery';
 import DestinationCard from '@/components/DestinationCard';
 import HomeGreeting from '@/components/HomeGreeting';
@@ -43,31 +42,6 @@ const whyUs = [
   { icon: '⏰', title: 'Berangkat Sesuai Jadwal', desc: 'Ketepatan waktu bukan sekadar janji. Kami tahu waktu Anda berharga.' },
   { icon: '🛡️', title: 'Pengemudi Berpengalaman', desc: 'Semua pengemudi kami hafal rute, ramah, dan mengutamakan keselamatan selama perjalanan.' },
   { icon: '📞', title: 'Pesan Kapan Saja', desc: 'Mau berangkat subuh atau tengah malam? Pemesanan via WhatsApp tersedia 24 jam penuh.' },
-];
-
-const cars = [
-  {
-    name: 'Toyota Avanza',
-    type: 'MPV · 7 Penumpang',
-    desc: 'Pilihan tepat untuk keluarga atau rombongan kecil. Irit bahan bakar, kabin cukup luas, dan nyaman untuk perjalanan menengah.',
-    img: '/images/avanza.jpg',
-    specs: ['7 Penumpang', 'AC Double Blower', 'Bagasi Luas'],
-  },
-  {
-    name: 'Toyota Innova',
-    type: 'MPV Premium · 7 Penumpang',
-    desc: 'Andalan kami untuk rute jarak jauh. Suspensi lebih halus dan kabin lebih lapang membuat perjalanan panjang terasa lebih ringan.',
-    img: '/images/innova.jpg',
-    specs: ['7 Penumpang', 'Suspensi Premium', 'Kabin Lega'],
-    featured: true,
-  },
-  {
-    name: 'Toyota HiAce',
-    type: 'Van · 12–14 Penumpang',
-    desc: 'Solusi untuk rombongan besar. Kabin tinggi, kursi lebih banyak, dan bagasi ekstra luas untuk bawaan grup.',
-    img: '/images/hiace.jpg',
-    specs: ['12–14 Penumpang', 'Kabin Tinggi', 'Bagasi Ekstra'],
-  },
 ];
 
 export default function HomePage() {
@@ -165,7 +139,7 @@ export default function HomePage() {
       <HomeBookingCard />
 
       {/* QUICK START — search, kategori, destinasi populer, penawaran (mobile-first) */}
-      <section aria-label="Mulai jelajah" className="relative z-10 bg-slate-50 pt-4 pb-2 md:pt-12">
+      <section aria-label="Mulai jelajah" className="relative z-10 bg-slate-50 pt-4 pb-6 md:pt-12">
         <div className="max-w-7xl mx-auto px-4">
           <form action="/destinasi" role="search" className="flex items-center gap-2 rounded-2xl bg-white p-2 pl-4 shadow-lg shadow-slate-300/40 ring-1 ring-slate-100">
             <svg className="h-5 w-5 shrink-0 text-slate-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M11 18a7 7 0 100-14 7 7 0 000 14z" /></svg>
@@ -185,7 +159,16 @@ export default function HomePage() {
             ))}
           </ul>
 
-          <div className="mt-7 flex items-center justify-between">
+        </div>
+      </section>
+
+      {/* ARMADA UNGGULAN — layanan utama kami, tampil sebelum destinasi */}
+      <FleetGallery />
+
+      {/* DESTINASI POPULER */}
+      <section aria-label="Destinasi populer" className="bg-slate-50 pb-4 pt-8 md:pb-10 md:pt-12">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between">
             <h2 className="font-display text-xl font-bold text-slate-800">Destinasi Populer</h2>
             <Link href="/destinasi" className="text-sm font-semibold text-primary-700">Lihat semua</Link>
           </div>
@@ -203,9 +186,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* GALERI ARMADA HIACE — menggantikan daftar kartu per rute (rute lengkap ada di /travel-bengkulu) */}
-      <FleetGallery />
 
       {/* KENAPA PILIH KAMI */}
       <section className="relative py-12 md:py-20 bg-gradient-to-br from-primary-900 via-primary-800 to-slate-900 overflow-hidden">
@@ -237,42 +217,6 @@ export default function HomePage() {
                 <div>
                   <h3 className="font-display font-bold text-slate-800 text-base md:text-lg mb-0.5 md:mb-2">{item.title}</h3>
                   <p className="text-slate-500 text-[13px] md:text-sm leading-relaxed">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ARMADA */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="section-title">Pilihan Armada Travel</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {cars.map((car, index) => (
-              <div key={car.name} className={`card overflow-hidden relative group ${car.featured ? 'ring-2 ring-primary-500' : ''}`}>
-                <div className="relative h-52 overflow-hidden bg-slate-200">
-                  <Image
-                    src={car.img}
-                    alt={car.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    priority={index === 0} 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
-                  <div className="absolute bottom-3 left-3 right-3 flex gap-2 flex-wrap">
-                    {car.specs.map((s) => (
-                      <span key={s} className="bg-white/90 text-slate-700 text-xs font-semibold px-2 py-0.5 rounded-full">{s}</span>
-                    ))}
-                  </div>
-                </div>
-                <div className="p-5">
-                  <h3 className="font-display font-bold text-slate-800 text-xl mb-0.5">{car.name}</h3>
-                  <p className="text-primary-700 text-sm font-semibold mb-3">{car.type}</p>
-                  <p className="text-slate-500 text-sm leading-relaxed">{car.desc}</p>
                 </div>
               </div>
             ))}
