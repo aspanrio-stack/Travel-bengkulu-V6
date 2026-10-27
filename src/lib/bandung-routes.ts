@@ -1,3 +1,5 @@
+import { TUJUAN_KORIDOR_PADANG, KURANG_NON_HIACE } from './routes';
+
 // Konfigurasi 3 halaman rute HiAce Bandung: dipakai BandungRoutePage.
 // Ubah tarif/estimasi di sini (dan di routes.ts) agar seragam.
 export const HARGA_BANDUNG = 800000;
@@ -35,12 +37,14 @@ export interface BandungRoute {
   perkJadwal?: string;
   kapasitas?: string;    // kartu 'Kapasitas' di ringkasan
   armadaCard?: string;   // kartu 'Armada' di ringkasan
-  jadwalCards?: { jam?: string; time?: string; judul: string; sub: string; armada: string; icon: string; tone: 'hiace' | 'random' }[];
+  jadwalCards?: { routeId?: string; jam?: string; time?: string; judul: string; sub: string; armada: string; icon: string; tone: 'hiace' | 'random' }[];
   jadwalRow?: string;
   armadaRow?: string;
   catatanArmada?: string; // kotak catatan di bawah intro
   durasiNote?: string;   // faktor yang memengaruhi waktu tempuh
   durasiFaq?: string;    // bagian 'termasuk ...'
+  /** Tabel tarif per tujuan (koridor Padang): Hiace vs kendaraan lain */
+  tarifTujuan?: { routeId: string; tujuan: string; hiace: number; lain: number }[];
   galeri?: { src: string; w: number; h: number; alt: string; cap: string }[];
 }
 
@@ -57,9 +61,16 @@ export const BANDUNG_ROUTES: Record<string, BandungRoute> = {
     duration: '30–36 jam',
     metaTitle: 'Travel Curup Bandung Hiace via Tol Palembang Rp 800.000',
     metaDesc:
-      'Travel Curup Bandung naik Hiace via Tol Palembang, Rp 800.000/orang. Berangkat 2 kali seminggu, dijemput di Curup, kabin lega TV & audio. Pesan WA 0852-6864-5461.',
+      'Travel Curup Bandung Hiace via Tol Palembang Rp 800.000. Berangkat Rabu & Jumat: Bengkulu 11.00, Curup 13.00. Pesan WA 0852-6864-5461.',
     h1: 'Travel Curup Bandung Hiace',
-    lead: 'Travel Hiace dari Curup langsung ke Bandung lewat Tol Palembang, berangkat 2 kali seminggu. Kabin lega dengan TV dan audio.',
+    lead: 'Travel Hiace dari Curup langsung ke Bandung lewat Tol Palembang, berangkat setiap Rabu dan Jumat. Kabin lega dengan TV dan audio.',
+    jadwal: 'setiap Rabu dan Jumat',
+    jadwalFaq: 'Berangkat setiap Rabu dan Jumat. Dari Curup pukul 13.00 WIB, sedangkan penumpang dari Kota Bengkulu berangkat pukul 11.00 WIB. Hubungi admin untuk sisa kursi.',
+    perkJadwal: 'setiap Rabu dan Jumat, bisa direncanakan jauh hari',
+    jadwalCards: [
+      { routeId: 'bkl-bdg', jam: '11.00 WIB', time: '11:00', judul: 'Berangkat dari Bengkulu', sub: 'Rabu & Jumat · Toyota Hiace', armada: 'Hiace', icon: '🚐', tone: 'hiace' as const },
+      { jam: '13.00 WIB', time: '13:00', judul: 'Berangkat dari Curup', sub: 'Rabu & Jumat · Toyota Hiace', armada: 'Hiace', icon: '🚐', tone: 'hiace' as const },
+    ],
     heroSrc: 'hiace-curup-bandung-hero.webp',
     heroW: 750,
     heroH: 1000,
@@ -172,6 +183,48 @@ const PADANG_BASE = {
   durasiNote: 'kondisi jalan, cuaca, dan lalu lintas',
   durasiFaq: 'istirahat dan makan',
 };
+
+// Asal Bengkulu / Curup: Hiace Rp 350.000 ke Padang, kendaraan lain Rp 50.000 lebih murah
+const HARGA_PADANG_HIACE = 350000;
+const padangAsalBase = (jamHiace: string) => {
+  const j = jamHiace.replace(':', '.');
+  return {
+    price: HARGA_PADANG_HIACE,
+    imgDir: PADANG_DIR,
+    via: 'Curup & Lubuklinggau',
+    jadwal: `Hiace jam ${j}, mobil random jam 14.00`,
+    jadwalFaq: `Ada 2 jam keberangkatan: pukul ${j} dengan mobil Hiace (Rp 350.000 ke Padang) dan pukul 14.00 dengan mobil random, bukan Hiace (Rp 50.000 lebih murah, Rp 300.000 ke Padang). Hubungi admin untuk sisa kursi.`,
+    armadaCard: 'Hiace · Mobil Random',
+    jadwalCards: [
+      { jam: `${j} WIB`, time: jamHiace, judul: 'Keberangkatan Hiace', sub: 'Toyota Hiace, kabin lega TV & audio', armada: 'Hiace', icon: '🚐', tone: 'hiace' as const },
+      { jam: '14.00 WIB', time: '14:00', judul: 'Keberangkatan Sore', sub: 'Mobil random (bukan Hiace), Rp 50.000 lebih murah', armada: 'Mobil Random', icon: '☀️', tone: 'random' as const },
+    ],
+    jadwalRow: `Pukul ${j} (Hiace) dan 14.00 (mobil random)`,
+    armadaRow: `Toyota Hiace untuk jam ${j} (sabuk pengaman, TV & audio). Jam 14.00 memakai mobil random`,
+    catatanArmada: `Tarif Rp 350.000 ke Padang berlaku untuk Hiace (jam ${j}). Kendaraan selain Hiace (jam 14.00) tarifnya Rp 50.000 lebih murah dan bukan Hiace.`,
+    badge: '🚐 Rute Baru · Hiace',
+    ctaText: `Pilih jam ${j} untuk naik Hiace. Isi form untuk cek kursi.`,
+    perkVia: 'rute lewat Curup dan Lubuklinggau menuju Padang',
+    perkJadwal: `jam ${j} dengan Hiace, jam 14.00 dengan mobil random`,
+    durasiNote: 'kondisi jalan, cuaca, dan lalu lintas',
+    durasiFaq: 'istirahat dan makan',
+  };
+};
+const tarifKoridor = (prefix: 'bkl' | 'crp') => {
+  const row = (routeId: string, tujuan: string, hiace: number) => ({ routeId, tujuan, hiace, lain: hiace - KURANG_NON_HIACE });
+  const t = (slug: string) => TUJUAN_KORIDOR_PADANG.find((x) => x.slug === slug)!;
+  return [
+    row(`${prefix}-bkt`, t('bkt').nama, t('bkt').hiace),
+    row(`${prefix}-pdg`, 'Padang', HARGA_PADANG_HIACE),
+    row(`${prefix}-bgk`, t('bgk').nama, t('bgk').hiace),
+    row(`${prefix}-srl`, t('srl').nama, t('srl').hiace),
+    row(`${prefix}-bgo`, t('bgo').nama, t('bgo').hiace),
+    row(`${prefix}-slk`, t('slk').nama, t('slk').hiace),
+    row(`${prefix}-skt`, t('skt').nama, t('skt').hiace),
+  ];
+};
+const PADANG_BASE_BKL = { ...padangAsalBase('12:15'), tarifTujuan: tarifKoridor('bkl') };
+const PADANG_BASE_CRP = { ...padangAsalBase('14:15'), tarifTujuan: tarifKoridor('crp') };
 const relPadang = (...extra: { href: string; label: string }[]) => [
   ...extra,
   { href: '/travel-curup-bengkulu', label: 'Travel Curup → Bengkulu' },
@@ -185,13 +238,13 @@ const L_PDG_CRP = { href: '/travel-padang-curup', label: 'Travel Padang → Curu
 
 export const PADANG_ROUTES: Record<string, BandungRoute> = {
   'travel-bengkulu-padang': {
-    ...PADANG_BASE,
+    ...PADANG_BASE_BKL,
     slug: 'travel-bengkulu-padang', routeId: 'bkl-pdg', from: 'Bengkulu', to: 'Padang',
     duration: '18–22 jam',
-    metaTitle: 'Travel Bengkulu Padang Hiace Rp 300.000 via Curup',
-    metaDesc: 'Travel Bengkulu Padang naik Hiace, Rp 300.000/orang via Curup dan Lubuklinggau. Kabin lega TV & audio, jemput di Bengkulu. Pesan WA 0852-6864-5461.',
+    metaTitle: 'Travel Bengkulu Padang Hiace Rp 350.000 via Curup',
+    metaDesc: 'Travel Bengkulu Padang Hiace Rp 350.000, berangkat 12.15. Tujuan Bukit Tinggi, Solok, Bangko, Muara Bungo. Pesan WA 0852-6864-5461.',
     h1: 'Travel Bengkulu Padang Hiace',
-    lead: 'Travel Hiace dari Bengkulu ke Padang lewat Curup dan Lubuklinggau. Tarif Rp 300.000 per orang, kabin lega dengan TV dan audio.',
+    lead: 'Travel Hiace dari Bengkulu ke Padang lewat Curup dan Lubuklinggau, berangkat pukul 12.15. Tarif Rp 350.000 per orang, kabin lega dengan TV dan audio. Bisa turun di Bukit Tinggi, Solok, Bangko, Sarolangun, Muara Bungo, dan Singkut.',
     heroSrc: 'hiace-silver-samping.webp', heroW: 720, heroH: 1280, heroPos: 'object-[50%_45%]',
     heroAlt: 'Toyota Hiace silver armada travel Bengkulu Padang',
     jalur: 'Dari Kota Bengkulu, Hiace naik ke Curup, lalu lanjut ke Lubuklinggau dan meneruskan perjalanan ke Padang. Sopir berhenti di rumah makan dan SPBU untuk istirahat, makan, dan ibadah.',
@@ -215,13 +268,13 @@ export const PADANG_ROUTES: Record<string, BandungRoute> = {
     related: relPadang(L_BKL_PDG, L_PDG_CRP, { href: '/tempat-wisata-bengkulu', label: 'Wisata Bengkulu' }),
   },
   'travel-curup-padang': {
-    ...PADANG_BASE,
+    ...PADANG_BASE_CRP,
     slug: 'travel-curup-padang', routeId: 'crp-pdg', from: 'Curup', to: 'Padang',
     duration: '16–20 jam',
-    metaTitle: 'Travel Curup Padang Hiace Rp 300.000 via Lubuklinggau',
-    metaDesc: 'Travel Curup Padang naik Hiace, Rp 300.000/orang via Lubuklinggau. Kabin lega TV & audio, jemput di Curup. Pesan WA 0852-6864-5461.',
+    metaTitle: 'Travel Curup Padang Hiace Rp 350.000 via Lubuklinggau',
+    metaDesc: 'Travel Curup Padang Hiace Rp 350.000, berangkat 14.15. Tujuan Bukit Tinggi, Solok, Bangko, Muara Bungo. Pesan WA 0852-6864-5461.',
     h1: 'Travel Curup Padang Hiace',
-    lead: 'Travel Hiace dari Curup ke Padang lewat Lubuklinggau. Tarif Rp 300.000 per orang, kabin lega dengan TV dan audio.',
+    lead: 'Travel Hiace dari Curup ke Padang lewat Lubuklinggau, berangkat pukul 14.15. Tarif Rp 350.000 per orang, kabin lega dengan TV dan audio. Bisa turun di Bukit Tinggi, Solok, Bangko, Sarolangun, Muara Bungo, dan Singkut.',
     heroSrc: 'hiace-silver-samping.webp', heroW: 720, heroH: 1280, heroPos: 'object-[50%_45%]',
     heroAlt: 'Toyota Hiace silver armada travel Curup Padang',
     jalur: 'Dari Curup, Hiace menuju Lubuklinggau dan meneruskan perjalanan ke Padang. Sopir berhenti di rumah makan dan SPBU untuk istirahat, makan, dan ibadah.',

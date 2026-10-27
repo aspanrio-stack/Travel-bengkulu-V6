@@ -57,7 +57,7 @@ export default function HomeBookingCard() {
           onChange={e => setRouteId(e.target.value)}
           className="mt-1.5 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-base text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
         >
-          {ROUTES.map(r => (
+          {ROUTES.filter(r => !r.hideOnHome).map(r => (
             <option key={r.id} value={r.id}>{r.from} – {r.to}</option>
           ))}
         </select>
