@@ -18,7 +18,55 @@ export interface Route {
    * Info per jam keberangkatan: jenis armada + pemberitahuan khusus
    * yang muncul di form pemesanan saat jam tersebut dipilih.
    */
-  timeInfo?: Record<string, { car: string; notice?: string }>;
+  timeInfo?: Record<string, { car: string; notice?: string; price?: number }>;
+  /**
+   * Hari keberangkatan tetap (0 = Minggu … 6 = Sabtu). Kosong = setiap hari / fleksibel.
+   */
+  departureDays?: number[];
+  /** Label hari untuk ditampilkan, mis. 'Rabu dan Jumat' */
+  departureDaysLabel?: string;
+  /** Sembunyikan dari pilihan rute cepat di beranda (rute turunan koridor Padang) */
+  hideOnHome?: boolean;
+}
+
+/** Selisih tarif untuk kendaraan selain Hiace (rute koridor Padang) */
+export const KURANG_NON_HIACE = 50000;
+
+const NOTICE_RANDOM =
+  'Perhatian: keberangkatan pukul 14.00 menggunakan mobil random (bukan Hiace), tarif Rp 50.000 lebih murah. Pilih jam Hiace jika Anda ingin naik Hiace.';
+
+/** Tujuan di koridor Padang — tarif Hiace per orang dari Bengkulu (Curup mengikuti tarif yang sama) */
+export const TUJUAN_KORIDOR_PADANG: { slug: string; nama: string; hiace: number }[] = [
+  { slug: 'bkt', nama: 'Bukit Tinggi', hiace: 350000 },
+  { slug: 'bgk', nama: 'Bangko', hiace: 300000 },
+  { slug: 'srl', nama: 'Sarolangun', hiace: 300000 },
+  { slug: 'bgo', nama: 'Muara Bungo', hiace: 300000 },
+  { slug: 'slk', nama: 'Solok', hiace: 350000 },
+  { slug: 'skt', nama: 'Singkut', hiace: 300000 },
+];
+
+function koridorPadangRoutes(): Route[] {
+  const asal = [
+    { prefix: 'bkl', nama: 'Bengkulu', jamHiace: '12:15', via: 'Curup, Lubuklinggau' },
+    { prefix: 'crp', nama: 'Curup', jamHiace: '14:15', via: 'Lubuklinggau' },
+  ];
+  return asal.flatMap(a =>
+    TUJUAN_KORIDOR_PADANG.map((t): Route => ({
+      id: `${a.prefix}-${t.slug}`,
+      from: a.nama,
+      to: t.nama,
+      price: t.hiace,
+      duration: 'Estimasi dikonfirmasi admin',
+      via: a.via,
+      hideOnHome: true,
+      departureTimes: [a.jamHiace, '14:00'],
+      departureNote: `Hiace berangkat pukul ${a.jamHiace.replace(':', '.')} (Rp ${(t.hiace / 1000).toFixed(0)}.000). Mobil random pukul 14.00 (Rp ${((t.hiace - KURANG_NON_HIACE) / 1000).toFixed(0)}.000, bukan Hiace).`,
+      timeInfo: {
+        [a.jamHiace]: { car: 'Hiace' },
+        '14:00': { car: 'Mobil Random', price: t.hiace - KURANG_NON_HIACE, notice: NOTICE_RANDOM },
+      },
+    })),
+  );
 }
 
 export const ROUTES: Route[] = [
@@ -134,8 +182,22 @@ export const ROUTES: Route[] = [
     price: 800000,
     duration: '30–36 jam',
     via: 'Tol Palembang, Bakauheni–Merak',
-    departureTimes: [],
-    departureNote: 'Berangkat 2 kali seminggu. Hubungi kami untuk konfirmasi hari, jam, dan sisa kursi.',
+    departureTimes: ['13:00'],
+    departureDays: [3, 5],
+    departureDaysLabel: 'Rabu dan Jumat',
+    departureNote: 'Berangkat setiap Rabu dan Jumat pukul 13.00 dari Curup. Hubungi kami untuk konfirmasi sisa kursi.',
+  },
+  {
+    id: 'bkl-bdg',
+    from: 'Bengkulu',
+    to: 'Bandung',
+    price: 800000,
+    duration: '32–38 jam',
+    via: 'Curup, Tol Palembang, Bakauheni–Merak',
+    departureTimes: ['11:00'],
+    departureDays: [3, 5],
+    departureDaysLabel: 'Rabu dan Jumat',
+    departureNote: 'Berangkat setiap Rabu dan Jumat pukul 11.00 dari Bengkulu. Hubungi kami untuk konfirmasi sisa kursi.',
   },
   {
     id: 'bdg-crp',
@@ -161,14 +223,14 @@ export const ROUTES: Route[] = [
     id: 'bkl-pdg',
     from: 'Bengkulu',
     to: 'Padang',
-    price: 300000,
+    price: 350000,
     duration: '18–22 jam',
     via: 'Curup, Lubuklinggau',
-    departureTimes: ['14:00', '18:30'],
-    departureNote: 'Pukul 18.30 menggunakan mobil Hiace. Pukul 14.00 menggunakan mobil random (bukan Hiace).',
+    departureTimes: ['12:15', '14:00'],
+    departureNote: 'Hiace berangkat pukul 12.15 (Rp 350.000). Mobil random pukul 14.00 (Rp 300.000, bukan Hiace).',
     timeInfo: {
-      '14:00': { car: 'Mobil Random', notice: 'Perhatian: keberangkatan pukul 14.00 menggunakan mobil random, bukan Hiace. Pilih pukul 18.30 jika Anda ingin naik Hiace.' },
-      '18:30': { car: 'Hiace' },
+      '12:15': { car: 'Hiace' },
+      '14:00': { car: 'Mobil Random', price: 300000, notice: NOTICE_RANDOM },
     },
   },
   {
@@ -189,14 +251,14 @@ export const ROUTES: Route[] = [
     id: 'crp-pdg',
     from: 'Curup',
     to: 'Padang',
-    price: 300000,
+    price: 350000,
     duration: '16–20 jam',
     via: 'Lubuklinggau',
-    departureTimes: ['14:00', '18:30'],
-    departureNote: 'Pukul 18.30 menggunakan mobil Hiace. Pukul 14.00 menggunakan mobil random (bukan Hiace).',
+    departureTimes: ['14:15', '14:00'],
+    departureNote: 'Hiace berangkat pukul 14.15 (Rp 350.000). Mobil random pukul 14.00 (Rp 300.000, bukan Hiace).',
     timeInfo: {
-      '14:00': { car: 'Mobil Random', notice: 'Perhatian: keberangkatan pukul 14.00 menggunakan mobil random, bukan Hiace. Pilih pukul 18.30 jika Anda ingin naik Hiace.' },
-      '18:30': { car: 'Hiace' },
+      '14:15': { car: 'Hiace' },
+      '14:00': { car: 'Mobil Random', price: 300000, notice: NOTICE_RANDOM },
     },
   },
   {
@@ -253,10 +315,24 @@ export const ROUTES: Route[] = [
     departureTimes: [],
     departureNote: 'Hubungi kami untuk konfirmasi jadwal keberangkatan dari Lampung.',
   },
+  ...koridorPadangRoutes(),
 ];
 
 export function getRouteById(id: string): Route | undefined {
   return ROUTES.find(r => r.id === id);
+}
+
+/** Harga per orang; mobil non-Hiace (timeInfo.price) bisa berbeda dari harga dasar */
+export function getRoutePrice(route: Route | undefined, time?: string): number {
+  if (!route) return 0;
+  return (time && route.timeInfo?.[time]?.price) || route.price;
+}
+
+/** Cek apakah tanggal (YYYY-MM-DD) jatuh pada hari keberangkatan rute */
+export function isDepartureDay(route: Route | undefined, date: string): boolean {
+  if (!route?.departureDays?.length || !date) return true;
+  const [y, m, d] = date.split('-').map(Number);
+  return route.departureDays.includes(new Date(y, m - 1, d).getDay());
 }
 
 export function formatPrice(price: number): string {

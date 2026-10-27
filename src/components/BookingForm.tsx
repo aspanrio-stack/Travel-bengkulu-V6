@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import { ROUTES, formatPrice, formatDepartureTime, getTimeInfo, Route } from '@/lib/routes';
+import { ROUTES, formatPrice, formatDepartureTime, getTimeInfo, getRoutePrice, isDepartureDay, Route } from '@/lib/routes';
 import LocationPicker from '@/components/LocationPicker';
 import SavedAddressBox from '@/components/SavedAddressBox';
 import LoginPrompt, { type AuthStatus } from '@/components/LoginPrompt';
@@ -89,7 +89,8 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
   };
   const hasReverse = !!selectedRoute && ROUTES.some(r => r.from === selectedRoute.to && r.to === selectedRoute.from);
   const fullPhone = form.phone ? '+62' + form.phone.replace(/^0+/, '') : '';
-  const totalPrice = selectedRoute ? selectedRoute.price * parseInt(form.passengers) : 0;
+  const unitPrice = getRoutePrice(selectedRoute, form.departureTime);
+  const totalPrice = selectedRoute ? unitPrice * parseInt(form.passengers) : 0;
 
   const hasFixedTimes = selectedRoute && selectedRoute.departureTimes && selectedRoute.departureTimes.length > 0;
   const isAirportRoute = selectedRoute && (selectedRoute.id === 'crp-bnd' || selectedRoute.id === 'bnd-crp');
@@ -109,6 +110,7 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
     if (!form.routeId) return 'Pilih rute perjalanan';
     if (!form.date) return 'Pilih tanggal keberangkatan';
     if (form.date < today) return 'Tanggal tidak boleh di masa lalu';
+    if (!isDepartureDay(selectedRoute, form.date)) return `Rute ini hanya berangkat hari ${selectedRoute?.departureDaysLabel ?? 'tertentu'}. Pilih tanggal yang sesuai.`;
     if (hasFixedTimes && !form.departureTime) return 'Pilih jam keberangkatan';
     if (isAirportRoute && !form.flightInfo.trim()) {
       return selectedRoute?.id === 'crp-bnd'
@@ -156,7 +158,7 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
     passengers: form.passengers,
     pickup: form.pickupAddress,
     dropoff: form.dropoffAddress,
-    harga: selectedRoute!.price,
+    harga: unitPrice,
     kodeUnik: 0,
     total: totalPrice,
     paymentMethod,
@@ -406,7 +408,7 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
                     {selectedRoute.via && <span className="ml-1 text-slate-400">· via {selectedRoute.via}</span>}
                   </span>
                   <span className="text-xs font-semibold text-primary-700">
-                    {formatPrice(selectedRoute.price)}/orang
+                    {formatPrice(unitPrice)}/orang
                   </span>
                 </div>
               )}
@@ -423,7 +425,7 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
                       className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500">
                       <option value="">-- Pilih Jam --</option>
                       {selectedRoute.departureTimes!.map(t => (
-                        <option key={t} value={t}>🕐 {formatDepartureTime(t)}{getTimeInfo(selectedRoute, t) ? ` · ${getTimeInfo(selectedRoute, t)!.car}` : ''}</option>
+                        <option key={t} value={t}>🕐 {formatDepartureTime(t)}{getTimeInfo(selectedRoute, t) ? ` · ${getTimeInfo(selectedRoute, t)!.car}` : ''}{getTimeInfo(selectedRoute, t)?.price ? ` · ${formatPrice(getTimeInfo(selectedRoute, t)!.price!)}` : ''}</option>
                       ))}
                     </select>
                     {selectedTimeInfo?.notice && (
@@ -469,6 +471,9 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
                 </label>
                 <input type="date" name="date" value={form.date} min={today} onChange={handleChange}
                   className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                {selectedRoute?.departureDaysLabel && (
+                  <p className="text-xs text-primary-600 mt-1.5">📅 Berangkat setiap hari {selectedRoute.departureDaysLabel}.</p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">
@@ -487,7 +492,7 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
               <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
                 <p className="mb-2 text-sm font-semibold text-slate-700">Ringkasan Harga</p>
                 <div className="flex justify-between text-sm text-slate-600">
-                  <span>{formatPrice(selectedRoute.price)} × {form.passengers} orang</span>
+                  <span>{formatPrice(unitPrice)} × {form.passengers} orang</span>
                   <span>{formatPrice(totalPrice)}</span>
                 </div>
                 <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3">

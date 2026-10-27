@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import QRISCheckout from '@/components/QRISCheckout';
-import { ROUTES, formatPrice } from '@/lib/routes';
+import { ROUTES, formatPrice, getRoutePrice } from '@/lib/routes';
 
 function PembayaranContent() {
   const params = useSearchParams();
@@ -22,7 +22,8 @@ function PembayaranContent() {
 
   // ── Kalkulasi harga ──
   const route         = ROUTES.find(r => r.id === routeId);
-  const hargaPerOrang = route?.price || 0;
+  const departureTime = params.get('departureTime') || '';
+  const hargaPerOrang = getRoutePrice(route, departureTime);
   const jumlah        = parseInt(passengers);
   const totalHarga    = hargaPerOrang * jumlah;
 

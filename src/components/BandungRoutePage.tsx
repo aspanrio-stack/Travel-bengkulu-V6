@@ -48,6 +48,12 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
   const faq: [string, string][] = [
     [`Berapa tarif travel ${nama}?`, `Tarif travel Hiace ${nama} adalah ${harga} per orang.`],
     ['Kapan jadwal keberangkatannya?', jadwalFaq],
+    ...(r.tarifTujuan
+      ? ([[
+          'Bisa turun di kota selain Padang?',
+          `Bisa. Selain Padang, perjalanan ini melayani ${r.tarifTujuan.filter((t) => t.tujuan !== 'Padang').map((t) => t.tujuan).join(', ')}. Tarif Hiace Rp 300.000 sampai Rp 350.000 per orang tergantung tujuan, dan kendaraan selain Hiace Rp 50.000 lebih murah.`,
+        ]] as [string, string][])
+      : []),
     [`Lewat mana rute travel ${nama}?`, r.jalur],
     ['Berapa lama perjalanannya?', `Estimasi ${r.duration} termasuk ${r.durasiFaq ?? 'penyeberangan Bakauheni–Merak, istirahat, dan makan'}. Waktu aktual bisa berubah karena ${r.durasiNote ?? 'kondisi jalan, antrean pelabuhan, dan cuaca'}.`],
     ['Bagaimana cara memesan?', 'Lewat form online di website ini atau WhatsApp admin.'],
@@ -138,7 +144,7 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
         {cards.map((c) => (
           <Link
             key={c.judul}
-            href={c.time ? `${pesanHref}&jam=${c.time}` : pesanHref}
+            href={c.time ? `/pesan?rute=${c.routeId ?? r.routeId}&jam=${c.time}` : `/pesan?rute=${c.routeId ?? r.routeId}`}
             className="group block rounded-2xl bg-slate-900 p-5 text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-300"
           >
             <div className="flex items-center gap-4">
@@ -184,6 +190,35 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
       <div className="mt-3 text-center text-sm text-slate-500">
         Atau hubungi admin: <a href="tel:+6285268645461">0852-6864-5461</a> / <a href="tel:+6282374497929">0823-7449-7929</a>
       </div>
+
+      {/* ── Tarif per tujuan (koridor Padang) ── */}
+      {r.tarifTujuan && (
+        <>
+          <h2 className={H2}>Tarif per Tujuan dari {r.from}</h2>
+          <p>
+            Satu keberangkatan melayani beberapa kota di sepanjang jalur ke Padang. Pilih tujuan Anda: tarif Hiace
+            dan tarif kendaraan lain (Rp 50.000 lebih murah) tertera di bawah.
+          </p>
+          <div className="overflow-x-auto">
+            <table>
+              <thead>
+                <tr><th>Tujuan</th><th>Hiace</th><th>Kendaraan lain</th><th></th></tr>
+              </thead>
+              <tbody>
+                {r.tarifTujuan.map((t) => (
+                  <tr key={t.routeId}>
+                    <td><strong>{r.from} → {t.tujuan}</strong></td>
+                    <td>{rp(t.hiace)}</td>
+                    <td>{rp(t.lain)}</td>
+                    <td><Link href={`/pesan?rute=${t.routeId}`} className="font-semibold text-primary-700 hover:underline">Pesan →</Link></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-sm text-slate-500">Tarif per orang. Hiace berangkat sesuai jam di atas; kendaraan lain berangkat pukul 14.00.</p>
+        </>
+      )}
 
       {/* ── Rute ── */}
       <h2 className={H2}>Rute Perjalanan {r.from} ke {r.to} via {via}</h2>
@@ -269,7 +304,7 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
       </div>
 
       <div className="mt-8 text-xs text-slate-500">
-        Diperbarui 27 Oktober 2026 oleh tim Travel Bengkulu, BTN Air Bang Curup. Informasi tarif dan jadwal dikelola langsung oleh admin kami.
+        Diperbarui 28 Oktober 2026 oleh tim Travel Bengkulu, BTN Air Bang Curup. Informasi tarif dan jadwal dikelola langsung oleh admin kami.
       </div>
 
       {/* ── Terkait ── */}
