@@ -216,7 +216,7 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
               </tbody>
             </table>
           </div>
-          <p className="text-sm text-slate-500">Tarif per orang. Hiace berangkat sesuai jam di atas; kendaraan lain berangkat pukul 14.00.</p>
+          <p className="text-sm text-slate-500">Tarif per orang. Jam keberangkatan Hiace dan mobil random tertera di bagian Jadwal di atas.</p>
         </>
       )}
 

@@ -97,15 +97,21 @@ export const BANDUNG_ROUTES: Record<string, BandungRoute> = {
     duration: '30–36 jam',
     metaTitle: 'Travel Bandung Curup Hiace via Tol Palembang Rp 800.000',
     metaDesc:
-      'Travel Bandung Curup naik Hiace via Tol Palembang, Rp 800.000/orang. Berangkat 2 kali seminggu, kabin lega TV & audio. Pesan WA 0852-6864-5461.',
+      'Travel Bandung Curup naik Hiace via Tol Palembang, Rp 800.000/orang. Berangkat Rabu & Jumat 13.00, kabin lega TV & audio. Pesan WA 0852-6864-5461.',
     h1: 'Travel Bandung Curup Hiace',
-    lead: 'Travel Hiace dari Bandung langsung ke Curup lewat Tol Palembang, berangkat 2 kali seminggu. Kabin lega dengan TV dan audio.',
+    lead: 'Travel Hiace dari Bandung langsung ke Curup lewat Tol Palembang, berangkat setiap Rabu dan Jumat pukul 13.00. Kabin lega dengan TV dan audio.',
     heroSrc: 'hiace-curup-bandung-malam.webp',
     heroW: 562,
     heroH: 1000,
     heroAlt: 'Toyota Hiace putih armada travel Bandung Curup saat penyeberangan malam',
     jalur:
       'Dari Bandung, HiAce masuk tol Cipularang dan Jakarta–Merak menuju Pelabuhan Merak, menyeberang ke Bakauheni, lalu masuk Tol Trans Sumatera ke arah Palembang. Dari Palembang perjalanan lanjut lewat Prabumulih, Sekayu, dan Lubuklinggau hingga tiba di Curup.',
+    jadwal: 'setiap Rabu dan Jumat pukul 13.00',
+    jadwalFaq: 'Berangkat setiap Rabu dan Jumat pukul 13.00 WIB dari Bandung. Hubungi admin untuk sisa kursi.',
+    perkJadwal: 'setiap Rabu dan Jumat pukul 13.00, bisa direncanakan jauh hari',
+    jadwalCards: [
+      { jam: '13.00 WIB', time: '13:00', judul: 'Berangkat dari Bandung', sub: 'Rabu & Jumat · Toyota Hiace', armada: 'Hiace', icon: '🚐', tone: 'hiace' as const },
+    ],
     jemput: 'Area Bandung',
     tujuan: 'Curup',
     related: [
@@ -127,15 +133,21 @@ export const BANDUNG_ROUTES: Record<string, BandungRoute> = {
     duration: '32–38 jam',
     metaTitle: 'Travel Bandung Bengkulu Hiace via Tol Palembang Rp 800.000',
     metaDesc:
-      'Travel Bandung Bengkulu naik Hiace via Tol Palembang, Rp 800.000/orang. Berangkat 2 kali seminggu, kabin lega TV & audio. Pesan WA 0852-6864-5461.',
+      'Travel Bandung Bengkulu naik Hiace via Tol Palembang, Rp 800.000/orang. Berangkat Rabu & Jumat 13.00, kabin lega TV & audio. Pesan WA 0852-6864-5461.',
     h1: 'Travel Bandung Bengkulu Hiace',
-    lead: 'Travel Hiace dari Bandung ke Kota Bengkulu lewat Tol Palembang dan Curup, berangkat 2 kali seminggu. Kabin lega dengan TV dan audio.',
+    lead: 'Travel Hiace dari Bandung ke Kota Bengkulu lewat Tol Palembang dan Curup, berangkat setiap Rabu dan Jumat pukul 13.00. Kabin lega dengan TV dan audio.',
     heroSrc: 'hiace-curup-bandung-malam.webp',
     heroW: 562,
     heroH: 1000,
     heroAlt: 'Toyota Hiace putih armada travel Bandung Bengkulu saat penyeberangan malam',
     jalur:
       'Dari Bandung, HiAce masuk tol menuju Merak, menyeberang ke Bakauheni, lalu lewat Tol Trans Sumatera ke Palembang. Dari Palembang perjalanan lanjut melalui Prabumulih, Sekayu, Lubuklinggau, dan Curup, kemudian turun ke Kota Bengkulu.',
+    jadwal: 'setiap Rabu dan Jumat pukul 13.00',
+    jadwalFaq: 'Berangkat setiap Rabu dan Jumat pukul 13.00 WIB dari Bandung. Hubungi admin untuk sisa kursi.',
+    perkJadwal: 'setiap Rabu dan Jumat pukul 13.00, bisa direncanakan jauh hari',
+    jadwalCards: [
+      { jam: '13.00 WIB', time: '13:00', judul: 'Berangkat dari Bandung', sub: 'Rabu & Jumat · Toyota Hiace', armada: 'Hiace', icon: '🚐', tone: 'hiace' as const },
+    ],
     jemput: 'Area Bandung',
     tujuan: 'Kota Bengkulu',
     related: [
@@ -151,7 +163,6 @@ export const BANDUNG_ROUTES: Record<string, BandungRoute> = {
 };
 
 // ───────── Rute Padang (Hiace silver) ─────────
-export const HARGA_PADANG = 300000;
 const PADANG_DIR = '/images/hiace-padang';
 const PADANG_GALERI = (nama: string, utama: 'samping' | 'depan') => [
   { src: 'kabin-led-tv.webp', w: 450, h: 800, alt: `Kabin Hiace travel ${nama} dengan plafon LED, TV, dan speaker`, cap: 'Plafon LED, TV, dan speaker di kabin.' },
@@ -162,50 +173,30 @@ const PADANG_GALERI = (nama: string, utama: 'samping' | 'depan') => [
     ? { src: 'hiace-silver-depan.webp', w: 720, h: 1280, alt: `Tampak depan Toyota Hiace silver travel ${nama}`, cap: 'Tampak depan armada Hiace.' }
     : { src: 'hiace-silver-samping.webp', w: 720, h: 1280, alt: `Tampak samping Toyota Hiace silver travel ${nama}`, cap: 'Tampak samping armada Hiace.' },
 ];
-const PADANG_BASE = {
-  price: HARGA_PADANG,
-  imgDir: PADANG_DIR,
-  via: 'Curup & Lubuklinggau',
-  jadwal: '2 jam keberangkatan, 14.00 dan 18.30',
-  jadwalFaq: 'Ada 2 jam keberangkatan: pukul 18.30 dengan mobil Hiace dan pukul 14.00 dengan mobil random (bukan Hiace). Hubungi admin untuk sisa kursi.',
-  armadaCard: 'Hiace · Mobil Random',
-  jadwalCards: [
-    { jam: '14.00 WIB', time: '14:00', judul: 'Keberangkatan Siang', sub: 'Menggunakan mobil random (bukan Hiace)', armada: 'Mobil Random', icon: '☀️', tone: 'random' as const },
-    { jam: '18.30 WIB', time: '18:30', judul: 'Keberangkatan Malam', sub: 'Menggunakan Toyota Hiace', armada: 'Hiace', icon: '🌙', tone: 'hiace' as const },
-  ],
-  jadwalRow: 'Pukul 14.00 (mobil random) dan 18.30 (Hiace)',
-  armadaRow: 'Toyota Hiace untuk jam 18.30 (sabuk pengaman, TV & audio). Jam 14.00 memakai mobil random',
-  catatanArmada: 'Pilih keberangkatan pukul 18.30 jika Anda ingin naik Hiace. Keberangkatan pukul 14.00 menggunakan mobil random (bukan Hiace).',
-  badge: '🚐 Rute Baru · Hiace',
-  ctaText: 'Pilih jam 18.30 untuk naik Hiace. Isi form untuk cek kursi.',
-  perkVia: 'rute lewat Curup dan Lubuklinggau menuju Padang',
-  perkJadwal: 'jam 18.30 dengan Hiace, jam 14.00 dengan mobil random',
-  durasiNote: 'kondisi jalan, cuaca, dan lalu lintas',
-  durasiFaq: 'istirahat dan makan',
-};
 
 // Asal Bengkulu / Curup: Hiace Rp 350.000 ke Padang, kendaraan lain Rp 50.000 lebih murah
 const HARGA_PADANG_HIACE = 350000;
-const padangAsalBase = (jamHiace: string) => {
+const padangAsalBase = (jamHiace: string, jamRandom: string, tujuan: string) => {
   const j = jamHiace.replace(':', '.');
+  const jr = jamRandom.replace(':', '.');
   return {
     price: HARGA_PADANG_HIACE,
     imgDir: PADANG_DIR,
     via: 'Curup & Lubuklinggau',
-    jadwal: `Hiace jam ${j}, mobil random jam 14.00`,
-    jadwalFaq: `Ada 2 jam keberangkatan: pukul ${j} dengan mobil Hiace (Rp 350.000 ke Padang) dan pukul 14.00 dengan mobil random, bukan Hiace (Rp 50.000 lebih murah, Rp 300.000 ke Padang). Hubungi admin untuk sisa kursi.`,
+    jadwal: `mobil random jam ${jr}, Hiace jam ${j}`,
+    jadwalFaq: `Ada 2 jam keberangkatan: pukul ${jr} dengan mobil random, bukan Hiace (Rp 50.000 lebih murah, Rp 300.000 ke ${tujuan}) dan pukul ${j} dengan mobil Hiace (Rp 350.000 ke ${tujuan}). Hubungi admin untuk sisa kursi.`,
     armadaCard: 'Hiace · Mobil Random',
     jadwalCards: [
       { jam: `${j} WIB`, time: jamHiace, judul: 'Keberangkatan Hiace', sub: 'Toyota Hiace, kabin lega TV & audio', armada: 'Hiace', icon: '🚐', tone: 'hiace' as const },
-      { jam: '14.00 WIB', time: '14:00', judul: 'Keberangkatan Sore', sub: 'Mobil random (bukan Hiace), Rp 50.000 lebih murah', armada: 'Mobil Random', icon: '☀️', tone: 'random' as const },
+      { jam: `${jr} WIB`, time: jamRandom, judul: 'Keberangkatan Mobil Random', sub: 'Bukan Hiace, Rp 50.000 lebih murah', armada: 'Mobil Random', icon: '☀️', tone: 'random' as const },
     ],
-    jadwalRow: `Pukul ${j} (Hiace) dan 14.00 (mobil random)`,
-    armadaRow: `Toyota Hiace untuk jam ${j} (sabuk pengaman, TV & audio). Jam 14.00 memakai mobil random`,
-    catatanArmada: `Tarif Rp 350.000 ke Padang berlaku untuk Hiace (jam ${j}). Kendaraan selain Hiace (jam 14.00) tarifnya Rp 50.000 lebih murah dan bukan Hiace.`,
+    jadwalRow: `Pukul ${jr} (mobil random) dan ${j} (Hiace)`,
+    armadaRow: `Toyota Hiace untuk jam ${j} (sabuk pengaman, TV & audio). Jam ${jr} memakai mobil random`,
+    catatanArmada: `Tarif Rp 350.000 ke ${tujuan} berlaku untuk Hiace (jam ${j}). Kendaraan selain Hiace (jam ${jr}) tarifnya Rp 50.000 lebih murah dan bukan Hiace.`,
     badge: '🚐 Rute Baru · Hiace',
     ctaText: `Pilih jam ${j} untuk naik Hiace. Isi form untuk cek kursi.`,
     perkVia: 'rute lewat Curup dan Lubuklinggau menuju Padang',
-    perkJadwal: `jam ${j} dengan Hiace, jam 14.00 dengan mobil random`,
+    perkJadwal: `jam ${j} dengan Hiace, jam ${jr} dengan mobil random`,
     durasiNote: 'kondisi jalan, cuaca, dan lalu lintas',
     durasiFaq: 'istirahat dan makan',
   };
@@ -223,8 +214,11 @@ const tarifKoridor = (prefix: 'bkl' | 'crp') => {
     row(`${prefix}-skt`, t('skt').nama, t('skt').hiace),
   ];
 };
-const PADANG_BASE_BKL = { ...padangAsalBase('12:15'), tarifTujuan: tarifKoridor('bkl') };
-const PADANG_BASE_CRP = { ...padangAsalBase('14:15'), tarifTujuan: tarifKoridor('crp') };
+const PADANG_BASE_BKL = { ...padangAsalBase('12:15', '11:00', 'Padang'), tarifTujuan: tarifKoridor('bkl') };
+const PADANG_BASE_CRP = { ...padangAsalBase('14:15', '13:00', 'Padang'), tarifTujuan: tarifKoridor('crp') };
+// Asal Padang (ke Bengkulu / Curup): mobil random 10.00, Hiace 11.00, tarif sama
+const PADANG_BASE_PDG_BKL = padangAsalBase('11:00', '10:00', 'Bengkulu');
+const PADANG_BASE_PDG_CRP = padangAsalBase('11:00', '10:00', 'Curup');
 const relPadang = (...extra: { href: string; label: string }[]) => [
   ...extra,
   { href: '/travel-curup-bengkulu', label: 'Travel Curup → Bengkulu' },
@@ -253,13 +247,13 @@ export const PADANG_ROUTES: Record<string, BandungRoute> = {
     related: relPadang(L_PDG_BKL, L_CRP_PDG, { href: '/tempat-wisata-bengkulu', label: 'Wisata Bengkulu' }),
   },
   'travel-padang-bengkulu': {
-    ...PADANG_BASE,
+    ...PADANG_BASE_PDG_BKL,
     slug: 'travel-padang-bengkulu', routeId: 'pdg-bkl', from: 'Padang', to: 'Bengkulu',
     duration: '18–22 jam',
-    metaTitle: 'Travel Padang Bengkulu Hiace Rp 300.000 via Curup',
-    metaDesc: 'Travel Padang Bengkulu naik Hiace, Rp 300.000/orang via Lubuklinggau dan Curup. Kabin lega TV & audio. Pesan WA 0852-6864-5461.',
+    metaTitle: 'Travel Padang Bengkulu Hiace Rp 350.000 via Curup',
+    metaDesc: 'Travel Padang Bengkulu naik Hiace Rp 350.000/orang, berangkat 11.00, via Lubuklinggau dan Curup. Kabin lega TV & audio. Pesan WA 0852-6864-5461.',
     h1: 'Travel Padang Bengkulu Hiace',
-    lead: 'Travel Hiace dari Padang ke Bengkulu lewat Lubuklinggau dan Curup. Tarif Rp 300.000 per orang, kabin lega dengan TV dan audio.',
+    lead: 'Travel Hiace dari Padang ke Bengkulu lewat Lubuklinggau dan Curup. Berangkat pukul 11.00. Tarif Rp 350.000 per orang, kabin lega dengan TV dan audio.',
     heroSrc: 'hiace-silver-depan.webp', heroW: 720, heroH: 1280, heroPos: 'object-[50%_40%]',
     heroAlt: 'Tampak depan Toyota Hiace silver armada travel Padang Bengkulu',
     jalur: 'Dari Padang, Hiace menuju Lubuklinggau, lalu naik ke Curup dan turun ke Kota Bengkulu. Sopir berhenti di rumah makan dan SPBU untuk istirahat, makan, dan ibadah.',
@@ -283,13 +277,13 @@ export const PADANG_ROUTES: Record<string, BandungRoute> = {
     related: relPadang(L_PDG_CRP, L_BKL_PDG, { href: '/rental-mobil-curup', label: 'Rental Mobil Curup' }, { href: '/hotel-di-curup', label: 'Hotel di Curup' }),
   },
   'travel-padang-curup': {
-    ...PADANG_BASE,
+    ...PADANG_BASE_PDG_CRP,
     slug: 'travel-padang-curup', routeId: 'pdg-crp', from: 'Padang', to: 'Curup',
     duration: '16–20 jam',
-    metaTitle: 'Travel Padang Curup Hiace Rp 300.000 via Lubuklinggau',
-    metaDesc: 'Travel Padang Curup naik Hiace, Rp 300.000/orang via Lubuklinggau. Kabin lega TV & audio. Pesan WA 0852-6864-5461.',
+    metaTitle: 'Travel Padang Curup Hiace Rp 350.000 via Lubuklinggau',
+    metaDesc: 'Travel Padang Curup naik Hiace Rp 350.000/orang, berangkat 11.00, via Lubuklinggau. Kabin lega TV & audio. Pesan WA 0852-6864-5461.',
     h1: 'Travel Padang Curup Hiace',
-    lead: 'Travel Hiace dari Padang ke Curup lewat Lubuklinggau. Tarif Rp 300.000 per orang, kabin lega dengan TV dan audio.',
+    lead: 'Travel Hiace dari Padang ke Curup lewat Lubuklinggau. Berangkat pukul 11.00. Tarif Rp 350.000 per orang, kabin lega dengan TV dan audio.',
     heroSrc: 'hiace-silver-depan.webp', heroW: 720, heroH: 1280, heroPos: 'object-[50%_40%]',
     heroAlt: 'Tampak depan Toyota Hiace silver armada travel Padang Curup',
     jalur: 'Dari Padang, Hiace menuju Lubuklinggau dan melanjutkan perjalanan ke Curup. Sopir berhenti di rumah makan dan SPBU untuk istirahat, makan, dan ibadah.',
