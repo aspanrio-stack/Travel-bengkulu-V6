@@ -136,9 +136,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ARMADA — langsung terlihat begitu beranda dibuka (tanpa scroll) */}
-      <FleetGallery />
-
+      {/* KARTU PESAN CEPAT — paling atas, tepat di bawah hero */}
       <HomeBookingCard />
 
       {/* QUICK START — search, kategori, destinasi populer, penawaran (mobile-first) */}
@@ -151,19 +149,21 @@ export default function HomePage() {
             <button className="rounded-xl bg-primary-700 px-4 py-2 text-sm font-semibold text-white">Cari</button>
           </form>
 
-          <ul className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-6">
+          <ul className="mt-4 grid grid-cols-6 gap-1">
             {quickCategories.map(c => (
               <li key={c.label}>
-                <Link href={c.href} className="flex flex-col items-center gap-1.5 rounded-2xl bg-white py-3 shadow-sm ring-1 ring-slate-100 transition-transform active:scale-95">
-                  <span aria-hidden className={`flex h-12 w-12 items-center justify-center rounded-2xl text-2xl ${c.bg}`}>{c.icon}</span>
-                  <span className="text-xs font-semibold text-slate-700">{c.label}</span>
+                <Link href={c.href} className="flex flex-col items-center gap-1 py-1 transition-transform active:scale-90">
+                  <span aria-hidden className="text-[28px] leading-none sm:text-3xl">{c.icon}</span>
+                  <span className="text-[11px] font-semibold text-slate-700 sm:text-xs">{c.label}</span>
                 </Link>
               </li>
             ))}
           </ul>
-
         </div>
       </section>
+
+      {/* ARMADA — gambar mobil, tepat di bawah kolom cari & ikon */}
+      <FleetGallery />
 
       {/* DESTINASI POPULER */}
       <section aria-label="Destinasi populer" className="bg-slate-50 pb-4 pt-8 md:pb-10 md:pt-12">
