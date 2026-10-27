@@ -6,6 +6,7 @@ import DestinationCard from '@/components/DestinationCard';
 import HomeGreeting from '@/components/HomeGreeting';
 import HomeBookingCard from '@/components/HomeBookingCard';
 import CustomerReviewsCard from '@/components/CustomerReviewsCard';
+import CityMarqueeCard from '@/components/CityMarqueeCard';
 import { DESTINATIONS } from '@/lib/destinations';
 import { getRouteById, formatPrice } from '@/lib/routes';
 
@@ -185,6 +186,14 @@ export default function HomePage() {
             ))}
           </ul>
 
+        </div>
+
+        {/* KARTU MARQUEE KOTA — full-width, tepat di atas Destinasi Populer */}
+        <div className="mt-7">
+          <CityMarqueeCard />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4">
           <div className="mt-7 flex items-center justify-between">
             <h2 className="font-display text-xl font-bold text-slate-800">Destinasi Populer</h2>
             <Link href="/destinasi" className="text-sm font-semibold text-primary-700">Lihat semua</Link>
