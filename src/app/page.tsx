@@ -24,8 +24,6 @@ const quickCategories = [
   { icon: '🚗', label: 'Rental', href: '/rental-mobil-curup', bg: 'bg-amber-50' },
   { icon: '✈️', label: 'Bandara', href: '/antar-jemput-bandara-curup', bg: 'bg-indigo-50' },
   { icon: '📦', label: 'Paket', href: '/kirim-paket-bengkulu-palembang', bg: 'bg-orange-50' },
-  { icon: '🏨', label: 'Hotel', href: '/daftar-hotel-di-bengkulu', bg: 'bg-primary-50' },
-  { icon: '🍽️', label: 'Kuliner', href: '/makanan-khas-bengkulu', bg: 'bg-rose-50' },
 ];
 
 const stats = [
@@ -73,7 +71,7 @@ export default function HomePage() {
           <div className="hidden md:block absolute top-1/4 right-1/4 w-64 h-64 bg-gold-500/10 rounded-full blur-3xl"></div>
         </div>
 
-        <div className="relative w-full max-w-7xl mx-auto px-4 pt-5 pb-14 md:py-20 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-12 items-center">
+        <div className="relative w-full max-w-7xl mx-auto px-4 pt-5 pb-20 md:py-20 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-12 items-center">
           {/* Baris atas (HP): nama brand + akun — navbar atas disembunyikan di HP */}
           <div className="md:hidden lg:col-span-2 flex items-center justify-between">
             <div className="leading-tight">
@@ -149,11 +147,11 @@ export default function HomePage() {
             <button className="rounded-xl bg-primary-700 px-4 py-2 text-sm font-semibold text-white">Cari</button>
           </form>
 
-          <ul className="mt-4 grid grid-cols-6 gap-1">
+          <ul className="mt-4 grid grid-cols-4 gap-2">
             {quickCategories.map(c => (
               <li key={c.label}>
                 <Link href={c.href} className="flex flex-col items-center gap-1 py-1 transition-transform active:scale-90">
-                  <span aria-hidden className="text-[28px] leading-none sm:text-3xl">{c.icon}</span>
+                  <span aria-hidden className="text-[32px] leading-none sm:text-4xl">{c.icon}</span>
                   <span className="text-[11px] font-semibold text-slate-700 sm:text-xs">{c.label}</span>
                 </Link>
               </li>
