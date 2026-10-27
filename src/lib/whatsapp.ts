@@ -11,6 +11,7 @@ const pesanMap: Record<string, string> = {
   '/travel-jambi-bengkulu':     'saya ingin pesan travel Jambi ke Bengkulu',
   '/travel-bengkulu-curup':     'saya ingin pesan travel Bengkulu ke Curup',
   '/travel-curup-bengkulu':     'saya ingin pesan travel Curup ke Bengkulu',
+  '/travel-curup-bandung':      'saya ingin pesan travel Curup ke Bandung',
   '/travel-bengkulu-lebong':    'saya ingin pesan travel Bengkulu ke Lebong',
   '/travel-lebong-bengkulu':    'saya ingin pesan travel Lebong ke Bengkulu',
   '/travel-bengkulu-lampung':   'saya ingin pesan travel Bengkulu ke Lampung',

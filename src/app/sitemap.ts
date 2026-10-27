@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/travel-jambi-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/travel-bengkulu-curup`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/travel-curup-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/travel-curup-bandung`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${baseUrl}/travel-bengkulu-lampung`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/travel-lampung-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/travel-bengkulu-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.8 },

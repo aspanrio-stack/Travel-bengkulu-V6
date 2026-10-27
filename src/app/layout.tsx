@@ -51,6 +51,34 @@ export const metadata: Metadata = {
   },
 };
 
+const businessJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'TravelAgency',
+  '@id': 'https://bengkulutravel.com/#organization',
+  name: 'Travel Bengkulu',
+  url: 'https://bengkulutravel.com',
+  logo: 'https://bengkulutravel.com/logo.png',
+  image: 'https://bengkulutravel.com/og-image.png',
+  telephone: ['+62-852-6864-5461', '+62-823-7449-7929'],
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'BTN Air Bang',
+    addressLocality: 'Curup',
+    addressRegion: 'Bengkulu',
+    addressCountry: 'ID',
+  },
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    opens: '00:00',
+    closes: '23:59',
+  },
+  contactPoint: [
+    { '@type': 'ContactPoint', telephone: '+62-852-6864-5461', contactType: 'customer service', areaServed: 'ID', availableLanguage: 'id' },
+    { '@type': 'ContactPoint', telephone: '+62-823-7449-7929', contactType: 'reservations', areaServed: 'ID', availableLanguage: 'id' },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -58,7 +86,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" data-scroll-behavior="smooth" className={`${fontDisplay.variable} ${fontBody.variable} scroll-smooth`}>
-      <head />
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(businessJsonLd) }}
+        />
+      </head>
       <body className="antialiased font-body bg-white text-slate-900">
         <Navbar />
         <main>{children}</main>

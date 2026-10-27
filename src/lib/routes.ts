@@ -123,6 +123,16 @@ export const ROUTES: Route[] = [
     departureNote: 'Hubungi kami untuk konfirmasi jadwal keberangkatan dari Curup.',
   },
   {
+    id: 'crp-bdg',
+    from: 'Curup',
+    to: 'Bandung',
+    price: 800000,
+    duration: '30–36 jam',
+    via: 'Lintas Sumatera, Bakauheni–Merak',
+    departureTimes: [],
+    departureNote: 'Berangkat 2 kali seminggu. Hubungi kami untuk konfirmasi hari, jam, dan sisa kursi.',
+  },
+  {
     id: 'bkl-lbg',
     from: 'Bengkulu',
     to: 'Lebong',
