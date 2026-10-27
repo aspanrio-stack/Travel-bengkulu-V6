@@ -160,8 +160,7 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers 
     gpsLng: gpsLocation?.lng ?? null,
   });
 
-  // ── TUNAI (default): simpan pesanan lalu tampilkan halaman sukses ──
-  // Notifikasi WA ke pemesan & admin dikirim server (POST /api/admin/orders)
+  // ── TUNAI: simpan ke DB lalu langsung redirect ke WA admin ──
   const handleKonfirmasi = async () => {
     const err = validateStep2();
     if (err) { setError(err); return; }
@@ -178,15 +177,46 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers 
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || 'Terjadi kesalahan. Silakan coba lagi.');
-        setSubmitting(false);
         return;
       }
 
       await saveAddressRef.current?.(); // simpan alamat (jika dicentang & login)
 
-      setSukses({ orderId: data.orderId || '-', paymentMethod: 'tunai' });
-      setSubmitting(false);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Buat pesan WA otomatis ke admin
+      const orderId = data.orderId || '-';
+      const dep = form.departureTime
+        ? `\nJam: ${formatDepartureTime(form.departureTime)}`
+        : form.flightInfo
+        ? `\nPenerbangan: ${form.flightInfo}`
+        : '';
+
+      const msgAdmin = [
+        `Halo Admin Travel Bengkulu 👋`,
+        ``,
+        `Saya ingin memesan travel dengan pembayaran *Tunai ke Driver*.`,
+        ``,
+        `*Detail Pesanan:*`,
+        `🚗 Rute: ${selectedRoute.from} → ${selectedRoute.to}`,
+        `📅 Tanggal: ${form.date}${dep}`,
+        `👥 Penumpang: ${form.passengers} orang`,
+        `📍 Jemput di: ${form.pickupAddress}`,
+        form.dropoffAddress ? `🏁 Antar ke: ${form.dropoffAddress}` : '',
+        ``,
+        `*Data Pemesan:*`,
+        `👤 Nama: ${form.name}`,
+        `📞 No. HP: ${fullPhone}`,
+        wantEmail && form.email ? `📧 Email: ${form.email}` : '',
+        ``,
+        `💰 Total: ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(totalPrice)}`,
+        `💳 Pembayaran: Tunai ke Driver`,
+        `🔖 No. Pesanan: *${orderId}*`,
+        ``,
+        `Mohon dikonfirmasi ketersediaan dan jadwal keberangkatan. Terima kasih!`,
+      ].filter(Boolean).join('\n');
+
+      // Redirect ke WA admin (nomor utama)
+      window.location.href = `https://wa.me/6282374497929?text=${encodeURIComponent(msgAdmin)}`;
+
     } catch {
       setError('Gagal menghubungi server. Periksa koneksi internet Anda.');
       setSubmitting(false);
