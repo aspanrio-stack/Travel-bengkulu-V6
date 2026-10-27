@@ -2,7 +2,7 @@
 // Ubah tarif/estimasi di sini (dan di routes.ts) agar seragam.
 export const HARGA_BANDUNG = 800000;
 // Isi jumlah kursi Hiace yang sebenarnya, mis. '12 Penumpang'.
-export const KAPASITAS_HIACE = 'Konfirmasi admin';
+export const KAPASITAS_HIACE = '13';
 
 export interface BandungRoute {
   slug: string;
