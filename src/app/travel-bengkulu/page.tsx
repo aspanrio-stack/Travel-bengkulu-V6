@@ -16,6 +16,7 @@ const routes = [
   { from: 'Bengkulu', to: 'Curup', price: 'Rp 100.000', duration: '2–2,5 jam', href: '/travel-bengkulu-curup', img: '/images/avanza.jpg' },
   { from: 'Palembang', to: 'Bengkulu', price: 'Rp 250.000', duration: '8–10 jam', href: '/travel-palembang-bengkulu', img: '/images/innova.jpg' },
   { from: 'Jambi', to: 'Bengkulu', price: 'Rp 250.000', duration: '9–12 jam', href: '/travel-jambi-bengkulu', img: '/images/hiace.jpg' },
+  { from: 'Curup', to: 'Bandung', price: 'Rp 800.000', duration: '30–36 jam', href: '/travel-curup-bandung', img: '/images/curup-bandung/hiace-curup-bandung-hero.webp' },
 ];
 
 

@@ -13,6 +13,7 @@ const PATH_TO_ROUTE_ID: Record<string, string> = {
   '/travel-jambi-bengkulu':      'jmb-bkl',
   '/travel-bengkulu-curup':      'bkl-crp',
   '/travel-curup-bengkulu':      'crp-bkl',
+  '/travel-curup-bandung':       'crp-bdg',
   '/antar-jemput-bandara-curup': 'crp-bnd',
   '/travel-bengkulu-lebong':     'bkl-lbg',
   '/travel-lebong-bengkulu':     'lbg-bkl',
