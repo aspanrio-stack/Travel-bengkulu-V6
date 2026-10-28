@@ -21,6 +21,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/travel-padang-bengkulu`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${baseUrl}/travel-curup-padang`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${baseUrl}/travel-padang-curup`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${baseUrl}/jadwal-travel-bengkulu-padang`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/ongkos-travel-bengkulu-padang`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/travel-bengkulu-lampung`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/travel-lampung-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/travel-bengkulu-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
@@ -37,9 +39,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/jambi-bengkulu-berapa-jam-naik-mobil`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/bengkulu-lebong-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/berapa-jam-lampung-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
-        { url: `${baseUrl}/jadwal-travel-bengkulu-padang`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${baseUrl}/ongkos-travel-bengkulu-padang`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
-    
 
     // Artikel informatif
     { url: `${baseUrl}/jarak-jambi-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.7 },

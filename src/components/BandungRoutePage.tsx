@@ -298,7 +298,7 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
           <p className="text-sm text-slate-500">Tarif per orang. Jam keberangkatan Hiace dan mobil random tertera di bagian Jadwal di atas.</p>
         </>
       )}
-      
+
       {r.panduan && (
         <div className="mt-8 grid gap-3 sm:grid-cols-2">
           {r.panduan.map((p) => (
@@ -310,7 +310,7 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
           ))}
         </div>
       )}
-      
+
       {/* ── Rute ── */}
       <h2 className={H2}>{r.judulRute ?? `Rute Perjalanan ${r.from} ke ${r.to} via ${via}`}</h2>
       <div className="flex flex-wrap items-center gap-2 mb-4" aria-label="Titik yang dilewati">

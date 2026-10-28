@@ -5,10 +5,6 @@ import { TUJUAN_KORIDOR_PADANG, KURANG_NON_HIACE } from './routes';
 export const HARGA_BANDUNG = 800000;
 // Isi jumlah kursi Hiace yang sebenarnya, mis. '12 Penumpang'.
 export const KAPASITAS_HIACE = '13';
-export interface BandungRoute {
-  // ...
-  panduan?: { href: string; label: string; desc: string }[]; // tautan silo (artikel pendukung)
-}
 
 export interface BandungRoute {
   slug: string;
@@ -61,6 +57,7 @@ export interface BandungRoute {
   judulRute?: string;
   judulKenapa?: string;
   perks?: [string, string][];        // daftar keunggulan khusus halaman
+  panduan?: { href: string; label: string; desc: string }[]; // tautan silo (artikel pendukung)
   faqExtra?: [string, string][];     // FAQ khusus halaman (tampil paling atas)
 }
 
@@ -273,6 +270,10 @@ export const PADANG_ROUTES: Record<string, BandungRoute> = {
       kota: ['Kota Bengkulu', 'Curup', 'Lubuklinggau', 'Padang'],
     },
     switcher: { text: 'Berangkat dari Curup? Tidak perlu turun ke Kota Bengkulu.', label: 'Lihat layanan Curup → Padang', href: '/travel-curup-padang' },
+    panduan: [
+      { href: '/jadwal-travel-bengkulu-padang', label: 'Jadwal Travel Bengkulu Padang', desc: 'Jam berangkat Hiace dan mobil random semua arah' },
+      { href: '/ongkos-travel-bengkulu-padang', label: 'Ongkos Travel Bengkulu Padang', desc: 'Tarif per tujuan dan contoh hitungan biaya' },
+    ],
     judulTarif: 'Tarif dari Kota Bengkulu ke Padang dan Kota Lainnya',
     tarifIntro: 'Satu keberangkatan dari Kota Bengkulu melayani beberapa kota di sepanjang jalur. Pilih tujuan Anda, tarif Hiace dan kendaraan lain tertera di bawah.',
     judulRute: 'Rute Bengkulu ke Padang via Curup dan Lubuklinggau (Bukan Mukomuko)',
@@ -294,7 +295,7 @@ export const PADANG_ROUTES: Record<string, BandungRoute> = {
     jalur: 'Dari Kota Bengkulu, Hiace naik ke Curup, lalu lanjut ke Lubuklinggau dan meneruskan perjalanan ke Padang. Sopir berhenti di rumah makan dan SPBU untuk istirahat, makan, dan ibadah.',
     jemput: 'Area Kota Bengkulu', tujuan: 'Padang',
     galeri: PADANG_GALERI('Bengkulu Padang', 'samping'),
-    related: relPadang(L_PDG_BKL, L_CRP_PDG, { href: '/tempat-wisata-bengkulu', label: 'Wisata Bengkulu' }),
+    related: relPadang(L_PDG_BKL, L_CRP_PDG, { href: '/jadwal-travel-bengkulu-padang', label: 'Jadwal Travel Bengkulu Padang' }, { href: '/ongkos-travel-bengkulu-padang', label: 'Ongkos Travel Bengkulu Padang' }, { href: '/tempat-wisata-bengkulu', label: 'Wisata Bengkulu' }),
   },
   'travel-padang-bengkulu': {
     ...PADANG_BASE_PDG_BKL,
