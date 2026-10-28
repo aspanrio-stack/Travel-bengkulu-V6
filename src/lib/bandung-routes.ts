@@ -5,6 +5,10 @@ import { TUJUAN_KORIDOR_PADANG, KURANG_NON_HIACE } from './routes';
 export const HARGA_BANDUNG = 800000;
 // Isi jumlah kursi Hiace yang sebenarnya, mis. '12 Penumpang'.
 export const KAPASITAS_HIACE = '13';
+export interface BandungRoute {
+  // ...
+  panduan?: { href: string; label: string; desc: string }[]; // tautan silo (artikel pendukung)
+}
 
 export interface BandungRoute {
   slug: string;
