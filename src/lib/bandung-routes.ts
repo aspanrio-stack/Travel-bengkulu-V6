@@ -46,6 +46,18 @@ export interface BandungRoute {
   /** Tabel tarif per tujuan (koridor Padang): Hiace vs kendaraan lain */
   tarifTujuan?: { routeId: string; tujuan: string; hiace: number; lain: number }[];
   galeri?: { src: string; w: number; h: number; alt: string; cap: string }[];
+  // ── Penegasan target pasar (anti-kanibal Curup vs Bengkulu). Semua opsional. ──
+  heroChip?: string;                 // label kecil di atas foto utama
+  intro?: string[];                  // paragraf pengantar; **teks** = tebal
+  fokus?: { tone: 'emerald' | 'sky'; eyebrow: string; judul: string; poin: string[]; kota?: string[] };
+  switcher?: { text: string; label: string; href: string }; // tautan ke halaman saudara
+  stops?: string[];                  // urutan titik di garis rute
+  judulTarif?: string;
+  tarifIntro?: string;
+  judulRute?: string;
+  judulKenapa?: string;
+  perks?: [string, string][];        // daftar keunggulan khusus halaman
+  faqExtra?: [string, string][];     // FAQ khusus halaman (tampil paling atas)
 }
 
 const JALUR_CRP_BDG =
@@ -235,10 +247,44 @@ export const PADANG_ROUTES: Record<string, BandungRoute> = {
     ...PADANG_BASE_BKL,
     slug: 'travel-bengkulu-padang', routeId: 'bkl-pdg', from: 'Bengkulu', to: 'Padang',
     duration: '18–22 jam',
-    metaTitle: 'Travel Bengkulu Padang Hiace Rp 350.000 via Curup',
-    metaDesc: 'Travel Bengkulu Padang Hiace Rp 350.000, berangkat 12.15. Tujuan Bukit Tinggi, Solok, Bangko, Muara Bungo. Pesan WA 0852-6864-5461.',
-    h1: 'Travel Bengkulu Padang Hiace',
-    lead: 'Travel Hiace dari Bengkulu ke Padang lewat Curup dan Lubuklinggau, berangkat pukul 12.15. Tarif Rp 350.000 per orang, kabin lega dengan TV dan audio. Bisa turun di Bukit Tinggi, Solok, Bangko, Sarolangun, Muara Bungo, dan Singkut.',
+    metaTitle: 'Travel Bengkulu Padang Hiace, Jemput di Kota Bengkulu',
+    metaDesc: 'Travel Bengkulu Padang khusus jemput di Kota Bengkulu, lewat Curup & Lubuklinggau, bukan Mukomuko. Hiace 12.15, Rp 350.000. WA 0852-6864-5461.',
+    h1: 'Travel Bengkulu Padang Hiace: Jemput di Kota Bengkulu',
+    lead: 'Layanan khusus penumpang yang berada di Kota Bengkulu dan ingin ke Padang. Setelah dijemput, mobil naik lewat Curup dan Lubuklinggau, bukan lewat Mukomuko.',
+    heroChip: '📍 Dijemput di Kota Bengkulu',
+    intro: [
+      '**Travel Bengkulu Padang** ini khusus untuk penjemputan di **Kota Bengkulu**. Anda dijemput di alamat Anda, lalu perjalanan naik melewati **Curup dan Lubuklinggau** menuju Padang. Rute ini **tidak lewat Mukomuko**, jadi tetap memakai jalur bawah via Curup.',
+      'Mencari **travel dari Bengkulu ke Padang** dengan rute dan jadwal yang jelas? Hiace berangkat pukul 12.15 dengan tarif Rp 350.000 per orang ke Padang. Tersedia juga mobil random pukul 11.00 yang lebih murah Rp 50.000.',
+    ],
+    fokus: {
+      tone: 'sky',
+      eyebrow: 'Khusus Kota Bengkulu',
+      judul: 'Posisi Anda di Kota Bengkulu? Ini rute Anda',
+      poin: [
+        'Dijemput di alamat Anda di Kota Bengkulu',
+        'Lewat Curup dan Lubuklinggau, bukan Mukomuko',
+        'Hiace pukul 12.15 atau mobil random pukul 11.00',
+        'Bisa turun di Padang, Bukit Tinggi, Solok, dan kota di jalur',
+      ],
+      kota: ['Kota Bengkulu', 'Curup', 'Lubuklinggau', 'Padang'],
+    },
+    switcher: { text: 'Berangkat dari Curup? Tidak perlu turun ke Kota Bengkulu.', label: 'Lihat layanan Curup → Padang', href: '/travel-curup-padang' },
+    judulTarif: 'Tarif dari Kota Bengkulu ke Padang dan Kota Lainnya',
+    tarifIntro: 'Satu keberangkatan dari Kota Bengkulu melayani beberapa kota di sepanjang jalur. Pilih tujuan Anda, tarif Hiace dan kendaraan lain tertera di bawah.',
+    judulRute: 'Rute Bengkulu ke Padang via Curup dan Lubuklinggau (Bukan Mukomuko)',
+    judulKenapa: 'Kenapa Naik Travel dari Kota Bengkulu',
+    perks: [
+      ['Jemput di Kota Bengkulu', 'alamat jemput disepakati saat pesan'],
+      ['Jalur via Curup', 'bukan lewat Mukomuko'],
+      ['Jadwal jelas', 'Hiace 12.15, mobil random 11.00'],
+      ['Hiace kabin lega', 'sabuk pengaman, TV, dan audio'],
+      ['Tarif transparan', 'Rp 350.000 ke Padang, dijelaskan sebelum membayar'],
+      ['Pesan 24 jam', 'admin siap dihubungi kapan saja'],
+    ],
+    faqExtra: [
+      ['Apakah travel Bengkulu Padang lewat Mukomuko?', 'Tidak. Dari Kota Bengkulu mobil naik lewat Curup dan Lubuklinggau, lalu lanjut ke Padang.'],
+      ['Apakah layanan ini menjemput di Curup?', 'Halaman ini khusus penjemputan di Kota Bengkulu. Jika Anda berada di Curup, gunakan layanan Curup ke Padang agar tidak perlu ke Kota Bengkulu dulu.'],
+    ],
     heroSrc: 'hiace-silver-samping.webp', heroW: 720, heroH: 1280, heroPos: 'object-[50%_45%]',
     heroAlt: 'Toyota Hiace silver armada travel Bengkulu Padang',
     jalur: 'Dari Kota Bengkulu, Hiace naik ke Curup, lalu lanjut ke Lubuklinggau dan meneruskan perjalanan ke Padang. Sopir berhenti di rumah makan dan SPBU untuk istirahat, makan, dan ibadah.',
@@ -265,15 +311,51 @@ export const PADANG_ROUTES: Record<string, BandungRoute> = {
     ...PADANG_BASE_CRP,
     slug: 'travel-curup-padang', routeId: 'crp-pdg', from: 'Curup', to: 'Padang',
     duration: '16–20 jam',
-    metaTitle: 'Travel Curup Padang Hiace Rp 350.000 via Lubuklinggau',
-    metaDesc: 'Travel Curup Padang Hiace Rp 350.000, berangkat 14.15. Tujuan Bukit Tinggi, Solok, Bangko, Muara Bungo. Pesan WA 0852-6864-5461.',
-    h1: 'Travel Curup Padang Hiace',
-    lead: 'Travel Hiace dari Curup ke Padang lewat Lubuklinggau, berangkat pukul 14.15. Tarif Rp 350.000 per orang, kabin lega dengan TV dan audio. Bisa turun di Bukit Tinggi, Solok, Bangko, Sarolangun, Muara Bungo, dan Singkut.',
-    heroSrc: 'hiace-silver-samping.webp', heroW: 720, heroH: 1280, heroPos: 'object-[50%_45%]',
-    heroAlt: 'Toyota Hiace silver armada travel Curup Padang',
+    metaTitle: 'Travel Curup Padang Hiace, Jemput di Rumah Tanpa ke Bengkulu',
+    metaDesc: 'Travel Curup Padang berangkat langsung dari Curup, jemput di rumah, tanpa ke Kota Bengkulu. Juga Curup Bangko & Muara Bungo. WA 0852-6864-5461.',
+    h1: 'Travel Curup Padang Hiace: Berangkat Langsung dari Curup',
+    lead: 'Kantor kami di Curup, jadi mobil berangkat langsung dari Curup dan menjemput Anda di rumah atau titik yang disepakati. Tidak perlu ke Kota Bengkulu dulu.',
+    heroChip: '📍 Berangkat langsung dari Curup',
+    intro: [
+      '**Travel Curup Padang** kami berangkat langsung dari **Curup**, karena kantor pusat kami ada di Curup. Anda dijemput di **rumah atau titik yang disepakati**, tanpa perlu ke Kota Bengkulu dulu. Dari Curup, mobil melaju lewat Lubuklinggau, Sarolangun, Bangko, dan Muara Bungo, lalu lanjut ke Padang.',
+      'Tidak hanya ke Padang. Kami juga melayani **travel Curup Bangko** dan **travel Curup Muara Bungo**, serta Sarolangun, Singkut, Solok, dan Bukit Tinggi dalam satu jalur keberangkatan yang sama. Hiace berangkat pukul 14.15, mobil random pukul 13.00.',
+    ],
+    fokus: {
+      tone: 'emerald',
+      eyebrow: 'Kantor Pusat di Curup',
+      judul: 'Posisi Anda di Curup? Langsung berangkat dari sini',
+      poin: [
+        'Dijemput di rumah atau titik sepakat di Curup',
+        'Tanpa perjalanan ke Kota Bengkulu',
+        'Lewat Lubuklinggau, Sarolangun, Bangko, Muara Bungo',
+        'Hiace pukul 14.15 atau mobil random pukul 13.00',
+      ],
+      kota: ['Curup', 'Lubuklinggau', 'Sarolangun', 'Bangko', 'Muara Bungo', 'Padang'],
+    },
+    stops: ['Curup', 'Lubuklinggau', 'Sarolangun', 'Bangko', 'Muara Bungo', 'Padang'],
+    switcher: { text: 'Posisi Anda di Kota Bengkulu, bukan Curup?', label: 'Lihat layanan Bengkulu → Padang', href: '/travel-bengkulu-padang' },
+    judulTarif: 'Travel Curup Bangko, Curup Muara Bungo, dan Tujuan Lainnya',
+    tarifIntro: 'Satu keberangkatan dari Curup melayani Padang sekaligus kota di sepanjang jalur, termasuk Bangko dan Muara Bungo. Pilih tujuan Anda, tarif Hiace dan kendaraan lain tertera di bawah.',
+    judulRute: 'Rute dari Curup ke Padang Tanpa Lewat Kota Bengkulu',
+    judulKenapa: 'Kenapa Naik Travel Langsung dari Curup',
+    perks: [
+      ['Jemput di rumah', 'titik jemput di Curup disepakati saat pesan'],
+      ['Tanpa ke Bengkulu', 'berangkat langsung dari Curup'],
+      ['Kantor pusat di Curup', 'mudah dihubungi dan dikunjungi'],
+      ['Banyak tujuan', 'Bangko, Sarolangun, Muara Bungo, Solok, Bukit Tinggi'],
+      ['Tarif transparan', 'Rp 350.000 ke Padang, Rp 300.000 ke Bangko dan Muara Bungo'],
+      ['Pesan 24 jam', 'admin siap dihubungi kapan saja'],
+    ],
+    faqExtra: [
+      ['Apakah saya harus ke Kota Bengkulu dulu?', 'Tidak. Mobil berangkat langsung dari Curup dan menjemput Anda di rumah atau titik yang disepakati di Curup.'],
+      ['Berapa tarif travel Curup Bangko dan Curup Muara Bungo?', 'Tarif Hiace Curup–Bangko dan Curup–Muara Bungo masing-masing Rp 300.000 per orang. Kendaraan selain Hiace Rp 50.000 lebih murah.'],
+      ['Bagaimana jika saya berada di Lubuklinggau atau kota di jalur?', 'Hubungi admin untuk mengatur titik naik di sepanjang jalur dan memastikan sisa kursi.'],
+    ],
+    heroSrc: 'hiace-silver-depan.webp', heroW: 720, heroH: 1280, heroPos: 'object-[50%_40%]',
+    heroAlt: 'Tampak depan Toyota Hiace silver armada travel Curup Padang',
     jalur: 'Dari Curup, Hiace menuju Lubuklinggau dan meneruskan perjalanan ke Padang. Sopir berhenti di rumah makan dan SPBU untuk istirahat, makan, dan ibadah.',
     jemput: 'Area Curup', tujuan: 'Padang',
-    galeri: PADANG_GALERI('Curup Padang', 'depan'),
+    galeri: PADANG_GALERI('Curup Padang', 'samping'),
     related: relPadang(L_PDG_CRP, L_BKL_PDG, { href: '/rental-mobil-curup', label: 'Rental Mobil Curup' }, { href: '/hotel-di-curup', label: 'Hotel di Curup' }),
   },
   'travel-padang-curup': {

@@ -31,6 +31,34 @@ const STEPS = [
 
 const rp = (n: number) => 'Rp ' + n.toLocaleString('id-ID');
 
+/** Teks dengan **tebal** sederhana */
+function Rich({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(/\*\*(.+?)\*\*/g).map((t, i) => (i % 2 ? <strong key={i}>{t}</strong> : <span key={i}>{t}</span>))}
+    </>
+  );
+}
+
+const TONE = {
+  emerald: {
+    wrap: 'border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-emerald-50',
+    eyebrow: 'bg-emerald-700 text-white',
+    check: 'text-emerald-700',
+    chipEnd: 'bg-emerald-700 text-white',
+    chip: 'border-emerald-200 bg-white text-emerald-900',
+    switchBtn: 'border-emerald-300 text-emerald-800 hover:bg-emerald-50',
+  },
+  sky: {
+    wrap: 'border-sky-200 bg-gradient-to-br from-sky-50 via-white to-sky-50',
+    eyebrow: 'bg-sky-700 text-white',
+    check: 'text-sky-700',
+    chipEnd: 'bg-sky-700 text-white',
+    chip: 'border-sky-200 bg-white text-sky-900',
+    switchBtn: 'border-sky-300 text-sky-800 hover:bg-sky-50',
+  },
+} as const;
+
 export default function BandungRoutePage({ r }: { r: BandungRoute }) {
   const IMG_DIR = r.imgDir ?? '/images/curup-bandung';
   const via = r.via ?? 'Tol Palembang';
@@ -46,6 +74,7 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
   const galeri = r.galeri ?? [...INTERIOR, extra];
 
   const faq: [string, string][] = [
+    ...(r.faqExtra ?? []),
     [`Berapa tarif travel ${nama}?`, `Tarif travel Hiace ${nama} adalah ${harga} per orang.`],
     ['Kapan jadwal keberangkatannya?', jadwalFaq],
     ...(r.tarifTujuan
@@ -87,7 +116,7 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
     ],
   };
 
-  const stops = routeStops(r.from, r.to);
+  const stops = r.stops ?? routeStops(r.from, r.to);
   const pesanHref = `/pesan?rute=${r.routeId}`;
   const cards = r.jadwalCards ?? [
     { jam: jadwal.charAt(0).toUpperCase() + jadwal.slice(1), judul: 'Jadwal Rutin', sub: 'Hari & jam keberangkatan dikonfirmasi admin', armada: 'Hiace', icon: '📅', tone: 'hiace' as const, time: undefined },
@@ -120,7 +149,43 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
           className={r.heroPos ? `object-cover ${r.heroPos}` : heroIsMalam ? 'object-cover object-[50%_65%]' : 'object-cover object-bottom'}
           sizes="(max-width: 1024px) 100vw, 700px"
         />
+        {r.heroChip && (
+          <>
+            <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-slate-900/75 to-transparent" aria-hidden="true" />
+            <span className="absolute bottom-4 left-4 rounded-full bg-white px-4 py-1.5 text-sm font-bold text-slate-900 shadow-md">
+              {r.heroChip}
+            </span>
+          </>
+        )}
       </div>
+
+      {/* ── Penegasan target pasar ── */}
+      {r.fokus && (
+        <section aria-label={r.fokus.eyebrow} className={`mb-6 rounded-2xl border p-5 shadow-sm ${TONE[r.fokus.tone].wrap}`}>
+          <span className={`inline-block rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-widest ${TONE[r.fokus.tone].eyebrow}`}>
+            {r.fokus.eyebrow}
+          </span>
+          <p className="mt-3 text-lg font-extrabold leading-snug text-slate-800">{r.fokus.judul}</p>
+          <ul className="mt-3 grid gap-2 sm:grid-cols-2 list-none p-0 m-0">
+            {r.fokus.poin.map((x) => (
+              <li key={x} className="flex gap-2 text-sm text-slate-700">
+                <span className={`font-bold ${TONE[r.fokus!.tone].check}`} aria-hidden="true">✓</span>
+                <span>{x}</span>
+              </li>
+            ))}
+          </ul>
+          {r.fokus.kota && (
+            <div className="mt-4 flex flex-wrap items-center gap-1.5" aria-label="Kota yang dilewati">
+              {r.fokus.kota.map((k, i, arr) => (
+                <span key={k} className="flex items-center gap-1.5">
+                  <span className={`rounded-full border px-3 py-1 text-xs font-semibold ${i === 0 || i === arr.length - 1 ? TONE[r.fokus!.tone].chipEnd + ' border-transparent' : TONE[r.fokus!.tone].chip}`}>{k}</span>
+                  {i < arr.length - 1 && <span className="text-slate-400" aria-hidden="true">→</span>}
+                </span>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       {/* ── Ringkasan: Rute / Armada / Kapasitas / Harga ── */}
       <div className="grid grid-cols-2 gap-px bg-slate-200 rounded-2xl overflow-hidden border border-slate-200 mb-6">
@@ -132,11 +197,26 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
         ))}
       </div>
 
-      <p>
-        <strong>Travel {nama} Hiace</strong> melayani perjalanan dari {r.from} langsung ke {r.tujuan} lewat{' '}
-        <strong>{via}</strong>. Tarif <strong>{harga} per orang</strong>, jadwal <strong>{jadwal}</strong>. Banyak
-        penumpang memilih Hiace karena kabinnya lebih lega dan nyaman untuk perjalanan jauh.
-      </p>
+      {r.intro ? (
+        r.intro.map((t) => (
+          <p key={t}><Rich text={t} /></p>
+        ))
+      ) : (
+        <p>
+          <strong>Travel {nama} Hiace</strong> melayani perjalanan dari {r.from} langsung ke {r.tujuan} lewat{' '}
+          <strong>{via}</strong>. Tarif <strong>{harga} per orang</strong>, jadwal <strong>{jadwal}</strong>. Banyak
+          penumpang memilih Hiace karena kabinnya lebih lega dan nyaman untuk perjalanan jauh.
+        </p>
+      )}
+
+      {r.switcher && r.fokus && (
+        <div className="my-5 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <span className="text-sm font-medium text-slate-700">{r.switcher.text}</span>
+          <Link href={r.switcher.href} className={`inline-flex shrink-0 items-center justify-center rounded-xl border px-4 py-2 text-sm font-bold transition ${TONE[r.fokus.tone].switchBtn}`}>
+            {r.switcher.label} →
+          </Link>
+        </div>
+      )}
 
       {/* ── Jadwal ── */}
       <h2 className={H2}>Jadwal Keberangkatan</h2>
@@ -194,10 +274,9 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
       {/* ── Tarif per tujuan (koridor Padang) ── */}
       {r.tarifTujuan && (
         <>
-          <h2 className={H2}>Tarif per Tujuan dari {r.from}</h2>
+          <h2 className={H2}>{r.judulTarif ?? `Tarif per Tujuan dari ${r.from}`}</h2>
           <p>
-            Satu keberangkatan melayani beberapa kota di sepanjang jalur ke Padang. Pilih tujuan Anda: tarif Hiace
-            dan tarif kendaraan lain (Rp 50.000 lebih murah) tertera di bawah.
+            {r.tarifIntro ?? 'Satu keberangkatan melayani beberapa kota di sepanjang jalur ke Padang. Pilih tujuan Anda: tarif Hiace dan tarif kendaraan lain (Rp 50.000 lebih murah) tertera di bawah.'}
           </p>
           <div className="overflow-x-auto">
             <table>
@@ -221,7 +300,7 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
       )}
 
       {/* ── Rute ── */}
-      <h2 className={H2}>Rute Perjalanan {r.from} ke {r.to} via {via}</h2>
+      <h2 className={H2}>{r.judulRute ?? `Rute Perjalanan ${r.from} ke ${r.to} via ${via}`}</h2>
       <div className="flex flex-wrap items-center gap-2 mb-4" aria-label="Titik yang dilewati">
         {stops.map((s, i) => (
           <span key={s} className="flex items-center gap-2">
@@ -241,16 +320,16 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
       </table>
 
       {/* ── Keunggulan ── */}
-      <h2 className={H2}>Kenapa Pilih Travel Hiace {nama}</h2>
+      <h2 className={H2}>{r.judulKenapa ?? `Kenapa Pilih Travel Hiace ${nama}`}</h2>
       <div className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
-        {[
+        {(r.perks ?? [
           ['Hiace kabin lega', 'atap tinggi, sabuk pengaman, TV dan audio'],
           [via, r.perkVia ?? 'rute Palembang–Lampung lewat Tol Trans Sumatera'],
           ['Jadwal jelas', r.perkJadwal ?? '2 kali seminggu, bisa direncanakan jauh hari'],
           ['Tarif transparan', `${harga}/orang, dijelaskan sebelum Anda membayar`],
           ['Dijemput', `titik jemput di ${r.jemput.replace(/^Area /, '')} disepakati saat pesan`],
           ['Pesan 24 jam', 'admin siap dihubungi kapan saja'],
-        ].map(([t, d]) => (
+        ]).map(([t, d]) => (
           <div key={t} className="flex gap-3 text-sm">
             <span className="mt-0.5 text-emerald-600 font-bold" aria-hidden="true">✓</span>
             <div><span className="font-semibold text-slate-800">{t}</span><span className="text-slate-600"> — {d}</span></div>
