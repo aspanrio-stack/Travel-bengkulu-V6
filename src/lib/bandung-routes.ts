@@ -64,7 +64,84 @@ export interface BandungRoute {
 const JALUR_CRP_BDG =
   'Dari Curup, HiAce melaju lewat Lubuklinggau, Sekayu, dan Prabumulih menuju Palembang. Dari Palembang perjalanan masuk Tol Trans Sumatera ke arah Lampung sampai Bakauheni, menyeberang ke Merak, lalu lanjut tol Jakarta–Cikampek dan Cipularang menuju Bandung.';
 
+const BANDUNG_PANDUAN = [
+  { href: '/jadwal-travel-bengkulu-bandung', label: 'Jadwal Travel Bengkulu Bandung', desc: 'Hari, jam berangkat, dan estimasi tiba semua arah' },
+  { href: '/ongkos-travel-bengkulu-bandung', label: 'Ongkos Travel Bengkulu Bandung', desc: 'Tarif per orang dan contoh hitungan biaya' },
+  { href: '/bengkulu-bandung-berapa-jam', label: 'Bengkulu Bandung Berapa Jam', desc: 'Waktu tempuh, rute, dan faktor yang memengaruhi' },
+  { href: '/bus-bengkulu-bandung', label: 'Bus Bengkulu Bandung vs Travel', desc: 'Beda bus dan travel Hiace, mana yang cocok' },
+];
+
 export const BANDUNG_ROUTES: Record<string, BandungRoute> = {
+  'travel-bengkulu-bandung': {
+    slug: 'travel-bengkulu-bandung',
+    routeId: 'bkl-bdg',
+    from: 'Bengkulu',
+    to: 'Bandung',
+    price: HARGA_BANDUNG,
+    duration: '32–38 jam',
+    metaTitle: 'Travel Bengkulu Bandung Hiace Rp 800.000',
+    metaDesc:
+      'Travel Bengkulu Bandung Hiace via Tol Palembang Rp 800.000/orang. Berangkat Rabu & Jumat pukul 11.00, dijemput di Kota Bengkulu. WA 0852-6864-5461.',
+    h1: 'Travel Bengkulu Bandung Hiace: Jemput di Kota Bengkulu',
+    lead: 'Travel Hiace dari Kota Bengkulu langsung ke Bandung lewat Curup dan Tol Palembang, berangkat setiap Rabu dan Jumat pukul 11.00. Kabin lega dengan TV dan audio.',
+    badge: '🚐 Hiace · Via Tol Palembang',
+    heroChip: '📍 Dijemput di Kota Bengkulu',
+    intro: [
+      '**Travel Bengkulu Bandung** ini khusus untuk penjemputan di **Kota Bengkulu**. Anda dijemput di alamat Anda, lalu Hiace naik lewat **Curup dan Lubuklinggau** menuju Palembang, masuk Tol Trans Sumatera, menyeberang **Bakauheni–Merak**, dan tiba di Bandung. Tidak perlu ganti kendaraan di tengah jalan.',
+      'Mencari **travel dari Bengkulu ke Bandung** dengan jadwal tetap? Hiace berangkat **Rabu dan Jumat pukul 11.00 WIB** dengan tarif **Rp 800.000 per orang**. Estimasi perjalanan 32–38 jam, termasuk penyeberangan, istirahat, dan makan.',
+    ],
+    fokus: {
+      tone: 'sky',
+      eyebrow: 'Khusus Kota Bengkulu',
+      judul: 'Posisi Anda di Kota Bengkulu? Ini rute Anda',
+      poin: [
+        'Dijemput di alamat Anda di Kota Bengkulu',
+        'Berangkat Rabu dan Jumat pukul 11.00 WIB',
+        'Lewat Curup, Lubuklinggau, dan Tol Palembang',
+        'Satu Hiace sampai Bandung, tanpa pindah kendaraan',
+      ],
+      kota: ['Kota Bengkulu', 'Curup', 'Lubuklinggau', 'Palembang', 'Bandung'],
+    },
+    switcher: { text: 'Berangkat dari Curup? Tidak perlu turun ke Kota Bengkulu.', label: 'Lihat layanan Curup → Bandung', href: '/travel-curup-bandung' },
+    panduan: BANDUNG_PANDUAN,
+    jadwal: 'setiap Rabu dan Jumat pukul 11.00',
+    jadwalFaq: 'Berangkat setiap Rabu dan Jumat pukul 11.00 WIB dari Kota Bengkulu. Hubungi admin untuk sisa kursi.',
+    perkJadwal: 'setiap Rabu dan Jumat pukul 11.00, bisa direncanakan jauh hari',
+    jadwalCards: [
+      { routeId: 'bkl-bdg', jam: '11.00 WIB', time: '11:00', judul: 'Berangkat dari Kota Bengkulu', sub: 'Rabu & Jumat · Toyota Hiace', armada: 'Hiace', icon: '🚐', tone: 'hiace' as const },
+    ],
+    judulRute: 'Rute Bengkulu ke Bandung via Curup, Tol Palembang, dan Bakauheni–Merak',
+    judulKenapa: 'Kenapa Naik Travel Hiace dari Kota Bengkulu',
+    perks: [
+      ['Jemput di Kota Bengkulu', 'titik jemput disepakati saat pesan'],
+      ['Jadwal tetap', 'Rabu dan Jumat pukul 11.00'],
+      ['Hiace kabin lega', 'atap tinggi, sabuk pengaman, TV, dan audio'],
+      ['Satu kendaraan sampai Bandung', 'lewat Tol Trans Sumatera dan Bakauheni–Merak'],
+      ['Tarif transparan', 'Rp 800.000/orang, dijelaskan sebelum membayar'],
+      ['Pesan 24 jam', 'admin siap dihubungi kapan saja'],
+    ],
+    faqExtra: [
+      ['Apakah travel Bengkulu Bandung lewat Curup?', 'Ya. Dari Kota Bengkulu, Hiace naik ke Curup, lalu lanjut ke Lubuklinggau dan Palembang sebelum masuk tol menuju Bakauheni dan Merak.'],
+      ['Apakah tarif dari Curup berbeda?', 'Tidak. Tarif Curup ke Bandung sama, Rp 800.000 per orang, tetapi berangkat pukul 13.00. Lihat halaman Curup ke Bandung jika Anda berada di Curup.'],
+    ],
+    heroSrc: 'hiace-curup-bandung-hero.webp',
+    heroW: 750,
+    heroH: 1000,
+    heroAlt: 'Toyota Hiace hitam armada travel Bengkulu Bandung di atas kapal penyeberangan',
+    jalur:
+      'Dari Kota Bengkulu, HiAce naik ke Curup, lalu melaju lewat Lubuklinggau, Sekayu, dan Prabumulih menuju Palembang. Dari Palembang perjalanan masuk Tol Trans Sumatera ke arah Lampung sampai Bakauheni, menyeberang ke Merak, lalu lanjut tol Jakarta–Cikampek dan Cipularang menuju Bandung.',
+    jemput: 'Area Kota Bengkulu',
+    tujuan: 'Bandung',
+    related: [
+      { href: '/jadwal-travel-bengkulu-bandung', label: 'Jadwal Travel Bengkulu Bandung' },
+      { href: '/ongkos-travel-bengkulu-bandung', label: 'Ongkos Travel Bengkulu Bandung' },
+      { href: '/travel-curup-bandung', label: 'Travel Curup → Bandung' },
+      { href: '/travel-bandung-bengkulu', label: 'Travel Bandung → Bengkulu' },
+      { href: '/travel-bengkulu-curup', label: 'Travel Bengkulu → Curup' },
+      { href: '/tempat-wisata-bengkulu', label: 'Wisata Bengkulu' },
+      { href: '/travel-bengkulu', label: 'Semua Rute Travel Bengkulu' },
+    ],
+  },
   'travel-curup-bandung': {
     slug: 'travel-curup-bandung',
     routeId: 'crp-bdg',
@@ -91,7 +168,22 @@ export const BANDUNG_ROUTES: Record<string, BandungRoute> = {
     jalur: JALUR_CRP_BDG,
     jemput: 'Area Curup',
     tujuan: 'Bandung',
+    fokus: {
+      tone: 'emerald',
+      eyebrow: 'Khusus Curup',
+      judul: 'Posisi Anda di Curup? Dijemput di Curup pukul 13.00',
+      poin: [
+        'Dijemput di area Curup, tidak perlu ke Kota Bengkulu',
+        'Berangkat Rabu dan Jumat pukul 13.00 WIB',
+        'Lewat Lubuklinggau dan Tol Palembang',
+        'Tarif sama, Rp 800.000 per orang',
+      ],
+      kota: ['Curup', 'Lubuklinggau', 'Palembang', 'Bandung'],
+    },
+    switcher: { text: 'Berangkat dari Kota Bengkulu? Jemputnya pukul 11.00.', label: 'Lihat layanan Bengkulu → Bandung', href: '/travel-bengkulu-bandung' },
+    panduan: BANDUNG_PANDUAN,
     related: [
+      { href: '/travel-bengkulu-bandung', label: 'Travel Bengkulu → Bandung' },
       { href: '/travel-bandung-curup', label: 'Travel Bandung → Curup' },
       { href: '/travel-bandung-bengkulu', label: 'Travel Bandung → Bengkulu' },
       { href: '/travel-curup-bengkulu', label: 'Travel Curup → Bengkulu' },
@@ -127,7 +219,9 @@ export const BANDUNG_ROUTES: Record<string, BandungRoute> = {
     ],
     jemput: 'Area Bandung',
     tujuan: 'Curup',
+    panduan: BANDUNG_PANDUAN,
     related: [
+      { href: '/travel-bengkulu-bandung', label: 'Travel Bengkulu → Bandung' },
       { href: '/travel-curup-bandung', label: 'Travel Curup → Bandung' },
       { href: '/travel-bandung-bengkulu', label: 'Travel Bandung → Bengkulu' },
       { href: '/travel-curup-bengkulu', label: 'Travel Curup → Bengkulu' },
@@ -163,7 +257,9 @@ export const BANDUNG_ROUTES: Record<string, BandungRoute> = {
     ],
     jemput: 'Area Bandung',
     tujuan: 'Kota Bengkulu',
+    panduan: BANDUNG_PANDUAN,
     related: [
+      { href: '/travel-bengkulu-bandung', label: 'Travel Bengkulu → Bandung' },
       { href: '/travel-bandung-curup', label: 'Travel Bandung → Curup' },
       { href: '/travel-curup-bandung', label: 'Travel Curup → Bandung' },
       { href: '/travel-curup-bengkulu', label: 'Travel Curup → Bengkulu' },
