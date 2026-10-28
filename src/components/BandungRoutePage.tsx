@@ -298,7 +298,19 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
           <p className="text-sm text-slate-500">Tarif per orang. Jam keberangkatan Hiace dan mobil random tertera di bagian Jadwal di atas.</p>
         </>
       )}
-
+      
+      {r.panduan && (
+        <div className="mt-8 grid gap-3 sm:grid-cols-2">
+          {r.panduan.map((p) => (
+            <Link key={p.href} href={p.href} className="group rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-primary-400 hover:shadow-sm">
+              <div className="text-[11px] font-bold uppercase tracking-widest text-amber-600">Panduan</div>
+              <div className="font-semibold text-slate-800 group-hover:text-primary-700">{p.label} →</div>
+              <div className="text-sm text-slate-600 leading-snug">{p.desc}</div>
+            </Link>
+          ))}
+        </div>
+      )}
+      
       {/* ── Rute ── */}
       <h2 className={H2}>{r.judulRute ?? `Rute Perjalanan ${r.from} ke ${r.to} via ${via}`}</h2>
       <div className="flex flex-wrap items-center gap-2 mb-4" aria-label="Titik yang dilewati">
