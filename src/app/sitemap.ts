@@ -37,6 +37,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/jambi-bengkulu-berapa-jam-naik-mobil`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/bengkulu-lebong-berapa-jam`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/berapa-jam-lampung-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+        { url: `${baseUrl}/jadwal-travel-bengkulu-padang`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/ongkos-travel-bengkulu-padang`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+    
 
     // Artikel informatif
     { url: `${baseUrl}/jarak-jambi-bengkulu`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
