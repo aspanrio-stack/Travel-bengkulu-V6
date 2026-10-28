@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import BandungRoutePage from '@/components/BandungRoutePage';
+import { hiaceOg, hiaceKeyFor, hiaceUrl } from '@/lib/hiace-images';
 import { PADANG_ROUTES } from '@/lib/bandung-routes';
 
 const r = PADANG_ROUTES['travel-padang-curup'];
@@ -13,10 +14,11 @@ export const metadata: Metadata = {
     title: `${r.metaTitle} | Travel Bengkulu`,
     description: r.metaDesc,
     url,
-    images: [{ url: `https://bengkulutravel.com${r.imgDir}/${r.heroSrc}`, width: r.heroW, height: r.heroH }],
+    images: [hiaceOg(hiaceKeyFor(r))],
     locale: 'id_ID',
     type: 'website',
   },
+  twitter: { card: 'summary_large_image', title: `${r.metaTitle} | Travel Bengkulu`, description: r.metaDesc, images: [hiaceUrl(hiaceKeyFor(r), 'og')] },
 };
 
 export default function Page() {

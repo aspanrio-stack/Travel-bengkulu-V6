@@ -3,6 +3,7 @@ import Image from 'next/image';
 import ArticleLayout from '@/components/ArticleLayout';
 import type { BandungRoute } from '@/lib/bandung-routes';
 import { KAPASITAS_HIACE } from '@/lib/bandung-routes';
+import { hiaceKeyFor, hiaceSchema, hiaceOg } from '@/lib/hiace-images';
 
 const BASE = 'https://bengkulutravel.com';
 
@@ -100,11 +101,18 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
         ],
       },
       {
+        '@type': 'WebPage',
+        '@id': url,
+        url,
+        name: r.h1,
+        primaryImageOfPage: { '@type': 'ImageObject', url: hiaceOg(hiaceKeyFor(r)).url, width: 1200, height: 630, caption: hiaceOg(hiaceKeyFor(r)).alt },
+      },
+      {
         '@type': 'Service',
         name: `Travel Hiace ${r.from} ke ${r.to}`,
         serviceType: 'Travel antar kota',
         url,
-        image: `${BASE}${IMG_DIR}/${r.heroSrc}`,
+        image: [...hiaceSchema(hiaceKeyFor(r)), `${BASE}${IMG_DIR}/${r.heroSrc}`],
         provider: { '@id': `${BASE}/#organization` },
         areaServed: [{ '@type': 'City', name: r.from }, { '@type': 'City', name: r.to }],
         offers: { '@type': 'Offer', price: String(r.price), priceCurrency: 'IDR', availability: 'https://schema.org/InStock', url },

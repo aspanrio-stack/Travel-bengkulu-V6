@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
-import { SiloJsonLd, SiloFaq, SiloCta, SiloAnswer, SiloRelated } from '@/components/SiloBlocks';
+import { SiloHero, SiloJsonLd, SiloFaq, SiloCta, SiloAnswer, SiloRelated } from '@/components/SiloBlocks';
+import { hiaceOg, hiaceUrl } from '@/lib/hiace-images';
 import { BASE, rp, titik, infoBandung, ARAH_BANDUNG, PILAR, SILO_LINKS } from '@/lib/bandung-silo';
 
 const URL = `${BASE}/jadwal-travel-bengkulu-bandung`;
@@ -14,7 +15,8 @@ export const metadata: Metadata = {
   title: `Jadwal Travel Bengkulu Bandung, ${bkl.hariLabel.replace(' dan ', ' & ')} ${titik(bkl.jam)}`,
   description: `Jadwal travel Bengkulu Bandung: Hiace berangkat ${bkl.hariLabel} pukul ${titik(bkl.jam)} WIB dari Kota Bengkulu. Jadwal Curup dan Bandung juga ada. WA 0852-6864-5461.`,
   alternates: { canonical: URL },
-  openGraph: { title: 'Jadwal Travel Bengkulu Bandung | Travel Bengkulu', url: URL, locale: 'id_ID', type: 'article' },
+  openGraph: { title: 'Jadwal Travel Bengkulu Bandung | Travel Bengkulu', url: URL, locale: 'id_ID', type: 'article', images: [hiaceOg('bandung-kapal')] },
+  twitter: { card: 'summary_large_image', images: [hiaceUrl('bandung-kapal', 'og')] },
 };
 
 const faq: [string, string][] = [
@@ -44,8 +46,10 @@ export default function Page() {
           { name: 'Travel Bengkulu Bandung', href: `${BASE}${PILAR}` },
           { name: 'Jadwal Travel Bengkulu Bandung', href: URL },
         ]}
+        page={{ url: URL, name: 'Jadwal Travel Bengkulu Bandung', image: 'bandung-kapal' }}
         faq={faq}
       />
+      <SiloHero k="bandung-kapal" caption="Hiace berangkat setiap Rabu dan Jumat dari Kota Bengkulu." />
 
       <p>
         <strong>Jadwal travel Bengkulu Bandung</strong>: Hiace berangkat <strong>setiap {bkl.hariLabel}</strong>. Dari Kota

@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
-import { SiloJsonLd, SiloFaq, SiloCta, SiloAnswer, SiloRelated } from '@/components/SiloBlocks';
+import { SiloHero, SiloJsonLd, SiloFaq, SiloCta, SiloAnswer, SiloRelated } from '@/components/SiloBlocks';
+import { hiaceOg, hiaceUrl } from '@/lib/hiace-images';
 import { BASE, rp, titik, infoBandung, ARAH_BANDUNG, PILAR, SILO_LINKS } from '@/lib/bandung-silo';
 
 const URL = `${BASE}/ongkos-travel-bengkulu-bandung`;
@@ -14,7 +15,8 @@ export const metadata: Metadata = {
   title: `Ongkos Travel Bengkulu Bandung 2026: ${rp(bkl.price)}`,
   description: `Ongkos travel Bengkulu Bandung 2026: Hiace ${rp(bkl.price)} per orang, sama dari Kota Bengkulu dan Curup. Ada contoh hitungan biaya 1–4 orang. WA 0852-6864-5461.`,
   alternates: { canonical: URL },
-  openGraph: { title: 'Ongkos Travel Bengkulu Bandung 2026 | Travel Bengkulu', url: URL, locale: 'id_ID', type: 'article' },
+  openGraph: { title: 'Ongkos Travel Bengkulu Bandung 2026 | Travel Bengkulu', url: URL, locale: 'id_ID', type: 'article', images: [hiaceOg('bandung-kapal')] },
+  twitter: { card: 'summary_large_image', images: [hiaceUrl('bandung-kapal', 'og')] },
 };
 
 const faq: [string, string][] = [
@@ -44,8 +46,10 @@ export default function Page() {
           { name: 'Travel Bengkulu Bandung', href: `${BASE}${PILAR}` },
           { name: 'Ongkos Travel Bengkulu Bandung', href: URL },
         ]}
+        page={{ url: URL, name: 'Ongkos Travel Bengkulu Bandung', image: 'bandung-kapal' }}
         faq={faq}
       />
+      <SiloHero k="bandung-kapal" caption="Toyota Hiace armada travel Bengkulu–Bandung, tarif Rp 800.000 per orang." />
 
       <p>
         <strong>Ongkos travel Bengkulu Bandung</strong> adalah <strong>{rp(bkl.price)} per orang</strong> naik Hiace, dengan

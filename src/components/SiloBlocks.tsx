@@ -1,15 +1,28 @@
 import Link from 'next/link';
+import Image from 'next/image';
+import { hiaceUrl, hiaceAlt, hiaceSchema, hiaceOg, type HiaceKey } from '@/lib/hiace-images';
 
 type Crumb = { name: string; href: string };
 
 /** JSON-LD: BreadcrumbList + FAQPage (opsional) */
-export function SiloJsonLd({ crumbs, faq }: { crumbs: Crumb[]; faq?: [string, string][] }) {
+export function SiloJsonLd({ crumbs, faq, page }: { crumbs: Crumb[]; faq?: [string, string][]; page?: { url: string; name: string; image: HiaceKey } }) {
   const graph: Record<string, unknown>[] = [
     {
       '@type': 'BreadcrumbList',
       itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: c.href })),
     },
   ];
+  if (page) {
+    const og = hiaceOg(page.image);
+    graph.push({
+      '@type': 'WebPage',
+      '@id': page.url,
+      url: page.url,
+      name: page.name,
+      image: hiaceSchema(page.image),
+      primaryImageOfPage: { '@type': 'ImageObject', url: og.url, width: og.width, height: og.height, caption: og.alt },
+    });
+  }
   if (faq?.length) {
     graph.push({
       '@type': 'FAQPage',
@@ -70,5 +83,17 @@ export function SiloRelated({ links, exclude }: { links: readonly { href: string
         ))}
       </ul>
     </>
+  );
+}
+
+/** Foto Hiace di atas konten: jadi gambar utama halaman untuk thumbnail hasil pencarian */
+export function SiloHero({ k, caption }: { k: HiaceKey; caption: string }) {
+  return (
+    <figure className="mb-6">
+      <div className="relative w-full overflow-hidden rounded-2xl shadow-sm" style={{ aspectRatio: '16 / 9' }}>
+        <Image src={hiaceUrl(k, '16x9').replace('https://bengkulutravel.com', '')} alt={hiaceAlt(k)} fill priority sizes="(max-width: 768px) 100vw, 700px" className="object-cover" />
+      </div>
+      <figcaption className="mt-2 text-center text-sm text-slate-500">{caption}</figcaption>
+    </figure>
   );
 }

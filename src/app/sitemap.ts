@@ -1,10 +1,29 @@
 import { MetadataRoute } from 'next';
+import { hiaceUrl, type HiaceKey } from '@/lib/hiace-images';
+
+// Halaman Hiace (Bandung + Padang) → foto untuk image sitemap
+const GAMBAR_HIACE: Record<string, HiaceKey> = {
+  'travel-bengkulu-bandung': 'bandung-kapal',
+  'travel-curup-bandung': 'bandung-kapal',
+  'travel-bandung-curup': 'bandung-malam',
+  'travel-bandung-bengkulu': 'bandung-malam',
+  'ongkos-travel-bengkulu-bandung': 'bandung-kapal',
+  'jadwal-travel-bengkulu-bandung': 'bandung-kapal',
+  'bengkulu-bandung-berapa-jam': 'bandung-malam',
+  'bus-bengkulu-bandung': 'bandung-malam',
+  'travel-bengkulu-padang': 'padang-samping',
+  'travel-curup-padang': 'padang-samping',
+  'travel-padang-bengkulu': 'padang-depan',
+  'travel-padang-curup': 'padang-depan',
+  'jadwal-travel-bengkulu-padang': 'padang-samping',
+  'ongkos-travel-bengkulu-padang': 'padang-depan',
+};
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://bengkulutravel.com';
   const lastModified = new Date();
 
-  return [
+  const entries: MetadataRoute.Sitemap = [
     { url: baseUrl, lastModified, changeFrequency: 'weekly', priority: 1 },
     // Halaman layanan utama
     { url: `${baseUrl}/travel-bengkulu`, lastModified, changeFrequency: 'weekly', priority: 1 },
@@ -69,4 +88,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/makanan-khas-curup`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/makanan-khas-lebong`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
   ];
+
+  return entries.map((e) => {
+    const k = GAMBAR_HIACE[e.url.replace(`${baseUrl}/`, '')];
+    return k ? { ...e, images: [hiaceUrl(k, '16x9')] } : e;
+  });
 }

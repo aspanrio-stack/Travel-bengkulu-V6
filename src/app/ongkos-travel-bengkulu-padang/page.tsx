@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
+import { SiloJsonLd, SiloHero } from '@/components/SiloBlocks';
+import { hiaceOg, hiaceUrl, hiaceSchema } from '@/lib/hiace-images';
 import { BASE, rp, jamPadang, tarifTujuanPadang } from '@/lib/padang-silo';
 
 const URL = `${BASE}/ongkos-travel-bengkulu-padang`;
@@ -13,7 +15,8 @@ export const metadata: Metadata = {
   title: `Ongkos Travel Bengkulu Padang 2026: Hiace ${rp(bkl.hiaceHarga)}`,
   description: `Ongkos travel Bengkulu Padang 2026: Hiace ${rp(bkl.hiaceHarga)} per orang, mobil random ${rp(bkl.randomHarga)}. Tarif ke Bukit Tinggi, Solok, Bangko, dan Muara Bungo. WA 0852-6864-5461.`,
   alternates: { canonical: URL },
-  openGraph: { title: 'Ongkos Travel Bengkulu Padang 2026 | Travel Bengkulu', url: URL, locale: 'id_ID', type: 'article' },
+  openGraph: { title: 'Ongkos Travel Bengkulu Padang 2026 | Travel Bengkulu', url: URL, locale: 'id_ID', type: 'article', images: [hiaceOg('padang-depan')] },
+  twitter: { card: 'summary_large_image', images: [hiaceUrl('padang-depan', 'og')] },
 };
 
 const hitung = [1, 2, 4].map((n) => ({ n, hiace: n * bkl.hiaceHarga, random: n * bkl.randomHarga }));
@@ -32,6 +35,7 @@ const faq: [string, string][] = [
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
+    { '@type': 'WebPage', '@id': URL, url: URL, name: 'Ongkos Travel Bengkulu Padang', image: hiaceSchema('padang-depan'), primaryImageOfPage: { '@type': 'ImageObject', url: hiaceOg('padang-depan').url, width: 1200, height: 630, caption: hiaceOg('padang-depan').alt } },
     { '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: BASE },
       { '@type': 'ListItem', position: 2, name: 'Travel Bengkulu Padang', item: `${BASE}/travel-bengkulu-padang` },
@@ -51,6 +55,7 @@ export default function Page() {
       price={rp(bkl.hiaceHarga)}
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <SiloHero k="padang-depan" caption="Toyota Hiace silver, tarif Rp 350.000 per orang ke Padang." />
 
       <p>
         <strong>Ongkos travel Bengkulu Padang</strong> adalah <strong>{rp(bkl.hiaceHarga)} per orang</strong> untuk Hiace

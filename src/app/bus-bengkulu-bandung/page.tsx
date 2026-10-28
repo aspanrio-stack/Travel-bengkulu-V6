@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
-import { SiloJsonLd, SiloFaq, SiloCta, SiloAnswer, SiloRelated } from '@/components/SiloBlocks';
+import { SiloHero, SiloJsonLd, SiloFaq, SiloCta, SiloAnswer, SiloRelated } from '@/components/SiloBlocks';
+import { hiaceOg, hiaceUrl } from '@/lib/hiace-images';
 import { BASE, rp, titik, infoBandung, PILAR, SILO_LINKS } from '@/lib/bandung-silo';
 
 const URL = `${BASE}/bus-bengkulu-bandung`;
@@ -11,7 +12,8 @@ export const metadata: Metadata = {
   title: 'Bus Bengkulu Bandung vs Travel Hiace',
   description: `Bus Bengkulu Bandung atau travel Hiace? Bandingkan cara naik, penjemputan, dan jadwal. Travel Hiace ${rp(bkl.price)}, ${bkl.hariLabel} pukul ${titik(bkl.jam)}. Cek dulu.`,
   alternates: { canonical: URL },
-  openGraph: { title: 'Bus Bengkulu Bandung vs Travel Hiace | Travel Bengkulu', url: URL, locale: 'id_ID', type: 'article' },
+  openGraph: { title: 'Bus Bengkulu Bandung vs Travel Hiace | Travel Bengkulu', url: URL, locale: 'id_ID', type: 'article', images: [hiaceOg('bandung-malam')] },
+  twitter: { card: 'summary_large_image', images: [hiaceUrl('bandung-malam', 'og')] },
 };
 
 const faq: [string, string][] = [
@@ -41,8 +43,10 @@ export default function Page() {
           { name: 'Travel Bengkulu Bandung', href: `${BASE}${PILAR}` },
           { name: 'Bus Bengkulu Bandung vs Travel Hiace', href: URL },
         ]}
+        page={{ url: URL, name: 'Bus Bengkulu Bandung vs Travel Hiace', image: 'bandung-malam' }}
         faq={faq}
       />
+      <SiloHero k="bandung-malam" caption="Travel Hiace Bengkulu–Bandung dengan jemput di alamat." />
 
       <p>
         Mencari <strong>bus Bengkulu Bandung</strong>? Ada dua cara umum menempuh rute ini lewat darat: naik bus

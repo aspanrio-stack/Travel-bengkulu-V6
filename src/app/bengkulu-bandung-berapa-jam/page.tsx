@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
-import { SiloJsonLd, SiloFaq, SiloCta, SiloAnswer, SiloRelated } from '@/components/SiloBlocks';
+import { SiloHero, SiloJsonLd, SiloFaq, SiloCta, SiloAnswer, SiloRelated } from '@/components/SiloBlocks';
 import { getRouteById } from '@/lib/routes';
+import { hiaceOg, hiaceUrl } from '@/lib/hiace-images';
 import { BASE, rp, titik, infoBandung, PILAR, SILO_LINKS } from '@/lib/bandung-silo';
 
 const URL = `${BASE}/bengkulu-bandung-berapa-jam`;
@@ -14,7 +15,8 @@ export const metadata: Metadata = {
   title: `Bengkulu Bandung Berapa Jam? Estimasi ${bkl.duration}`,
   description: `Bengkulu ke Bandung berapa jam? Naik travel Hiace via Tol Palembang sekitar ${bkl.duration}. Cek estimasi jam tiba, rute, faktor penentu, dan tips perjalanan jauh.`,
   alternates: { canonical: URL },
-  openGraph: { title: 'Bengkulu Bandung Berapa Jam? | Travel Bengkulu', url: URL, locale: 'id_ID', type: 'article' },
+  openGraph: { title: 'Bengkulu Bandung Berapa Jam? | Travel Bengkulu', url: URL, locale: 'id_ID', type: 'article', images: [hiaceOg('bandung-malam')] },
+  twitter: { card: 'summary_large_image', images: [hiaceUrl('bandung-malam', 'og')] },
 };
 
 const faq: [string, string][] = [
@@ -44,8 +46,10 @@ export default function Page() {
           { name: 'Travel Bengkulu Bandung', href: `${BASE}${PILAR}` },
           { name: 'Bengkulu Bandung Berapa Jam', href: URL },
         ]}
+        page={{ url: URL, name: 'Bengkulu Bandung Berapa Jam', image: 'bandung-malam' }}
         faq={faq}
       />
+      <SiloHero k="bandung-malam" caption="Hiace saat penyeberangan malam Bakauheni–Merak dalam perjalanan ke Bandung." />
 
       <p>
         <strong>Bengkulu ke Bandung berapa jam?</strong> Lewat darat naik travel Hiace, perjalanannya sekitar{' '}

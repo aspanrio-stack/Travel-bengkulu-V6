@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
+import { SiloJsonLd, SiloHero } from '@/components/SiloBlocks';
+import { hiaceOg, hiaceUrl, hiaceSchema } from '@/lib/hiace-images';
 import { BASE, rp, titik, jamPadang } from '@/lib/padang-silo';
 
 const URL = `${BASE}/jadwal-travel-bengkulu-padang`;
@@ -12,7 +14,8 @@ export const metadata: Metadata = {
   title: `Jadwal Travel Bengkulu Padang: Hiace ${titik(bkl.hiace)}, Mobil Random ${titik(bkl.random)}`,
   description: `Jadwal travel Bengkulu Padang terbaru: Hiace berangkat ${titik(bkl.hiace)} dan mobil random ${titik(bkl.random)} dari Kota Bengkulu. Jadwal dari Padang dan Curup juga ada. Cek kursi via WA 0852-6864-5461.`,
   alternates: { canonical: URL },
-  openGraph: { title: 'Jadwal Travel Bengkulu Padang | Travel Bengkulu', url: URL, locale: 'id_ID', type: 'article' },
+  openGraph: { title: 'Jadwal Travel Bengkulu Padang | Travel Bengkulu', url: URL, locale: 'id_ID', type: 'article', images: [hiaceOg('padang-samping')] },
+  twitter: { card: 'summary_large_image', images: [hiaceUrl('padang-samping', 'og')] },
 };
 
 const ROWS = [
@@ -34,6 +37,7 @@ const faq: [string, string][] = [
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
+    { '@type': 'WebPage', '@id': URL, url: URL, name: 'Jadwal Travel Bengkulu Padang', image: hiaceSchema('padang-samping'), primaryImageOfPage: { '@type': 'ImageObject', url: hiaceOg('padang-samping').url, width: 1200, height: 630, caption: hiaceOg('padang-samping').alt } },
     { '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: BASE },
       { '@type': 'ListItem', position: 2, name: 'Travel Bengkulu Padang', item: `${BASE}/travel-bengkulu-padang` },
@@ -53,6 +57,7 @@ export default function Page() {
       price={rp(bkl.hiaceHarga)}
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <SiloHero k="padang-samping" caption="Toyota Hiace silver armada travel Bengkulu–Padang." />
 
       <p>
         <strong>Jadwal travel Bengkulu Padang</strong> dari Kota Bengkulu: <strong>Hiace pukul {titik(bkl.hiace)} WIB</strong>{' '}
