@@ -24,10 +24,7 @@ const fontBody = Plus_Jakarta_Sans({
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#0f766e' };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://www.bengkulutravel.com'),
-  alternates: {
-    canonical: 'https://www.bengkulutravel.com',
-  },
+  metadataBase: new URL('https://bengkulutravel.com'),
   title: {
     default: 'Travel Bengkulu | Antar Jemput Door to Door Terpercaya',
     template: '%s | Travel Bengkulu',
@@ -39,7 +36,7 @@ export const metadata: Metadata = {
     title: 'Travel Bengkulu | Antar Jemput Door to Door Terpercaya',
     description:
       'Jasa travel Bengkulu terpercaya. Melayani rute Bengkulu-Palembang, Bengkulu-Jambi, Bengkulu-Curup.',
-    url: 'https://www.bengkulutravel.com',
+    url: 'https://bengkulutravel.com',
     siteName: 'Travel Bengkulu',
     images: [{ url: '/og-image.png', width: 1200, height: 630 }],
     locale: 'id_ID',

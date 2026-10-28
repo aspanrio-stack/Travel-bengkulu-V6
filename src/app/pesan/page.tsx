@@ -6,6 +6,8 @@ import { ROUTES } from '@/lib/routes';
 export const metadata: Metadata = {
   title: 'Pesan Travel & Rental Mobil Bengkulu – Konfirmasi via WhatsApp',
   description: 'Pesan tiket travel atau rental mobil Bengkulu secara online. Isi form, konfirmasi via WhatsApp, bayar tunai atau QRIS.',
+  // Halaman form (varian ?rute=/?mode=/?penumpang= tak punya nilai SEO) → jangan diindeks, tapi tetap ikuti link.
+  robots: { index: false, follow: true },
 };
 
 export default async function PesanPage({
