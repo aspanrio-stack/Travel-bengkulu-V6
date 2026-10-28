@@ -16,6 +16,7 @@ const PATH_TO_ROUTE_ID: Record<string, string> = {
   '/travel-curup-bandung':       'crp-bdg',
   '/travel-bandung-curup':       'bdg-crp',
   '/travel-bandung-bengkulu':    'bdg-bkl',
+  '/travel-bengkulu-bandung':    'bkl-bdg',
   '/travel-bengkulu-padang':     'bkl-pdg',
   '/travel-padang-bengkulu':     'pdg-bkl',
   '/travel-curup-padang':        'crp-pdg',

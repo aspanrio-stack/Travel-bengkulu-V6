@@ -78,7 +78,7 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
     [`Berapa tarif travel ${nama}?`, `Tarif travel Hiace ${nama} adalah ${harga} per orang.`],
     ['Kapan jadwal keberangkatannya?', jadwalFaq],
     ...(r.tarifTujuan
-      ? ([[
+      ? ([r.faqTurun ?? [
           'Bisa turun di kota selain Padang?',
           `Bisa. Selain Padang, perjalanan ini melayani ${r.tarifTujuan.filter((t) => t.tujuan !== 'Padang').map((t) => t.tujuan).join(', ')}. Tarif Hiace Rp 300.000 sampai Rp 350.000 per orang tergantung tujuan, dan kendaraan selain Hiace Rp 50.000 lebih murah.`,
         ]] as [string, string][])
@@ -106,7 +106,7 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
         url,
         image: `${BASE}${IMG_DIR}/${r.heroSrc}`,
         provider: { '@id': `${BASE}/#organization` },
-        areaServed: [{ '@type': 'City', name: r.from }, { '@type': 'City', name: r.to }],
+        areaServed: Array.from(new Set([r.from, r.to, ...(r.tarifTujuan ?? []).map((t) => t.tujuan)])).map((name) => ({ '@type': 'City', name })),
         offers: { '@type': 'Offer', price: String(r.price), priceCurrency: 'IDR', availability: 'https://schema.org/InStock', url },
       },
       {
@@ -281,21 +281,21 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
           <div className="overflow-x-auto">
             <table>
               <thead>
-                <tr><th>Tujuan</th><th>Hiace</th><th>Kendaraan lain</th><th></th></tr>
+                <tr><th>Tujuan</th><th>{r.tarifTujuan.some((t) => t.lain) ? 'Hiace' : 'Tarif/orang'}</th>{r.tarifTujuan.some((t) => t.lain) && <th>Kendaraan lain</th>}<th></th></tr>
               </thead>
               <tbody>
                 {r.tarifTujuan.map((t) => (
                   <tr key={t.routeId}>
                     <td><strong>{r.from} → {t.tujuan}</strong></td>
                     <td>{rp(t.hiace)}</td>
-                    <td>{rp(t.lain)}</td>
+                    {r.tarifTujuan!.some((x) => x.lain) && <td>{t.lain ? rp(t.lain) : '-'}</td>}
                     <td><Link href={`/pesan?rute=${t.routeId}`} className="font-semibold text-primary-700 hover:underline">Pesan →</Link></td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className="text-sm text-slate-500">Tarif per orang. Jam keberangkatan Hiace dan mobil random tertera di bagian Jadwal di atas.</p>
+          <p className="text-sm text-slate-500">{r.tarifFootnote ?? 'Tarif per orang. Jam keberangkatan Hiace dan mobil random tertera di bagian Jadwal di atas.'}</p>
         </>
       )}
 

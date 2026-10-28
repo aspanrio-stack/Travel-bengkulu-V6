@@ -17,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/travel-curup-bandung`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${baseUrl}/travel-bandung-curup`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${baseUrl}/travel-bandung-bengkulu`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${baseUrl}/travel-bengkulu-bandung`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${baseUrl}/travel-bengkulu-padang`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${baseUrl}/travel-padang-bengkulu`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${baseUrl}/travel-curup-padang`, lastModified, changeFrequency: 'weekly', priority: 0.9 },

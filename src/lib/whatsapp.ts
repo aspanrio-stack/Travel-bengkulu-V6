@@ -14,6 +14,7 @@ const pesanMap: Record<string, string> = {
   '/travel-curup-bandung':      'saya ingin pesan travel Hiace Curup ke Bandung',
   '/travel-bandung-curup':      'saya ingin pesan travel Hiace Bandung ke Curup',
   '/travel-bandung-bengkulu':   'saya ingin pesan travel Hiace Bandung ke Bengkulu',
+  '/travel-bengkulu-bandung':   'saya ingin pesan travel Hiace Bengkulu ke Bandung',
   '/travel-bengkulu-padang':    'saya ingin pesan travel Hiace Bengkulu ke Padang',
   '/travel-padang-bengkulu':    'saya ingin pesan travel Hiace Padang ke Bengkulu',
   '/travel-curup-padang':       'saya ingin pesan travel Hiace Curup ke Padang',
