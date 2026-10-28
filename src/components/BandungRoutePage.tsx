@@ -106,7 +106,8 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
         url,
         image: `${BASE}${IMG_DIR}/${r.heroSrc}`,
         provider: { '@id': `${BASE}/#organization` },
-        areaServed: [{ '@type': 'City', name: r.from }, { '@type': 'City', name: r.to }],
+        description: r.lead,
+        areaServed: (r.fokus?.kota ?? [r.from, r.to]).map((name) => ({ '@type': 'City', name })),
         offers: { '@type': 'Offer', price: String(r.price), priceCurrency: 'IDR', availability: 'https://schema.org/InStock', url },
       },
       {
@@ -314,7 +315,7 @@ export default function BandungRoutePage({ r }: { r: BandungRoute }) {
         <tbody>
           <tr><td>Estimasi waktu</td><td>{r.duration}, tergantung {r.durasiNote ?? 'jalan, antrean pelabuhan, dan cuaca'}</td></tr>
           <tr><td>Penjemputan</td><td>{r.jemput}, titik disepakati saat pesan</td></tr>
-          <tr><td>Pembayaran</td><td>Tunai atau QRIS</td></tr>
+          <tr><td>Pembayaran</td><td>Tunai (QRIS sedang gangguan)</td></tr>
           <tr><td>Pemesanan</td><td>Form online atau WhatsApp admin</td></tr>
         </tbody>
       </table>
