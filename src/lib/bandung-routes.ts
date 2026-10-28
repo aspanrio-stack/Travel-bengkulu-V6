@@ -44,7 +44,9 @@ export interface BandungRoute {
   durasiNote?: string;   // faktor yang memengaruhi waktu tempuh
   durasiFaq?: string;    // bagian 'termasuk ...'
   /** Tabel tarif per tujuan (koridor Padang): Hiace vs kendaraan lain */
-  tarifTujuan?: { routeId: string; tujuan: string; hiace: number; lain: number }[];
+  tarifTujuan?: { routeId: string; tujuan: string; hiace: number; lain?: number }[];
+  tarifFootnote?: string;
+  faqTurun?: [string, string];       // pengganti FAQ 'Bisa turun di kota lain?' (default: koridor Padang)
   galeri?: { src: string; w: number; h: number; alt: string; cap: string }[];
   // ── Penegasan target pasar (anti-kanibal Curup vs Bengkulu). Semua opsional. ──
   heroChip?: string;                 // label kecil di atas foto utama
@@ -63,6 +65,28 @@ export interface BandungRoute {
 const JALUR_CRP_BDG =
   'Dari Curup, HiAce melaju lewat Lubuklinggau, Sekayu, dan Prabumulih menuju Palembang. Dari Palembang perjalanan masuk Tol Trans Sumatera ke arah Lampung sampai Bakauheni, menyeberang ke Merak, lalu lanjut tol Jakarta–Cikampek dan Cipularang menuju Bandung.';
 
+const relBandung = (...extra: { href: string; label: string }[]) => [
+  ...extra,
+  { href: '/travel-curup-bengkulu', label: 'Travel Curup → Bengkulu' },
+  { href: '/travel-bengkulu-curup', label: 'Travel Bengkulu → Curup' },
+  { href: '/travel-bengkulu', label: 'Semua Rute Travel Bengkulu' },
+];
+const L_CRP_BDG = { href: '/travel-curup-bandung', label: 'Travel Curup → Bandung' };
+const L_BKL_BDG = { href: '/travel-bengkulu-bandung', label: 'Travel Bengkulu → Bandung' };
+const L_BDG_CRP = { href: '/travel-bandung-curup', label: 'Travel Bandung → Curup' };
+const L_BDG_BKL = { href: '/travel-bandung-bengkulu', label: 'Travel Bandung → Bengkulu' };
+const L_JKT_CRP = { href: '/travel-jakarta-curup', label: 'Travel Jakarta → Curup' };
+const L_JKT_BKL = { href: '/travel-jakarta-bengkulu', label: 'Travel Jakarta → Bengkulu' };
+const L_LMP_CRP = { href: '/travel-lampung-curup', label: 'Travel Lampung → Curup' };
+const kartuJadwal = (judul: string, jam: string, time: string, routeId?: string) => ({
+  routeId, jam: `${jam} WIB`, time, judul, sub: 'Rabu & Jumat · Toyota Hiace', armada: 'Hiace', icon: '🚐', tone: 'hiace' as const,
+});
+
+/*
+ * Prinsip anti-kanibal koridor Jawa: SATU halaman per KOTA ASAL (Curup, Kota Bengkulu, Bandung)
+ * dan per arah. Kota lintasan (Lampung, Jakarta) tidak punya halaman sendiri, melainkan baris di tabel tarif
+ * halaman Curup → Bandung (sama seperti Bangko/Muara Bungo di koridor Padang).
+ */
 export const BANDUNG_ROUTES: Record<string, BandungRoute> = {
   'travel-curup-bandung': {
     slug: 'travel-curup-bandung',
@@ -71,17 +95,56 @@ export const BANDUNG_ROUTES: Record<string, BandungRoute> = {
     to: 'Bandung',
     price: HARGA_BANDUNG,
     duration: '30–36 jam',
-    metaTitle: 'Travel Curup Bandung Hiace via Tol Palembang Rp 800.000',
+    metaTitle: 'Travel Curup Bandung Hiace, Juga ke Jakarta & Lampung',
     metaDesc:
-      'Travel Curup Bandung Hiace via Tol Palembang Rp 800.000. Berangkat Rabu & Jumat: Bengkulu 11.00, Curup 13.00. Pesan WA 0852-6864-5461.',
-    h1: 'Travel Curup Bandung Hiace',
-    lead: 'Travel Hiace dari Curup langsung ke Bandung lewat Tol Palembang, berangkat setiap Rabu dan Jumat. Kabin lega dengan TV dan audio.',
-    jadwal: 'setiap Rabu dan Jumat',
-    jadwalFaq: 'Berangkat setiap Rabu dan Jumat. Dari Curup pukul 13.00 WIB, sedangkan penumpang dari Kota Bengkulu berangkat pukul 11.00 WIB. Hubungi admin untuk sisa kursi.',
-    perkJadwal: 'setiap Rabu dan Jumat, bisa direncanakan jauh hari',
-    jadwalCards: [
-      { routeId: 'bkl-bdg', jam: '11.00 WIB', time: '11:00', judul: 'Berangkat dari Bengkulu', sub: 'Rabu & Jumat · Toyota Hiace', armada: 'Hiace', icon: '🚐', tone: 'hiace' as const },
-      { jam: '13.00 WIB', time: '13:00', judul: 'Berangkat dari Curup', sub: 'Rabu & Jumat · Toyota Hiace', armada: 'Hiace', icon: '🚐', tone: 'hiace' as const },
+      'Travel Curup Bandung Hiace berangkat langsung dari Curup via Tol Palembang. Tujuan Lampung Rp 350.000, Jakarta Rp 700.000, Bandung Rp 800.000. WA 0852-6864-5461.',
+    h1: 'Travel Curup Bandung Hiace: Berangkat Langsung dari Curup',
+    lead: 'Kantor kami di Curup, jadi Hiace menjemput Anda di Curup lalu melaju via Tol Palembang. Satu keberangkatan melayani Lampung, Jakarta, dan Bandung.',
+    heroChip: '📍 Berangkat langsung dari Curup',
+    intro: [
+      '**Travel Curup Bandung** berangkat langsung dari **Curup** setiap **Rabu dan Jumat pukul 13.00**. Anda dijemput di rumah atau titik yang disepakati, lalu Hiace melaju lewat Lubuklinggau dan Palembang, masuk Tol Trans Sumatera sampai Bakauheni, menyeberang ke Merak, dan lanjut ke Jawa.',
+      'Tidak harus sampai Bandung. Mobil ini melewati **Lampung** dan **Jakarta**, jadi Anda juga bisa memesan **travel Curup Lampung** (Rp 350.000) atau **travel Curup Jakarta** (Rp 700.000) dalam keberangkatan yang sama.',
+    ],
+    fokus: {
+      tone: 'emerald',
+      eyebrow: 'Kantor Pusat di Curup',
+      judul: 'Posisi Anda di Curup? Langsung berangkat dari sini',
+      poin: [
+        'Dijemput di rumah atau titik sepakat di Curup',
+        'Berangkat Rabu & Jumat pukul 13.00',
+        'Turun di Lampung, Jakarta, atau Bandung',
+        'Lewat Tol Palembang dan Tol Trans Sumatera',
+      ],
+      kota: ['Curup', 'Palembang', 'Lampung', 'Jakarta', 'Bandung'],
+    },
+    stops: ['Curup', 'Lubuklinggau', 'Palembang', 'Lampung', 'Jakarta', 'Bandung'],
+    switcher: { text: 'Berangkat dari Kota Bengkulu, bukan Curup?', label: 'Lihat layanan Bengkulu → Bandung', href: '/travel-bengkulu-bandung' },
+    jadwal: 'setiap Rabu dan Jumat pukul 13.00',
+    jadwalFaq: 'Berangkat setiap Rabu dan Jumat pukul 13.00 WIB dari Curup. Hubungi admin untuk sisa kursi.',
+    perkJadwal: 'setiap Rabu dan Jumat pukul 13.00, bisa direncanakan jauh hari',
+    jadwalCards: [kartuJadwal('Berangkat dari Curup', '13.00', '13:00')],
+    tarifTujuan: [
+      { routeId: 'crp-lmp', tujuan: 'Lampung', hiace: 350000 },
+      { routeId: 'crp-jkt', tujuan: 'Jakarta', hiace: 700000 },
+      { routeId: 'crp-bdg', tujuan: 'Bandung', hiace: HARGA_BANDUNG },
+    ],
+    judulTarif: 'Travel Curup Jakarta, Curup Lampung, dan Curup Bandung: Tarif per Tujuan',
+    tarifIntro: 'Satu keberangkatan dari Curup melayani tiga tujuan sekaligus. Pilih kota tujuan Anda, titik turun disepakati dengan admin saat pemesanan.',
+    tarifFootnote: 'Tarif Hiace per orang. Semua tujuan berangkat Rabu dan Jumat pukul 13.00 dari Curup.',
+    faqTurun: ['Bisa turun di Lampung atau Jakarta, tidak harus Bandung?', 'Bisa. Hiace ini melewati Lampung dan Jakarta sebelum sampai Bandung. Tarif ke Lampung Rp 350.000 dan ke Jakarta Rp 700.000 per orang, titik turun disepakati dengan admin saat pemesanan.'],
+    judulRute: 'Rute dari Curup ke Bandung via Tol Palembang, Tanpa ke Kota Bengkulu',
+    judulKenapa: 'Kenapa Naik Travel Langsung dari Curup',
+    perks: [
+      ['Jemput di rumah', 'titik jemput di Curup disepakati saat pesan'],
+      ['Tanpa ke Bengkulu', 'berangkat langsung dari Curup'],
+      ['Tiga tujuan', 'Lampung, Jakarta, dan Bandung dalam satu jadwal'],
+      ['Via tol', 'Tol Palembang dan Tol Trans Sumatera'],
+      ['Tarif transparan', 'Rp 350.000 Lampung, Rp 700.000 Jakarta, Rp 800.000 Bandung'],
+      ['Pesan 24 jam', 'admin siap dihubungi kapan saja'],
+    ],
+    faqExtra: [
+      ['Apakah saya harus ke Kota Bengkulu dulu?', 'Tidak. Hiace berangkat langsung dari Curup dan menjemput Anda di rumah atau titik yang disepakati di Curup.'],
+      ['Berapa tarif travel Curup Jakarta dan Curup Lampung?', 'Curup ke Jakarta Rp 700.000 dan Curup ke Lampung Rp 350.000 per orang, dengan armada dan jadwal yang sama seperti ke Bandung.'],
     ],
     heroSrc: 'hiace-curup-bandung-hero.webp',
     heroW: 750,
@@ -90,15 +153,73 @@ export const BANDUNG_ROUTES: Record<string, BandungRoute> = {
     jalur: JALUR_CRP_BDG,
     jemput: 'Area Curup',
     tujuan: 'Bandung',
-    related: [
-      { href: '/travel-bandung-curup', label: 'Travel Bandung → Curup' },
-      { href: '/travel-bandung-bengkulu', label: 'Travel Bandung → Bengkulu' },
-      { href: '/travel-curup-bengkulu', label: 'Travel Curup → Bengkulu' },
-      { href: '/travel-bengkulu-curup', label: 'Travel Bengkulu → Curup' },
-      { href: '/rental-mobil-curup', label: 'Rental Mobil Curup' },
-      { href: '/hotel-di-curup', label: 'Hotel di Curup' },
-      { href: '/travel-bengkulu', label: 'Semua Rute Travel Bengkulu' },
+    related: relBandung(L_BKL_BDG, L_BDG_CRP, L_JKT_CRP, L_LMP_CRP, { href: '/rental-mobil-curup', label: 'Rental Mobil Curup' }, { href: '/hotel-di-curup', label: 'Hotel di Curup' }),
+  },
+  'travel-bengkulu-bandung': {
+    slug: 'travel-bengkulu-bandung',
+    routeId: 'bkl-bdg',
+    from: 'Bengkulu',
+    to: 'Bandung',
+    price: HARGA_BANDUNG,
+    duration: '32–38 jam',
+    via: 'Curup & Tol Palembang',
+    metaTitle: 'Travel Bengkulu Bandung Hiace, Juga ke Jakarta',
+    metaDesc:
+      'Travel Bengkulu Bandung Hiace khusus jemput di Kota Bengkulu, via Curup dan Tol Palembang. Bengkulu Jakarta Rp 700.000, Bengkulu Bandung Rp 800.000. WA 0852-6864-5461.',
+    h1: 'Travel Bengkulu Bandung Hiace: Jemput di Kota Bengkulu',
+    lead: 'Layanan untuk penumpang di Kota Bengkulu yang ingin ke Bandung. Hiace menjemput Anda pukul 11.00, naik lewat Curup, lalu masuk Tol Palembang.',
+    heroChip: '📍 Dijemput di Kota Bengkulu',
+    intro: [
+      '**Travel Bengkulu Bandung** ini khusus untuk penjemputan di **Kota Bengkulu**. Hiace berangkat setiap **Rabu dan Jumat pukul 11.00**, naik melewati **Curup** dan Lubuklinggau, lalu lanjut via **Tol Palembang** menuju Bandung.',
+      'Mobil ini juga melewati **Jakarta**, jadi **travel Bengkulu Jakarta** tersedia dengan tarif **Rp 700.000** per orang. Tarifnya sama dengan dari Curup, karena untuk perjalanan jauh kami tidak menambah selisih jarak Bengkulu–Curup.',
     ],
+    fokus: {
+      tone: 'sky',
+      eyebrow: 'Khusus Kota Bengkulu',
+      judul: 'Posisi Anda di Kota Bengkulu? Ini rute Anda',
+      poin: [
+        'Dijemput di alamat Anda di Kota Bengkulu',
+        'Berangkat Rabu & Jumat pukul 11.00',
+        'Naik lewat Curup, lalu Tol Palembang',
+        'Turun di Jakarta atau Bandung',
+      ],
+      kota: ['Kota Bengkulu', 'Curup', 'Palembang', 'Bandung'],
+    },
+    stops: ['Kota Bengkulu', 'Curup', 'Lubuklinggau', 'Palembang', 'Bakauheni–Merak', 'Bandung'],
+    switcher: { text: 'Berangkat dari Curup? Tidak perlu ke Kota Bengkulu.', label: 'Lihat layanan Curup → Bandung', href: '/travel-curup-bandung' },
+    jadwal: 'setiap Rabu dan Jumat pukul 11.00',
+    jadwalFaq: 'Berangkat setiap Rabu dan Jumat pukul 11.00 WIB dari Kota Bengkulu. Hubungi admin untuk sisa kursi.',
+    perkJadwal: 'setiap Rabu dan Jumat pukul 11.00, bisa direncanakan jauh hari',
+    jadwalCards: [kartuJadwal('Berangkat dari Bengkulu', '11.00', '11:00')],
+    tarifTujuan: [
+      { routeId: 'bkl-jkt', tujuan: 'Jakarta', hiace: 700000 },
+      { routeId: 'bkl-bdg', tujuan: 'Bandung', hiace: HARGA_BANDUNG },
+    ],
+    judulTarif: 'Travel Bengkulu Jakarta dan Bengkulu Bandung: Tarif per Tujuan',
+    tarifIntro: 'Satu keberangkatan dari Kota Bengkulu melayani Jakarta dan Bandung. Pilih kota tujuan Anda, titik turun disepakati dengan admin saat pemesanan.',
+    tarifFootnote: 'Tarif Hiace per orang, berangkat Rabu dan Jumat pukul 11.00 dari Kota Bengkulu. Untuk tujuan Lampung dari Kota Bengkulu, lihat halaman Bengkulu → Lampung.',
+    faqTurun: ['Bisa turun di Jakarta, tidak harus Bandung?', 'Bisa. Tarif Bengkulu ke Jakarta Rp 700.000 per orang, sama dengan dari Curup karena kami tidak menambah selisih jarak Bengkulu–Curup. Titik turun disepakati saat pemesanan.'],
+    judulRute: 'Rute Bengkulu ke Bandung via Curup dan Tol Palembang',
+    judulKenapa: 'Kenapa Naik Travel dari Kota Bengkulu',
+    perks: [
+      ['Jemput di Kota Bengkulu', 'alamat jemput disepakati saat pesan'],
+      ['Jalur via Curup', 'lalu Lubuklinggau dan Tol Palembang'],
+      ['Jadwal jelas', 'Rabu dan Jumat pukul 11.00'],
+      ['Hiace kabin lega', 'sabuk pengaman, TV, dan audio'],
+      ['Tarif transparan', 'Rp 700.000 ke Jakarta, Rp 800.000 ke Bandung'],
+      ['Pesan 24 jam', 'admin siap dihubungi kapan saja'],
+    ],
+    faqExtra: [
+      ['Apakah layanan ini menjemput di Curup?', 'Halaman ini khusus penjemputan di Kota Bengkulu. Jika Anda berada di Curup, gunakan layanan Curup ke Bandung yang berangkat pukul 13.00 agar tidak perlu ke Kota Bengkulu dulu.'],
+    ],
+    heroSrc: 'hiace-curup-bandung-malam.webp',
+    heroW: 562,
+    heroH: 1000,
+    heroAlt: 'Toyota Hiace putih armada travel Bengkulu Bandung saat penyeberangan malam',
+    jalur: 'Dari Kota Bengkulu, Hiace naik ke Curup, lalu lewat Lubuklinggau dan Palembang. Dari Palembang perjalanan masuk Tol Trans Sumatera ke Bakauheni, menyeberang ke Merak, dan lanjut tol Jakarta–Cikampek serta Cipularang menuju Bandung.',
+    jemput: 'Area Kota Bengkulu',
+    tujuan: 'Bandung',
+    related: relBandung(L_CRP_BDG, L_BDG_BKL, L_JKT_BKL, { href: '/travel-bengkulu-lampung', label: 'Travel Bengkulu → Lampung' }, { href: '/daftar-hotel-di-bengkulu', label: 'Hotel di Bengkulu' }),
   },
   'travel-bandung-curup': {
     slug: 'travel-bandung-curup',
@@ -107,11 +228,30 @@ export const BANDUNG_ROUTES: Record<string, BandungRoute> = {
     to: 'Curup',
     price: HARGA_BANDUNG,
     duration: '30–36 jam',
-    metaTitle: 'Travel Bandung Curup Hiace via Tol Palembang Rp 800.000',
+    metaTitle: 'Travel Bandung Curup Hiace, Jemput di Bandung Rabu & Jumat',
     metaDesc:
-      'Travel Bandung Curup naik Hiace via Tol Palembang, Rp 800.000/orang. Berangkat Rabu & Jumat 13.00, kabin lega TV & audio. Pesan WA 0852-6864-5461.',
-    h1: 'Travel Bandung Curup Hiace',
-    lead: 'Travel Hiace dari Bandung langsung ke Curup lewat Tol Palembang, berangkat setiap Rabu dan Jumat pukul 13.00. Kabin lega dengan TV dan audio.',
+      'Travel Bandung Curup Hiace, jemput di Bandung setiap Rabu & Jumat pukul 13.00 via Tol Palembang. Rp 800.000/orang. Pesan WA 0852-6864-5461.',
+    h1: 'Travel Bandung Curup Hiace: Jemput di Bandung',
+    lead: 'Untuk Anda yang berada di Bandung dan menuju Curup. Hiace berangkat setiap Rabu dan Jumat pukul 13.00, via Tol Palembang.',
+    heroChip: '📍 Dijemput di Bandung',
+    intro: [
+      '**Travel Bandung Curup** ini untuk penumpang yang berada di **Bandung** dan ingin pulang atau berkunjung ke **Curup**. Hiace berangkat setiap **Rabu dan Jumat pukul 13.00**, masuk tol menuju Merak, menyeberang ke Bakauheni, lalu lewat **Tol Palembang** sampai Curup.',
+      'Tarifnya Rp 800.000 per orang dengan jadwal tetap dua kali seminggu, sehingga perjalanan pulang bisa direncanakan jauh hari.',
+    ],
+    fokus: {
+      tone: 'emerald',
+      eyebrow: 'Khusus Dari Bandung',
+      judul: 'Posisi Anda di Bandung? Ini rute pulang ke Curup',
+      poin: [
+        'Dijemput di Bandung, titik jemput disepakati saat pesan',
+        'Berangkat Rabu & Jumat pukul 13.00',
+        'Lewat Tol Palembang menuju Curup',
+        'Tujuan akhir Curup',
+      ],
+      kota: ['Bandung', 'Merak–Bakauheni', 'Palembang', 'Curup'],
+    },
+    stops: ['Bandung', 'Jakarta', 'Bakauheni–Merak', 'Palembang', 'Lubuklinggau', 'Curup'],
+    switcher: { text: 'Tujuan Anda Kota Bengkulu, bukan Curup?', label: 'Lihat layanan Bandung → Bengkulu', href: '/travel-bandung-bengkulu' },
     heroSrc: 'hiace-curup-bandung-malam.webp',
     heroW: 562,
     heroH: 1000,
@@ -121,20 +261,23 @@ export const BANDUNG_ROUTES: Record<string, BandungRoute> = {
     jadwal: 'setiap Rabu dan Jumat pukul 13.00',
     jadwalFaq: 'Berangkat setiap Rabu dan Jumat pukul 13.00 WIB dari Bandung. Hubungi admin untuk sisa kursi.',
     perkJadwal: 'setiap Rabu dan Jumat pukul 13.00, bisa direncanakan jauh hari',
-    jadwalCards: [
-      { jam: '13.00 WIB', time: '13:00', judul: 'Berangkat dari Bandung', sub: 'Rabu & Jumat · Toyota Hiace', armada: 'Hiace', icon: '🚐', tone: 'hiace' as const },
+    jadwalCards: [kartuJadwal('Berangkat dari Bandung', '13.00', '13:00')],
+    judulRute: 'Rute Bandung ke Curup via Tol Palembang',
+    judulKenapa: 'Kenapa Naik Travel dari Bandung ke Curup',
+    perks: [
+      ['Jemput di Bandung', 'titik jemput disepakati saat pesan'],
+      ['Tujuan langsung Curup', 'tanpa ganti kendaraan'],
+      ['Jadwal tetap', 'Rabu dan Jumat pukul 13.00'],
+      ['Hiace kabin lega', 'sabuk pengaman, TV, dan audio'],
+      ['Tarif transparan', 'Rp 800.000 per orang, dijelaskan sebelum membayar'],
+      ['Pesan 24 jam', 'admin siap dihubungi kapan saja'],
+    ],
+    faqExtra: [
+      ['Apakah travel ini bisa mengantar sampai Kota Bengkulu?', 'Tujuan halaman ini adalah Curup. Untuk turun di Kota Bengkulu, gunakan layanan Bandung ke Bengkulu.'],
     ],
     jemput: 'Area Bandung',
     tujuan: 'Curup',
-    related: [
-      { href: '/travel-curup-bandung', label: 'Travel Curup → Bandung' },
-      { href: '/travel-bandung-bengkulu', label: 'Travel Bandung → Bengkulu' },
-      { href: '/travel-curup-bengkulu', label: 'Travel Curup → Bengkulu' },
-      { href: '/rental-mobil-curup', label: 'Rental Mobil Curup' },
-      { href: '/hotel-di-curup', label: 'Hotel di Curup' },
-      { href: '/makanan-khas-curup', label: 'Makanan Khas Curup' },
-      { href: '/travel-bengkulu', label: 'Semua Rute Travel Bengkulu' },
-    ],
+    related: relBandung(L_CRP_BDG, L_BDG_BKL, { href: '/rental-mobil-curup', label: 'Rental Mobil Curup' }, { href: '/makanan-khas-curup', label: 'Makanan Khas Curup' }),
   },
   'travel-bandung-bengkulu': {
     slug: 'travel-bandung-bengkulu',
@@ -143,11 +286,30 @@ export const BANDUNG_ROUTES: Record<string, BandungRoute> = {
     to: 'Bengkulu',
     price: HARGA_BANDUNG,
     duration: '32–38 jam',
-    metaTitle: 'Travel Bandung Bengkulu Hiace via Tol Palembang Rp 800.000',
+    metaTitle: 'Travel Bandung Bengkulu Hiace, Antar Sampai Kota Bengkulu',
     metaDesc:
-      'Travel Bandung Bengkulu naik Hiace via Tol Palembang, Rp 800.000/orang. Berangkat Rabu & Jumat 13.00, kabin lega TV & audio. Pesan WA 0852-6864-5461.',
-    h1: 'Travel Bandung Bengkulu Hiace',
-    lead: 'Travel Hiace dari Bandung ke Kota Bengkulu lewat Tol Palembang dan Curup, berangkat setiap Rabu dan Jumat pukul 13.00. Kabin lega dengan TV dan audio.',
+      'Travel Bandung Bengkulu Hiace, antar sampai Kota Bengkulu via Tol Palembang dan Curup. Berangkat Rabu & Jumat 13.00, Rp 800.000. WA 0852-6864-5461.',
+    h1: 'Travel Bandung Bengkulu Hiace: Antar Sampai Kota Bengkulu',
+    lead: 'Untuk Anda yang berada di Bandung dan tujuan akhirnya Kota Bengkulu. Hiace berangkat Rabu dan Jumat pukul 13.00, via Tol Palembang dan Curup.',
+    heroChip: '📍 Tujuan akhir Kota Bengkulu',
+    intro: [
+      '**Travel Bandung Bengkulu** ini mengantar Anda dari **Bandung** sampai **Kota Bengkulu**. Hiace berangkat setiap **Rabu dan Jumat pukul 13.00**, lewat **Tol Palembang**, Lubuklinggau, dan Curup, kemudian turun ke Kota Bengkulu.',
+      'Karena melewati Curup lebih dulu, perjalanan ke Kota Bengkulu memakan waktu sedikit lebih lama dibanding tujuan Curup. Tarifnya Rp 800.000 per orang.',
+    ],
+    fokus: {
+      tone: 'sky',
+      eyebrow: 'Tujuan Akhir Kota Bengkulu',
+      judul: 'Tujuan Anda Kota Bengkulu? Ini rutenya',
+      poin: [
+        'Dijemput di Bandung, titik jemput disepakati saat pesan',
+        'Berangkat Rabu & Jumat pukul 13.00',
+        'Lewat Tol Palembang dan Curup',
+        'Diantar sampai Kota Bengkulu',
+      ],
+      kota: ['Bandung', 'Palembang', 'Curup', 'Kota Bengkulu'],
+    },
+    stops: ['Bandung', 'Bakauheni–Merak', 'Palembang', 'Lubuklinggau', 'Curup', 'Kota Bengkulu'],
+    switcher: { text: 'Tujuan Anda Curup, bukan Kota Bengkulu?', label: 'Lihat layanan Bandung → Curup', href: '/travel-bandung-curup' },
     heroSrc: 'hiace-curup-bandung-malam.webp',
     heroW: 562,
     heroH: 1000,
@@ -157,20 +319,98 @@ export const BANDUNG_ROUTES: Record<string, BandungRoute> = {
     jadwal: 'setiap Rabu dan Jumat pukul 13.00',
     jadwalFaq: 'Berangkat setiap Rabu dan Jumat pukul 13.00 WIB dari Bandung. Hubungi admin untuk sisa kursi.',
     perkJadwal: 'setiap Rabu dan Jumat pukul 13.00, bisa direncanakan jauh hari',
-    jadwalCards: [
-      { jam: '13.00 WIB', time: '13:00', judul: 'Berangkat dari Bandung', sub: 'Rabu & Jumat · Toyota Hiace', armada: 'Hiace', icon: '🚐', tone: 'hiace' as const },
+    jadwalCards: [kartuJadwal('Berangkat dari Bandung', '13.00', '13:00')],
+    judulRute: 'Rute Bandung ke Kota Bengkulu via Tol Palembang dan Curup',
+    judulKenapa: 'Kenapa Naik Travel dari Bandung ke Kota Bengkulu',
+    perks: [
+      ['Diantar ke Kota Bengkulu', 'tanpa ganti kendaraan di Curup'],
+      ['Jemput di Bandung', 'titik jemput disepakati saat pesan'],
+      ['Jadwal tetap', 'Rabu dan Jumat pukul 13.00'],
+      ['Hiace kabin lega', 'sabuk pengaman, TV, dan audio'],
+      ['Tarif transparan', 'Rp 800.000 per orang, dijelaskan sebelum membayar'],
+      ['Pesan 24 jam', 'admin siap dihubungi kapan saja'],
+    ],
+    faqExtra: [
+      ['Apakah bisa turun di Curup saja?', 'Bisa. Jika tujuan Anda Curup, gunakan layanan Bandung ke Curup agar turun lebih awal tanpa ke Kota Bengkulu.'],
     ],
     jemput: 'Area Bandung',
     tujuan: 'Kota Bengkulu',
-    related: [
-      { href: '/travel-bandung-curup', label: 'Travel Bandung → Curup' },
-      { href: '/travel-curup-bandung', label: 'Travel Curup → Bandung' },
-      { href: '/travel-curup-bengkulu', label: 'Travel Curup → Bengkulu' },
-      { href: '/travel-bengkulu-curup', label: 'Travel Bengkulu → Curup' },
-      { href: '/tempat-wisata-bengkulu', label: 'Wisata Bengkulu' },
-      { href: '/daftar-hotel-di-bengkulu', label: 'Hotel di Bengkulu' },
-      { href: '/travel-bengkulu', label: 'Semua Rute Travel Bengkulu' },
-    ],
+    related: relBandung(L_BDG_CRP, L_BKL_BDG, { href: '/tempat-wisata-bengkulu', label: 'Wisata Bengkulu' }, { href: '/daftar-hotel-di-bengkulu', label: 'Hotel di Bengkulu' }),
+  },
+  'travel-jakarta-curup': {
+    slug: 'travel-jakarta-curup', routeId: 'jkt-crp', from: 'Jakarta', to: 'Curup', price: 700000, duration: '27–33 jam',
+    metaTitle: 'Travel Jakarta Curup Hiace via Tol, Rp 700.000',
+    metaDesc: 'Travel Jakarta Curup Hiace via Tol Trans Sumatera, Rp 700.000/orang, naik di Jakarta tujuan Curup. Jadwal Rabu & Jumat, jam jemput konfirmasi admin. WA 0852-6864-5461.',
+    h1: 'Travel Jakarta Curup Hiace: Naik di Jakarta, Turun di Curup',
+    lead: 'Untuk Anda yang berada di Jakarta dan menuju Curup. Hiace melewati Jakarta dalam perjalanan dari Bandung, lalu lanjut via Tol Trans Sumatera ke Curup.',
+    heroChip: '📍 Dijemput di Jakarta',
+    intro: ['**Travel Jakarta Curup** ini untuk penumpang yang naik di **Jakarta** dengan tujuan **Curup**. Hiace berangkat dari Bandung setiap Rabu dan Jumat, melewati Jakarta, menyeberang dari Merak ke Bakauheni, lalu lanjut lewat **Tol Trans Sumatera** dan Palembang sampai Curup. Jam jemput di Jakarta dikonfirmasi admin saat pesan.', 'Tarifnya **Rp 700.000** per orang. Layanan ini hanya untuk tujuan Curup dan Kota Bengkulu, bukan untuk rute Jakarta–Bandung.'],
+    fokus: { tone: 'emerald', eyebrow: 'Khusus Dari Jakarta', judul: 'Posisi Anda di Jakarta? Ini rute pulang ke Curup', poin: ['Naik di Jakarta, titik jemput disepakati', 'Jadwal Rabu & Jumat, jam jemput dari admin', 'Lewat Tol Trans Sumatera dan Palembang', 'Tujuan akhir Curup'], kota: ['Jakarta', 'Bakauheni–Merak', 'Palembang', 'Curup'] },
+    stops: ['Jakarta', 'Bakauheni–Merak', 'Palembang', 'Lubuklinggau', 'Curup'],
+    switcher: { text: 'Tujuan Anda Kota Bengkulu, bukan Curup?', label: 'Lihat layanan Jakarta → Bengkulu', href: '/travel-jakarta-bengkulu' },
+    jadwal: 'setiap Rabu dan Jumat, jam jemput dikonfirmasi admin',
+    jadwalFaq: 'Jadwal mengikuti keberangkatan dari Bandung setiap Rabu dan Jumat. Jam jemput di Jakarta dikonfirmasi admin saat pemesanan.',
+    perkJadwal: 'Rabu dan Jumat, jam jemput dikonfirmasi admin',
+    jadwalCards: [{ jam: 'Rabu & Jumat', judul: 'Keberangkatan dari Jakarta', sub: 'Jam jemput dikonfirmasi admin · Toyota Hiace', armada: 'Hiace', icon: '🚐', tone: 'hiace' as const }],
+    judulRute: 'Rute Jakarta ke Curup via Tol Trans Sumatera',
+    judulKenapa: 'Kenapa Naik Travel dari Jakarta ke Curup',
+    perks: [['Jemput di Jakarta', 'titik jemput disepakati saat pesan'], ['Tujuan langsung Curup', 'tanpa ganti kendaraan'], ['Tol Trans Sumatera', 'perjalanan lebih lancar'], ['Hiace kabin lega', 'sabuk pengaman, TV, dan audio'], ['Tarif transparan', 'Rp 700.000 per orang, dijelaskan sebelum membayar'], ['Pesan 24 jam', 'admin siap dihubungi kapan saja']],
+    faqExtra: [['Apakah bisa naik dari Jakarta ke Bandung?', 'Tidak. Kami tidak melayani rute Jakarta–Bandung. Layanan ini hanya untuk tujuan Curup dan Kota Bengkulu.']],
+    heroSrc: 'hiace-curup-bandung-hero.webp', heroW: 750, heroH: 1000,
+    heroAlt: 'Toyota Hiace hitam armada travel Jakarta Curup di atas kapal penyeberangan',
+    jalur: 'Dari Jakarta, Hiace menuju Pelabuhan Merak lewat tol Jakarta–Merak, menyeberang ke Bakauheni, lalu masuk Tol Trans Sumatera ke arah Palembang. Dari Palembang perjalanan lanjut lewat Prabumulih, Sekayu, dan Lubuklinggau sampai Curup.',
+    jemput: 'Area Jakarta', tujuan: 'Curup',
+    related: relBandung(L_JKT_BKL, L_LMP_CRP, L_CRP_BDG, { href: '/rental-mobil-curup', label: 'Rental Mobil Curup' }, { href: '/makanan-khas-curup', label: 'Makanan Khas Curup' }),
+  },
+  'travel-jakarta-bengkulu': {
+    slug: 'travel-jakarta-bengkulu', routeId: 'jkt-bkl', from: 'Jakarta', to: 'Bengkulu', price: 700000, duration: '29–35 jam',
+    metaTitle: 'Travel Jakarta Bengkulu Hiace, Antar Sampai Kota Bengkulu',
+    metaDesc: 'Travel Jakarta Bengkulu Hiace, naik di Jakarta dan diantar sampai Kota Bengkulu via Tol Trans Sumatera dan Curup. Rp 700.000, sama dengan tujuan Curup. WA 0852-6864-5461.',
+    h1: 'Travel Jakarta Bengkulu Hiace: Antar Sampai Kota Bengkulu',
+    lead: 'Untuk Anda yang berada di Jakarta dan tujuan akhirnya Kota Bengkulu. Hiace melewati Jakarta, lanjut via Tol Trans Sumatera dan Curup.',
+    heroChip: '📍 Tujuan akhir Kota Bengkulu',
+    intro: ['**Travel Jakarta Bengkulu** ini mengantar Anda dari **Jakarta** sampai **Kota Bengkulu**. Hiace berangkat dari Bandung setiap Rabu dan Jumat, melewati Jakarta, lalu lewat **Tol Trans Sumatera**, Palembang, Lubuklinggau, dan Curup, kemudian turun ke Kota Bengkulu. Jam jemput di Jakarta dikonfirmasi admin.', 'Tarifnya **Rp 700.000** per orang, sama dengan tujuan Curup. Untuk perjalanan jauh kami tidak menambah selisih jarak Curup–Bengkulu.'],
+    fokus: { tone: 'sky', eyebrow: 'Tujuan Akhir Kota Bengkulu', judul: 'Tujuan Anda Kota Bengkulu? Ini rutenya', poin: ['Naik di Jakarta, titik jemput disepakati', 'Jadwal Rabu & Jumat, jam jemput dari admin', 'Lewat Tol Trans Sumatera dan Curup', 'Diantar sampai Kota Bengkulu'], kota: ['Jakarta', 'Palembang', 'Curup', 'Kota Bengkulu'] },
+    stops: ['Jakarta', 'Bakauheni–Merak', 'Palembang', 'Lubuklinggau', 'Curup', 'Kota Bengkulu'],
+    switcher: { text: 'Tujuan Anda Curup, bukan Kota Bengkulu?', label: 'Lihat layanan Jakarta → Curup', href: '/travel-jakarta-curup' },
+    jadwal: 'setiap Rabu dan Jumat, jam jemput dikonfirmasi admin',
+    jadwalFaq: 'Jadwal mengikuti keberangkatan dari Bandung setiap Rabu dan Jumat. Jam jemput di Jakarta dikonfirmasi admin saat pemesanan.',
+    perkJadwal: 'Rabu dan Jumat, jam jemput dikonfirmasi admin',
+    jadwalCards: [{ jam: 'Rabu & Jumat', judul: 'Keberangkatan dari Jakarta', sub: 'Jam jemput dikonfirmasi admin · Toyota Hiace', armada: 'Hiace', icon: '🚐', tone: 'hiace' as const }],
+    judulRute: 'Rute Jakarta ke Kota Bengkulu via Tol Trans Sumatera dan Curup',
+    judulKenapa: 'Kenapa Naik Travel dari Jakarta ke Kota Bengkulu',
+    perks: [['Diantar ke Kota Bengkulu', 'tanpa ganti kendaraan di Curup'], ['Jemput di Jakarta', 'titik jemput disepakati saat pesan'], ['Tarif sama dengan Curup', 'Rp 700.000, tanpa selisih jarak'], ['Hiace kabin lega', 'sabuk pengaman, TV, dan audio'], ['Jadwal tetap', 'mengikuti keberangkatan Rabu dan Jumat'], ['Pesan 24 jam', 'admin siap dihubungi kapan saja']],
+    faqExtra: [['Apakah bisa naik dari Jakarta ke Bandung?', 'Tidak. Kami tidak melayani rute Jakarta–Bandung. Layanan ini hanya untuk tujuan Curup dan Kota Bengkulu.'], ['Kenapa tarif ke Kota Bengkulu sama dengan ke Curup?', 'Untuk perjalanan jarak jauh kami tidak menambahkan selisih jarak Curup–Bengkulu, jadi tarif Jakarta ke Bengkulu sama dengan Jakarta ke Curup, yaitu Rp 700.000 per orang.']],
+    heroSrc: 'hiace-curup-bandung-malam.webp', heroW: 562, heroH: 1000,
+    heroAlt: 'Toyota Hiace putih armada travel Jakarta Bengkulu saat penyeberangan malam',
+    jalur: 'Dari Jakarta, Hiace menuju Pelabuhan Merak, menyeberang ke Bakauheni, lalu masuk Tol Trans Sumatera ke Palembang. Dari Palembang perjalanan lanjut melalui Prabumulih, Sekayu, Lubuklinggau, dan Curup, kemudian turun ke Kota Bengkulu.',
+    jemput: 'Area Jakarta', tujuan: 'Kota Bengkulu',
+    related: relBandung(L_JKT_CRP, L_BKL_BDG, { href: '/tempat-wisata-bengkulu', label: 'Wisata Bengkulu' }, { href: '/daftar-hotel-di-bengkulu', label: 'Hotel di Bengkulu' }),
+  },
+  'travel-lampung-curup': {
+    slug: 'travel-lampung-curup', routeId: 'lmp-crp', from: 'Lampung', to: 'Curup', price: 350000, duration: '14–18 jam',
+    metaTitle: 'Travel Lampung Curup Hiace via Tol Palembang Rp 350.000',
+    metaDesc: 'Travel Lampung Curup Hiace via Tol Trans Sumatera dan Palembang, Rp 350.000/orang. Jadwal Rabu & Jumat, jam jemput konfirmasi admin. WA 0852-6864-5461.',
+    h1: 'Travel Lampung Curup Hiace: Naik di Lampung, Turun di Curup',
+    lead: 'Untuk Anda yang berada di Lampung dan menuju Curup. Hiace melewati Lampung lalu lanjut lewat Tol Palembang sampai Curup.',
+    heroChip: '📍 Dijemput di Lampung',
+    intro: ['**Travel Lampung Curup** ini untuk penumpang yang naik di **Lampung** dengan tujuan **Curup**. Hiace berangkat dari Bandung setiap Rabu dan Jumat, menyeberang dari Merak ke Bakauheni, lalu melaju lewat **Tol Trans Sumatera** dan Palembang sampai Curup. Jam jemput di Lampung dikonfirmasi admin saat pesan.', 'Tarifnya **Rp 350.000** per orang. Ini jalur Lampung ke Curup via Palembang, berbeda dari layanan Lampung ke Kota Bengkulu.'],
+    fokus: { tone: 'emerald', eyebrow: 'Khusus Dari Lampung', judul: 'Posisi Anda di Lampung? Ini rute ke Curup', poin: ['Naik di Lampung, titik jemput disepakati', 'Jadwal Rabu & Jumat, jam jemput dari admin', 'Lewat Tol Trans Sumatera dan Palembang', 'Tujuan akhir Curup'], kota: ['Lampung', 'Palembang', 'Lubuklinggau', 'Curup'] },
+    stops: ['Lampung', 'Palembang', 'Lubuklinggau', 'Curup'],
+    switcher: { text: 'Tujuan Anda Kota Bengkulu, bukan Curup?', label: 'Lihat layanan Lampung → Bengkulu', href: '/travel-lampung-bengkulu' },
+    jadwal: 'setiap Rabu dan Jumat, jam jemput dikonfirmasi admin',
+    jadwalFaq: 'Jadwal mengikuti keberangkatan dari Bandung setiap Rabu dan Jumat. Jam jemput di Lampung dikonfirmasi admin saat pemesanan.',
+    perkJadwal: 'Rabu dan Jumat, jam jemput dikonfirmasi admin',
+    jadwalCards: [{ jam: 'Rabu & Jumat', judul: 'Keberangkatan dari Lampung', sub: 'Jam jemput dikonfirmasi admin · Toyota Hiace', armada: 'Hiace', icon: '🚐', tone: 'hiace' as const }],
+    judulRute: 'Rute Lampung ke Curup via Tol Palembang',
+    judulKenapa: 'Kenapa Naik Travel dari Lampung ke Curup',
+    perks: [['Jemput di Lampung', 'titik jemput disepakati saat pesan'], ['Tujuan langsung Curup', 'tanpa ganti kendaraan'], ['Tol Trans Sumatera', 'perjalanan lebih lancar'], ['Hiace kabin lega', 'sabuk pengaman, TV, dan audio'], ['Tarif transparan', 'Rp 350.000 per orang, dijelaskan sebelum membayar'], ['Pesan 24 jam', 'admin siap dihubungi kapan saja']],
+    faqExtra: [['Apakah bisa naik dari Lampung ke Bandung atau Jakarta?', 'Tidak. Kami tidak melayani rute Lampung–Bandung maupun Lampung–Jakarta. Layanan ini hanya untuk tujuan Curup.']],
+    heroSrc: 'hiace-curup-bandung-malam.webp', heroW: 562, heroH: 1000,
+    heroAlt: 'Toyota Hiace putih armada travel Lampung Curup saat penyeberangan malam',
+    jalur: 'Dari Lampung, Hiace masuk Tol Trans Sumatera ke arah Palembang. Dari Palembang perjalanan lanjut lewat Prabumulih, Sekayu, dan Lubuklinggau sampai Curup.',
+    jemput: 'Area Lampung', tujuan: 'Curup',
+    related: relBandung(L_JKT_CRP, L_CRP_BDG, { href: '/travel-lampung-bengkulu', label: 'Travel Lampung → Bengkulu' }, { href: '/rental-mobil-curup', label: 'Rental Mobil Curup' }),
   },
 };
 
