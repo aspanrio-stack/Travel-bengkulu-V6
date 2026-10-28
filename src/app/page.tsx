@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: 'Travel Bengkulu | Antar Jemput Door to Door – Curup, Palembang, Jambi',
   description:
     'Travel Bengkulu melayani antar jemput door to door rute Bengkulu–Palembang, Bengkulu–Jambi, dan Bengkulu–Curup. Armada bersih, pengemudi berpengalaman, harga pas di kantong. Pesan sekarang via WhatsApp!',
+  alternates: { canonical: 'https://bengkulutravel.com' },
 };
 
 // Beranda statis (ISR): dibangun ulang paling cepat tiap 5 menit → ulasan baru / yang disembunyikan ikut tampil/hilang.

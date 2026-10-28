@@ -39,11 +39,6 @@ const nextConfig = {
         destination: '/ongkos-travel-bengkulu-2026',
         permanent: true,
       },
-      {
-        source: '/_next/static/media/:path*',
-        destination: '/',
-        permanent: false,
-      },
 
       // --- Redirect dari blog lama ---
       { source: '/index.html', destination: '/', permanent: true },
@@ -59,10 +54,13 @@ const nextConfig = {
       { source: '/2026/02/rental-mobil-curup.html', destination: '/rental-mobil-curup', permanent: true },
       { source: '/2026/02/kirim-paket-palembang-ke-bengkulu.html', destination: '/kirim-paket-bengkulu-palembang', permanent: true },
       { source: '/2026/02/kirim-paket-bengkulu-ke-palembang.html', destination: '/kirim-paket-bengkulu-palembang', permanent: true },
-      { source: '/2026/02/transportasi-bengkulu-ke-padang.html', destination: '/', permanent: true },
-      { source: '/2026/02/travel-bengkulu-padang.html', destination: '/', permanent: true },
+      { source: '/2026/02/transportasi-bengkulu-ke-padang.html', destination: '/travel-bengkulu-padang', permanent: true },
+      { source: '/2026/02/travel-bengkulu-padang.html', destination: '/travel-bengkulu-padang', permanent: true },
       { source: '/2026/02/travel-palembang-ke-bengkulu-door-to-door-tanpa-transit.html', destination: '/travel-palembang-bengkulu', permanent: true },
       { source: '/2026/02/travel-bengkulu-ke-kota-jambi-door-to-door.html', destination: '/travel-bengkulu-jambi', permanent: true },
+      // Label Blogger → halaman rute yang relevan (hindari soft-404 karena semua dilempar ke beranda)
+      { source: '/search/label/Bengkulu Palembang', destination: '/travel-bengkulu-palembang', permanent: true },
+      { source: '/search/label/Bengkulu%20Palembang', destination: '/travel-bengkulu-palembang', permanent: true },
       { source: '/search/label/:label*', destination: '/', permanent: true },
       { source: '/search/:path*', destination: '/', permanent: true },
       { source: '/p/:slug', destination: '/', permanent: true },

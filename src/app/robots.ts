@@ -5,16 +5,16 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
+      // Pola URL Blogger lama (/feeds/, ?m=1, ?alt=rss, /search) SENGAJA tidak diblokir:
+      // semuanya sudah di-301 (next.config.js + src/proxy.ts). Jika diblokir, Google tidak
+      // bisa melihat redirect-nya sehingga URL lama tetap "diindeks meski diblokir robots.txt".
       disallow: [
-        '/feeds/',
-        '/*?m=1',
-        '/*?alt=rss',
         '/site.webmanifest',
-        '/search',
         '/masuk',
         '/profil',
         '/auth/',
-        // '/orang' → dihapus, sudah ditangani redirect 301
+        '/admin/',
+        '/api/',
       ],
     },
     sitemap: 'https://bengkulutravel.com/sitemap.xml',
