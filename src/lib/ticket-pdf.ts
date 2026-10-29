@@ -193,8 +193,7 @@ export async function generateTicketPDF(
     'Siapkan diri 15 menit sebelum waktu penjemputan',
     'Driver akan menghubungi Anda sebelum tiba',
     'Bawa identitas diri (KTP/SIM)',
-    ticket ? 'Tiket sah jika hasil scan QR berstatus VALID' : 'Hubungi admin jika perlu verifikasi keaslian tiket',
-    'Satu tiket hanya berlaku untuk satu kali perjalanan',
+    ticket ? 'Keaslian tiket dapat dicek kapan saja lewat scan QR (status VALID)' : 'Hubungi admin jika perlu verifikasi keaslian tiket',
   ];
   let iy = boxTop - 32;
   instruksi.forEach(line => {

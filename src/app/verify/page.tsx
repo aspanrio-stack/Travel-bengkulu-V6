@@ -1,14 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { headers } from 'next/headers';
-import VerifyTicketAction from '@/components/VerifyTicketAction';
-import { getSession } from '@/lib/auth';
+import { formatRp } from '@/lib/orders';
 import { rateLimited } from '@/lib/reviews';
-import { getTicketByToken, isValidTokenFormat, maskPassengerName, TICKET_RETENTION_DAYS } from '@/lib/tickets';
+import { getTicketByToken, isValidTokenFormat, TICKET_RETENTION_DAYS } from '@/lib/tickets';
 
-// Halaman publik tanpa login, tapi per-tiket → jangan diindeks & jangan di-cache
+// Publik, tanpa login, READ-ONLY (tidak mengubah data apa pun). Per-tiket → jangan diindeks/di-cache.
 export const metadata: Metadata = {
-  title: 'Verifikasi Tiket',
+  title: 'Verifikasi Keaslian Tiket',
   robots: { index: false, follow: false },
 };
 export const dynamic = 'force-dynamic';
@@ -33,22 +32,28 @@ function Notice({ title, body }: { title: string; body: string }) {
   );
 }
 
-const fmtDateTime = (iso: string) =>
-  new Date(iso).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' WIB';
+function Row({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
+  return (
+    <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-2 last:border-0 last:pb-0">
+      <span className="text-sm text-slate-500">{label}</span>
+      <span className={`text-right text-sm font-semibold text-slate-800 ${mono ? 'font-mono' : ''}`}>{value}</span>
+    </div>
+  );
+}
 
 export default async function VerifyPage({ searchParams }: { searchParams: Promise<{ token?: string }> }) {
   const sp = await searchParams;
   const token = typeof sp.token === 'string' ? sp.token : '';
 
-  // Batasi tebak-tebakan token (30 permintaan/menit per IP)
+  // Batasi tebak-tebakan token (30 permintaan/menit per IP); cek berulang secara wajar tetap aman
   const h = await headers();
   const ip = (h.get('x-forwarded-for') ?? '').split(',')[0].trim() || 'unknown';
   if (await rateLimited(`verify:${ip}`, 30, 60)) {
-    return <Notice title="Terlalu banyak permintaan" body="Silakan tunggu sebentar lalu scan ulang QR pada tiket Anda." />;
+    return <Notice title="Terlalu banyak permintaan" body="Silakan tunggu sebentar lalu scan ulang QR pada tiket." />;
   }
 
   if (!isValidTokenFormat(token)) {
-    return <Notice title="Tiket tidak valid" body="Tautan verifikasi tidak lengkap. Scan ulang QR pada tiket PDF Anda." />;
+    return <Notice title="Tiket tidak valid" body="Tautan verifikasi tidak lengkap. Scan ulang QR pada tiket PDF." />;
   }
 
   const lookup = await getTicketByToken(token);
@@ -65,48 +70,28 @@ export default async function VerifyPage({ searchParams }: { searchParams: Promi
   }
 
   const t = lookup.ticket;
-  const isStaff = Boolean(await getSession().catch(() => null));
-  const used = t.is_verified;
-  const name = isStaff ? t.passenger_name : maskPassengerName(t.passenger_name);
-
   return (
     <Shell>
-      <div className={`rounded-2xl p-6 text-center shadow-sm ${used ? 'bg-amber-50' : 'bg-emerald-50'}`}>
-        <p className={`text-xs font-bold tracking-widest ${used ? 'text-amber-700' : 'text-emerald-700'}`}>STATUS TIKET</p>
-        <h1 className={`mt-1 font-display text-3xl font-bold ${used ? 'text-amber-700' : 'text-emerald-700'}`}>
-          {used ? 'SUDAH DIGUNAKAN' : 'VALID'}
-        </h1>
-        <p className="mt-2 text-sm text-slate-600">
-          {used
-            ? `Tiket ini sudah divalidasi petugas pada ${t.verified_at ? fmtDateTime(t.verified_at) : '-'} dan tidak dapat dipakai lagi.`
-            : 'Tiket asli, diterbitkan resmi oleh Travel Bengkulu.'}
-        </p>
+      <div className="rounded-2xl bg-emerald-50 p-6 text-center shadow-sm">
+        <p className="text-xs font-bold tracking-widest text-emerald-700">STATUS TIKET</p>
+        <h1 className="mt-1 font-display text-3xl font-bold text-emerald-700">VALID · RESMI</h1>
+        <p className="mt-2 text-sm text-slate-600">Tiket ini asli dan diterbitkan resmi oleh Travel Bengkulu.</p>
       </div>
 
       <div className="space-y-3 rounded-2xl bg-white p-5 shadow-sm">
-        <Row label="Nama Penumpang" value={name} />
+        <Row label="Nama Penumpang" value={t.passenger_name} />
         <Row label="Rute" value={t.route} />
-        <Row label="Tanggal" value={t.travel_date} />
+        <Row label="Tanggal Keberangkatan" value={t.travel_date} />
         {t.departure_time && <Row label="Jam Berangkat" value={t.departure_time} />}
-        <Row label="Jumlah Penumpang" value={`${t.passengers} orang`} />
+        <Row label="Kursi" value={`${t.passengers} kursi`} />
+        <Row label="Harga" value={formatRp(t.total_price)} />
         <Row label="No. Pesanan" value={t.order_id} mono />
       </div>
 
-      {isStaff && !used && <VerifyTicketAction token={token} />}
-
       <p className="px-2 text-center text-xs text-slate-500">
+        Halaman ini hanya untuk memeriksa keaslian tiket dan bisa dibuka berulang kali tanpa mengubah data apa pun.
         Data verifikasi disimpan {Math.round(TICKET_RETENTION_DAYS / 30)} bulan sejak tiket terbit, lalu dihapus otomatis.
-        Nama penumpang disamarkan untuk menjaga privasi.
       </p>
     </Shell>
-  );
-}
-
-function Row({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
-  return (
-    <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-2 last:border-0 last:pb-0">
-      <span className="text-sm text-slate-500">{label}</span>
-      <span className={`text-right text-sm font-semibold text-slate-800 ${mono ? 'font-mono' : ''}`}>{value}</span>
-    </div>
   );
 }

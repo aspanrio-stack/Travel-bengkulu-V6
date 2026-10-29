@@ -1,9 +1,10 @@
 /**
  * lib/tickets.ts
- * Tiket ber-QR untuk verifikasi keaslian (server-side).
+ * Tiket ber-QR untuk verifikasi keaslian (server-side). Verifikasi READ-ONLY: tidak ada status
+ * 'terpakai' — tiket bisa di-scan berkali-kali oleh penumpang maupun pihak audit.
  *
  *   Supabase : tabel `tickets` (supabase/tickets.sql) — sumber kebenaran token & status
- *   Redis    : cache baca 5 menit (`ticket:{token}`) + kunci anti double-scan (`ticket_used:{token}`)
+ *   Redis    : cache baca 5 menit (`ticket:{token}`) — hanya mempercepat, bukan sumber data
  *
  * Retensi: data tiket dihapus 90 hari (3 bulan) setelah terbit — baris Supabase oleh cron
  * /api/cron/purge-expired-tickets, kunci Redis lewat TTL.
@@ -15,7 +16,6 @@ import { getSupabaseAdmin } from './supabase/admin';
 export const TICKET_RETENTION_DAYS = 90;
 const DAY_MS = 86_400_000;
 const CACHE_TTL_SEC = 300;
-const USED_TTL_SEC = TICKET_RETENTION_DAYS * 86_400 + 86_400; // +1 hari agar tidak lebih cepat hilang dari baris DB
 const TOKEN_RE = /^[A-Za-z0-9_-]{20,64}$/;
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://bengkulutravel.com').replace(/\/$/, '');
@@ -28,15 +28,13 @@ export interface TicketRecord {
   travel_date: string;
   departure_time: string | null;
   passengers: number;
-  is_verified: boolean;
-  verified_at: string | null;
-  verified_by: string | null;
+  total_price: number;
   created_at: string;
   expires_at: string;
 }
 
 const COLUMNS =
-  'order_id, unique_token, passenger_name, route, travel_date, departure_time, passengers, is_verified, verified_at, verified_by, created_at, expires_at';
+  'order_id, unique_token, passenger_name, route, travel_date, departure_time, passengers, total_price, created_at, expires_at';
 
 export const buildVerifyUrl = (token: string) => `${SITE_URL}/verify?token=${encodeURIComponent(token)}`;
 export const isValidTokenFormat = (t: unknown): t is string => typeof t === 'string' && TOKEN_RE.test(t);
@@ -84,6 +82,7 @@ export async function issueTicket(order: Order): Promise<IssuedTicket | null> {
           travel_date: order.date,
           departure_time: order.departureTime ?? null,
           passengers: order.passengers,
+          total_price: order.total,
           created_at: new Date(now).toISOString(),
           expires_at: new Date(now + TICKET_RETENTION_DAYS * DAY_MS).toISOString(),
         })
@@ -145,69 +144,6 @@ export async function getTicketByToken(token: string): Promise<TicketLookup> {
 }
 
 // ─────────────────────────────────────────────
-// Validasi oleh petugas (anti double-scan)
-// ─────────────────────────────────────────────
-export type MarkResult =
-  | { result: 'marked'; ticket: TicketRecord }
-  | { result: 'already-used'; ticket: TicketRecord | null }
-  | { result: 'not-found' }
-  | { result: 'error' };
-
-/**
- * Tandai tiket sudah dipakai. Dua lapis agar tidak bisa dipakai dua kali walau di-scan bersamaan:
- *   1. Redis SET NX `ticket_used:{token}` — pemenang tunggal secara atomik (cepat)
- *   2. Supabase UPDATE ... WHERE is_verified = false — sumber kebenaran permanen
- */
-export async function markTicketUsed(token: string, by: string): Promise<MarkResult> {
-  if (!isValidTokenFormat(token)) return { result: 'not-found' };
-  const sb = getSupabaseAdmin();
-  if (!sb) return { result: 'error' };
-
-  const redis = getRedis();
-  const lockKey = `ticket_used:${token}`;
-  let locked = false;
-  try {
-    locked = (await redis.set(lockKey, by, 'EX', USED_TTL_SEC, 'NX')) === 'OK';
-  } catch {
-    locked = true; // Redis bermasalah → andalkan guard atomik di DB (langkah 2)
-  }
-
-  if (!locked) {
-    const cur = await getTicketByToken(token);
-    return { result: 'already-used', ticket: cur.status === 'ok' ? cur.ticket : null };
-  }
-
-  const { data, error } = await sb
-    .from('tickets')
-    .update({ is_verified: true, verified_at: new Date().toISOString(), verified_by: by })
-    .eq('unique_token', token)
-    .eq('is_verified', false)
-    .gt('expires_at', new Date().toISOString())
-    .select(COLUMNS)
-    .maybeSingle();
-
-  if (error) {
-    console.error('[TICKET] Gagal menandai tiket:', error);
-    try { await redis.del(lockKey); } catch { /* abaikan */ }
-    return { result: 'error' };
-  }
-
-  if (!data) {
-    // Tidak ada baris yang berubah: sudah dipakai, kedaluwarsa, atau token tidak ada
-    const { data: cur } = await sb.from('tickets').select(COLUMNS).eq('unique_token', token).maybeSingle();
-    if (!cur) {
-      try { await redis.del(lockKey); } catch { /* abaikan */ }
-      return { result: 'not-found' };
-    }
-    return { result: 'already-used', ticket: cur as TicketRecord };
-  }
-
-  const t = data as TicketRecord;
-  await cacheTicket(t); // timpa cache lama (status baru langsung terlihat di /verify)
-  return { result: 'marked', ticket: t };
-}
-
-// ─────────────────────────────────────────────
 // Retensi 3 bulan
 // ─────────────────────────────────────────────
 export async function purgeExpiredTickets(): Promise<number> {
@@ -220,15 +156,4 @@ export async function purgeExpiredTickets(): Promise<number> {
     .select('unique_token');
   if (error) throw error;
   return data?.length ?? 0;
-}
-
-// ─────────────────────────────────────────────
-// Tampilan nama untuk publik (nama lengkap hanya untuk petugas login)
-// ─────────────────────────────────────────────
-export function maskPassengerName(fullName: string): string {
-  const parts = fullName.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return '-';
-  const cap = (w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
-  if (parts.length === 1) return cap(parts[0]);
-  return `${cap(parts[0])} ${parts.slice(1).map(p => p.charAt(0).toUpperCase() + '.').join(' ')}`;
 }

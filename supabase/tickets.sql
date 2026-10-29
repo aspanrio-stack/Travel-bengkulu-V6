@@ -3,6 +3,7 @@
 -- Aman dijalankan ulang (idempotent).
 --
 -- Akses:
+--   • Verifikasi bersifat READ-ONLY: scan QR tidak mengubah data apa pun, jadi boleh dicek berkali-kali.
 --   • SEMUA baca/tulis lewat server Next.js memakai SUPABASE_SERVICE_ROLE_KEY.
 --   • RLS aktif TANPA policy → anon/authenticated tidak bisa membaca apa pun
 --     (token & data penumpang tidak bisa di-query langsung dari browser).
@@ -23,10 +24,8 @@ create table if not exists public.tickets (
   travel_date     text not null,
   departure_time  text,
   passengers      integer not null default 1,
-  -- TRUE = sudah divalidasi petugas saat naik (tidak bisa dipakai lagi)
-  is_verified     boolean not null default false,
-  verified_at     timestamptz,
-  verified_by     text,
+  -- Harga total yang tercetak di tiket (Rupiah, termasuk kode unik)
+  total_price     integer not null default 0,
   created_at      timestamptz not null default now(),
   expires_at      timestamptz not null default (now() + interval '90 days')
 );
@@ -41,3 +40,9 @@ revoke all on public.tickets from anon, authenticated;
 -- create extension if not exists pg_cron;
 -- select cron.schedule('purge-expired-tickets', '0 19 * * *',
 --   $$ delete from public.tickets where expires_at < now() $$);
+
+-- ── Jika tabel versi sebelumnya sudah terlanjur dibuat, jalankan migrasi ini: ──
+-- alter table public.tickets add column if not exists total_price integer not null default 0;
+-- alter table public.tickets drop column if exists is_verified;
+-- alter table public.tickets drop column if exists verified_at;
+-- alter table public.tickets drop column if exists verified_by;
