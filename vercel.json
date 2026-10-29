@@ -16,6 +16,10 @@
     {
       "path": "/api/cron/send-review-requests",
       "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/cron/purge-expired-tickets",
+      "schedule": "0 2 * * *"
     }
   ]
 }
