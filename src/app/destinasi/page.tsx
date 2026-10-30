@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import DestinationCard from '@/components/DestinationCard';
+import ReviewGuideSection from '@/components/ReviewGuideSection';
 import { CATEGORIES, DESTINATIONS } from '@/lib/destinations';
 
 export const metadata: Metadata = {
-  title: 'Destinasi Wisata Bengkulu – Pantai, Sejarah, Alam',
+  title: 'Jelajah Bengkulu – Destinasi Wisata, Ulasan & Rating Penumpang',
   description:
-    'Jelajahi destinasi wisata Bengkulu: Pantai Panjang, Benteng Marlborough, Bukit Kaba, Air Terjun Suban, Pulau Tikus dan lainnya. Lengkap dengan akses travel dan rental mobil.',
+    'Jelajahi destinasi wisata Bengkulu: Pantai Panjang, Benteng Marlborough, Bukit Kaba, Air Terjun Suban, Pulau Tikus dan lainnya. Lengkap dengan akses travel, rental mobil, serta panduan memberi ulasan dan rating penumpang.',
   alternates: { canonical: 'https://bengkulutravel.com/destinasi' },
   // noindex sementara: konten masih tipis. Hapus baris ini setelah tiap destinasi punya artikel lengkap.
   robots: { index: false, follow: true },
@@ -24,11 +25,13 @@ export default async function DestinasiPage({
     (!term || `${d.name} ${d.area} ${d.short}`.toLowerCase().includes(term))
   );
 
+  const showPopular = !term && kategori === 'semua';
+
   return (
-    <div className="min-h-screen bg-slate-50 pt-6 md:pt-20 pb-10">
+    <div className="min-h-screen bg-slate-50 pt-6 md:pt-20 pb-28">
       <div className="mx-auto max-w-6xl px-4">
-        <h1 className="font-display text-2xl font-bold text-slate-800 md:text-3xl">Destinasi Wisata Bengkulu</h1>
-        <p className="mt-1 text-slate-500">Pilih tujuan, lalu pesan travel atau sewa mobil ke sana.</p>
+        <h1 className="font-display text-2xl font-bold text-slate-800 md:text-3xl">Jelajah Bengkulu</h1>
+        <p className="mt-1 text-slate-500">Temukan tujuan wisata, pesan travel atau sewa mobil, dan bagikan ulasan perjalanan Anda.</p>
 
         <form action="/destinasi" className="mt-4">
           <input type="hidden" name="kategori" value={kategori} />
@@ -46,6 +49,22 @@ export default async function DestinasiPage({
           ))}
         </div>
 
+        {showPopular && (
+          <section aria-label="Destinasi populer" className="mt-6">
+            <div className="flex items-center justify-between">
+              <h2 className="font-display text-xl font-bold text-slate-800">Destinasi Populer</h2>
+              <a href="#semua-destinasi" className="text-sm font-semibold text-primary-700">Lihat semua</a>
+            </div>
+            <div className="-mx-4 mt-3 flex snap-x gap-3 overflow-x-auto px-4 pb-3">
+              {DESTINATIONS.filter(d => d.popular).map(d => <DestinationCard key={d.slug} d={d} compact />)}
+            </div>
+          </section>
+        )}
+
+        <h2 id="semua-destinasi" className="mt-6 scroll-mt-20 font-display text-xl font-bold text-slate-800">
+          {showPopular ? 'Semua Destinasi' : 'Hasil Pencarian'}
+        </h2>
+
         {list.length === 0 ? (
           <p className="mt-10 text-center text-slate-500">Tidak ada destinasi yang cocok. Coba kata kunci lain.</p>
         ) : (
@@ -53,6 +72,8 @@ export default async function DestinasiPage({
             {list.map(d => <DestinationCard key={d.slug} d={d} />)}
           </div>
         )}
+
+        <ReviewGuideSection />
 
         <p className="mt-8 text-sm text-slate-500">
           Ingin panduan lengkap? Baca <Link className="font-semibold text-primary-700 underline" href="/tempat-wisata-bengkulu">Tempat Wisata di Bengkulu</Link>.

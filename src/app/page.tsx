@@ -1,13 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import FleetGallery from '@/components/FleetGallery';
-import DestinationCard from '@/components/DestinationCard';
 import HomeGreeting from '@/components/HomeGreeting';
 import HomeBookingCard from '@/components/HomeBookingCard';
 import CustomerReviewsCard from '@/components/CustomerReviewsCard';
 import ETicketSection from '@/components/ETicketSection';
-import { DESTINATIONS } from '@/lib/destinations';
-import { getRouteById, formatPrice } from '@/lib/routes';
 
 export const metadata: Metadata = {
   title: 'Travel Bengkulu | Antar Jemput Door to Door – Curup, Palembang, Jambi',
@@ -164,28 +161,6 @@ export default function HomePage() {
 
       {/* ARMADA — gambar mobil, tepat di bawah kolom cari & ikon */}
       <FleetGallery />
-
-      {/* DESTINASI POPULER */}
-      <section aria-label="Destinasi populer" className="bg-slate-50 pb-4 pt-8 md:pb-10 md:pt-12">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-display text-xl font-bold text-slate-800">Destinasi Populer</h2>
-            <Link href="/destinasi" className="text-sm font-semibold text-primary-700">Lihat semua</Link>
-          </div>
-          <div className="-mx-4 mt-3 flex snap-x gap-3 overflow-x-auto px-4 pb-3">
-            {DESTINATIONS.filter(d => d.popular).map(d => <DestinationCard key={d.slug} d={d} compact />)}
-          </div>
-
-          <div className="mt-3 flex items-center justify-between gap-4 overflow-hidden rounded-3xl bg-gradient-to-br from-primary-700 to-primary-900 p-5 text-white">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-primary-100">Rute Hemat</p>
-              <p className="mt-1 font-display text-lg font-bold">Bengkulu – Curup</p>
-              <p className="text-sm text-primary-100">Mulai {formatPrice(getRouteById('bkl-crp')?.price ?? 100000)} / orang, berangkat setiap jam</p>
-            </div>
-            <Link href="/pesan?rute=bkl-crp" className="shrink-0 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-primary-800">Pesan</Link>
-          </div>
-        </div>
-      </section>
 
       {/* E-TICKETING */}
       <ETicketSection />
