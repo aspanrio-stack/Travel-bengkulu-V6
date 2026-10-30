@@ -4,9 +4,9 @@ import Image from 'next/image';
 /**
  * Banner hotel (satu gambar besar) untuk halaman Jelajah.
  * Foto: simpan di /public/images/hotel/hotel-bengkulu.webp (disarankan 1600x900, <200 KB),
- * lalu isi HOTEL_IMAGE di bawah. Selama null, tampil ilustrasi gradient + kolam sebagai placeholder.
+ * HOTEL_IMAGE di bawah sudah terisi. Jika diubah menjadi null, tampil ilustrasi gradient + kolam sebagai placeholder.
  */
-const HOTEL_IMAGE: string | null = null; // contoh: '/images/hotel/hotel-bengkulu.webp'
+const HOTEL_IMAGE: string | null = '/images/hotel/hotel-bengkulu.webp';
 
 const chips = [
   { icon: '🏊', label: 'Kolam Renang' },
@@ -67,7 +67,7 @@ export default function HotelBanner() {
         {HOTEL_IMAGE ? (
           <Image
             src={HOTEL_IMAGE}
-            alt="Hotel dengan kolam renang dan suasana hijau di Bengkulu"
+            alt="Kolam renang hotel dengan kursi santai dan pepohonan kelapa yang hijau"
             fill
             sizes="(max-width: 1152px) 100vw, 1152px"
             className="object-cover transition-transform duration-700 group-hover:scale-105"
