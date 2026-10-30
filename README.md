@@ -27,7 +27,7 @@ Dikembangkan oleh Rio Mardiansyah.
 - Form satu halaman (`BookingForm.tsx`): Dari & Tujuan, jam keberangkatan, tanggal, jumlah penumpang, alamat jemput/antar (opsional GPS), nama, HP, email.
 - Tarif dan jadwal bersumber dari `src/lib/routes.ts` (`ROUTES`). Satu rute bisa punya beberapa jam berangkat, armada berbeda per jam (`timeInfo`, mis. Hiace vs mobil random dengan tarif lebih murah), dan hari berangkat tetap (`departureDays`).
 - Tamu tetap bisa memesan tanpa login. Set `NEXT_PUBLIC_REQUIRE_LOGIN_TO_BOOK=true` untuk mewajibkan login.
-- Metode bayar: **tunai** (default, bayar ke driver saat dijemput) dan **QRIS**. Tombol QRIS saat ini dimatikan lewat konstanta `QRIS_ENABLED = false` di `BookingForm.tsx` (QRIS dinamis dibuat dari QRIS statis oleh `lib/qrisGenerator.ts`, env `NEXT_PUBLIC_QRIS_STATIC`).
+- Metode bayar: **tunai** (default, bayar ke driver saat dijemput) dan **QRIS**. Tombol QRIS dikontrol env `NEXT_PUBLIC_QRIS_ENABLED` (`true` = aktif, default mati) di `BookingForm.tsx` (QRIS dinamis dibuat dari QRIS statis oleh `lib/qrisGenerator.ts`, env `NEXT_PUBLIC_QRIS_STATIC`).
 - Tombol **Konfirmasi Pesanan** menyimpan pesanan ke Redis lalu mengirim notifikasi WhatsApp.
 
 ### 2. Alur Pesanan & Status
@@ -155,6 +155,7 @@ Salin `.env.example` menjadi `.env.local` untuk development. Untuk produksi, isi
 | `CRON_SECRET` | Otorisasi cron Vercel (`Authorization: Bearer ...`) |
 | `NEXT_PUBLIC_SITE_URL` | Dasar URL di email & QR (default `https://bengkulutravel.com`) |
 | `NEXT_PUBLIC_REQUIRE_LOGIN_TO_BOOK` | `true` = wajib login sebelum memesan |
+| `NEXT_PUBLIC_QRIS_ENABLED` | `true` untuk mengaktifkan tombol Bayar via QRIS |
 | `NEXT_PUBLIC_QRIS_STATIC` | String QRIS statis untuk QRIS dinamis |
 
 ---

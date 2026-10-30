@@ -7,8 +7,10 @@ import LoginPrompt, { type AuthStatus } from '@/components/LoginPrompt';
 
 const REQUIRE_LOGIN = process.env.NEXT_PUBLIC_REQUIRE_LOGIN_TO_BOOK === 'true';
 
-// QRIS sedang gangguan → ubah ke true untuk mengaktifkan kembali tombol Bayar via QRIS
-const QRIS_ENABLED = false;
+// Tombol Bayar via QRIS dikontrol lewat env Vercel (tanpa ubah kode):
+//   NEXT_PUBLIC_QRIS_ENABLED=true  → tombol QRIS aktif (demo / saat QRIS travel sudah siap)
+//   (kosong / selain 'true')       → tombol QRIS mati, tampil "sedang gangguan", default tunai
+const QRIS_ENABLED = process.env.NEXT_PUBLIC_QRIS_ENABLED === 'true';
 
 interface BookingFormProps {
   preselectedRouteId?: string;
@@ -531,10 +533,12 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
             <div className="space-y-3">
               <p className="text-sm font-semibold text-slate-700">Metode Pembayaran</p>
 
-              <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-2 text-sm text-amber-800">
-                <span className="shrink-0 mt-0.5">ℹ️</span>
-                <span>Pembayaran QRIS sedang gangguan. Untuk sementara, bayar tunai langsung ke driver saat dijemput.</span>
-              </div>
+              {!QRIS_ENABLED && (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-2 text-sm text-amber-800">
+                  <span className="shrink-0 mt-0.5">ℹ️</span>
+                  <span>Pembayaran QRIS sedang gangguan. Untuk sementara, bayar tunai langsung ke driver saat dijemput.</span>
+                </div>
+              )}
 
               <div className="w-full border-2 border-primary-600 bg-primary-50 rounded-xl px-4 py-3 flex items-center gap-3">
                 <span className="text-2xl" aria-hidden="true">💵</span>
@@ -548,10 +552,12 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
               <button onClick={handleBayarQRIS} disabled={!QRIS_ENABLED || submitting || blocked}
                 aria-disabled={!QRIS_ENABLED}
                 className="w-full bg-slate-100 border border-slate-200 enabled:bg-primary-600 enabled:border-primary-600 enabled:text-white text-slate-600 disabled:cursor-not-allowed font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-3">
-                <span className="text-2xl grayscale opacity-60" aria-hidden="true">📱</span>
+                <span className={`text-2xl ${QRIS_ENABLED ? '' : 'grayscale opacity-60'}`} aria-hidden="true">📱</span>
                 <div className="text-left">
                   <p className="font-bold">Bayar via QRIS</p>
-                  <p className="text-xs font-semibold text-red-700">Sedang gangguan</p>
+                  {QRIS_ENABLED
+                    ? <p className="text-xs font-medium text-primary-100">Scan & bayar langsung via e-wallet / m-banking</p>
+                    : <p className="text-xs font-semibold text-red-700">Sedang gangguan</p>}
                 </div>
               </button>
 

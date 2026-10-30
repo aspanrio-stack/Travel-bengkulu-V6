@@ -78,11 +78,28 @@ export function generateQRISDinamis(
   // Tag 54 = Transaction Amount (jumlah pembayaran)
   // Sisipkan total pembayaran tanpa desimal
   const nilaiTotal = Math.round(totalBayar).toString();
-  tlvMap.set('54', nilaiTotal);
+
+  // Tag 01 (Point of Initiation): 11 = statis, 12 = dinamis
+  tlvMap.set('01', '12');
+
+  // Tag 54 harus berurutan di antara Tag 53 (mata uang) dan Tag 58 (negara).
+  // Map.set() pada tag baru akan menaruhnya di paling akhir, jadi susun ulang urutannya
+  // supaya semua aplikasi pembayaran (termasuk yang ketat) bisa membaca nominalnya.
+  const urut = new Map<string, string>();
+  tlvMap.delete('54');
+  let sudahSisip = false;
+  for (const [tag, value] of tlvMap) {
+    if (!sudahSisip && Number(tag) > 54) {
+      urut.set('54', nilaiTotal);
+      sudahSisip = true;
+    }
+    urut.set(tag, value);
+  }
+  if (!sudahSisip) urut.set('54', nilaiTotal);
 
   // Rebuild string QRIS dengan Tag 54 baru
   // Tag 63 (CRC) selalu di akhir dengan length 04
-  const qrisBaru = rebuildQRIS(tlvMap) + '6304';
+  const qrisBaru = rebuildQRIS(urut) + '6304';
 
   // Hitung CRC16 dari seluruh string termasuk "6304"
   const crcBaru = hitungCRC16(qrisBaru);
