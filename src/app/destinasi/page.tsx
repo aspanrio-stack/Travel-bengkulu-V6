@@ -51,26 +51,26 @@ export default async function DestinasiPage({
 
         {showPopular && (
           <section aria-label="Destinasi populer" className="mt-6">
-            <div className="flex items-center justify-between">
-              <h2 className="font-display text-xl font-bold text-slate-800">Destinasi Populer</h2>
-              <a href="#semua-destinasi" className="text-sm font-semibold text-primary-700">Lihat semua</a>
-            </div>
+            <h2 className="font-display text-xl font-bold text-slate-800">Destinasi Populer</h2>
             <div className="-mx-4 mt-3 flex snap-x gap-3 overflow-x-auto px-4 pb-3">
               {DESTINATIONS.filter(d => d.popular).map(d => <DestinationCard key={d.slug} d={d} compact />)}
             </div>
           </section>
         )}
 
-        <h2 id="semua-destinasi" className="mt-6 scroll-mt-20 font-display text-xl font-bold text-slate-800">
-          {showPopular ? 'Semua Destinasi' : 'Hasil Pencarian'}
-        </h2>
+        {!showPopular && (
+          <>
+            <h2 className="mt-6 font-display text-xl font-bold text-slate-800">Hasil Pencarian</h2>
 
-        {list.length === 0 ? (
-          <p className="mt-10 text-center text-slate-500">Tidak ada destinasi yang cocok. Coba kata kunci lain.</p>
-        ) : (
-          <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 md:gap-5">
-            {list.map(d => <DestinationCard key={d.slug} d={d} />)}
-          </div>
+            {list.length === 0 ? (
+            <p className="mt-10 text-center text-slate-500">Tidak ada destinasi yang cocok. Coba kata kunci lain.</p>
+          ) : (
+            <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 md:gap-5">
+              {list.map(d => <DestinationCard key={d.slug} d={d} />)}
+            </div>
+          )}
+
+          </>
         )}
 
         <ReviewGuideSection />
