@@ -62,54 +62,51 @@ export default function HotelBanner() {
     <section aria-label="Hotel di Bengkulu" className="mt-8">
       <Link
         href="/daftar-hotel-di-bengkulu"
-        className="group relative block aspect-[4/3] overflow-hidden rounded-3xl shadow-xl shadow-primary-900/15 ring-1 ring-primary-900/10 transition-transform active:scale-[0.99] sm:aspect-[16/9] lg:aspect-[21/9]"
+        className="group grid overflow-hidden rounded-3xl bg-primary-900 shadow-xl shadow-primary-900/15 ring-1 ring-primary-900/10 transition-transform active:scale-[0.99] lg:grid-cols-5"
       >
-        {HOTEL_IMAGE ? (
-          <Image
-            src={HOTEL_IMAGE}
-            alt="Kolam renang hotel dengan kursi santai dan pepohonan kelapa yang hijau"
-            fill
-            sizes="(max-width: 1152px) 100vw, 1152px"
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-        ) : (
-          <PlaceholderArt />
-        )}
-
-        {/* gradasi agar teks terbaca */}
-        <div className="absolute inset-0 bg-gradient-to-t from-primary-900/90 via-primary-900/30 to-transparent" aria-hidden="true" />
-
-        {/* lencana atas */}
-        <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-bold text-primary-800 shadow-md backdrop-blur">
+        {/* Gambar: tanpa teks di atasnya, jadi foto (dan tulisan di dalam foto) tetap bersih */}
+        <div className="relative aspect-video overflow-hidden lg:col-span-3 lg:aspect-auto lg:min-h-[340px]">
+          {HOTEL_IMAGE ? (
+            <Image
+              src={HOTEL_IMAGE}
+              alt="Kolam renang hotel dengan kursi santai, payung, dan pohon kelapa yang hijau"
+              fill
+              sizes="(max-width: 1024px) 100vw, 700px"
+              className="object-cover object-left-bottom transition-transform duration-700 group-hover:scale-105"
+            />
+          ) : (
+            <PlaceholderArt />
+          )}
+          <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-bold text-primary-800 shadow-md backdrop-blur">
             🏨 Penginapan Pilihan
           </span>
+          <span className="absolute right-3 top-3 rotate-3 rounded-full bg-gradient-to-r from-amber-500 to-amber-400 px-3 py-1.5 text-xs font-bold text-slate-900 shadow-lg">
+            Mulai Rp 100.000/malam
+          </span>
         </div>
-        <span className="absolute right-4 top-4 rotate-3 rounded-full bg-gradient-to-r from-amber-500 to-amber-400 px-3 py-1.5 text-xs font-bold text-slate-900 shadow-lg">
-          Mulai Rp 100.000/malam
-        </span>
 
-        {/* konten bawah */}
-        <div className="absolute inset-x-0 bottom-0 p-5 text-white md:p-8">
+        {/* Teks: panel terpisah di bawah gambar (HP) atau di samping (layar lebar) */}
+        <div className="flex flex-col justify-center bg-gradient-to-br from-primary-800 to-primary-900 p-5 text-white lg:col-span-2 lg:p-8">
           <p className="text-xs font-semibold uppercase tracking-widest text-amber-300">Kota Bengkulu · Curup · Lebong</p>
-          <h2 className="mt-1 font-display text-2xl font-bold leading-tight md:text-4xl">
+          <h2 className="mt-1.5 font-display text-2xl font-bold leading-tight md:text-3xl">
             Menginap Nyaman di Bengkulu
           </h2>
-          <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-white/90 md:text-base">
+          <p className="mt-2 text-sm leading-relaxed text-white/90">
             Dari guest house hemat sampai hotel bintang 4. Istirahat tenang setelah perjalanan, tinggal pilih yang paling cocok.
           </p>
 
-          <div className="mt-3 flex flex-wrap items-center gap-2">
+          <div className="mt-4 flex flex-wrap gap-2">
             {chips.map(c => (
-              <span key={c.label} className="inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
+              <span key={c.label} className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold">
                 <span aria-hidden="true">{c.icon}</span>
                 {c.label}
               </span>
             ))}
-            <span className="ml-auto inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-primary-800 shadow-lg transition-transform group-hover:translate-x-0.5">
-              Lihat Hotel <span aria-hidden="true">→</span>
-            </span>
           </div>
+
+          <span className="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-primary-800 shadow-lg transition-transform group-hover:translate-x-0.5 lg:self-start">
+            Lihat Hotel <span aria-hidden="true">→</span>
+          </span>
         </div>
       </Link>
     </section>
