@@ -12,7 +12,7 @@ const bdg = infoBandung('bdg-bkl');
 const bklCrp = getRouteById('bkl-crp')!.duration;
 
 export const metadata: Metadata = {
-  title: `Bengkulu Bandung Berapa Jam? Estimasi ${bkl.duration}`,
+  title: 'Bengkulu Bandung Berapa Jam? Estimasi Waktu & Rute via Tol',
   description: `Bengkulu ke Bandung berapa jam? Naik travel Hiace via Tol Palembang sekitar ${bkl.duration}. Cek estimasi jam tiba, rute, faktor penentu, dan tips perjalanan jauh.`,
   alternates: { canonical: URL },
   openGraph: { title: 'Bengkulu Bandung Berapa Jam? | Travel Bengkulu', url: URL, locale: 'id_ID', type: 'article', images: [hiaceOg('bandung-malam')] },
@@ -33,7 +33,7 @@ const faq: [string, string][] = [
 export default function Page() {
   return (
     <ArticleLayout
-      title={`Bengkulu Bandung Berapa Jam? Estimasi ${bkl.duration}`}
+      title="Bengkulu Bandung Berapa Jam? Estimasi Waktu & Rute via Tol"
       description="Waktu tempuh Bengkulu ke Bandung lewat darat, estimasi jam tiba, rute, dan faktor yang memengaruhi lama perjalanan."
       breadcrumbs={[{ label: 'Travel Bengkulu', href: '/travel-bengkulu' }, { label: 'Travel Bengkulu Bandung', href: PILAR }, { label: 'Berapa Jam' }]}
       badge="🕐 Info Perjalanan"

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Hotel di Curup – Rekomendasi Penginapan Terbaik di Rejang Lebong 2025',
+  title: 'Hotel di Curup – Rekomendasi Penginapan Terbaik di Rejang Lebong',
   description:
     'Daftar hotel terbaik di Curup Rejang Lebong. Dari hotel budget hingga bintang. Lokasi strategis, fasilitas lengkap, cocok untuk wisata dan bisnis. Info lengkap di sini!',
   alternates: { canonical: 'https://bengkulutravel.com/hotel-di-curup' },

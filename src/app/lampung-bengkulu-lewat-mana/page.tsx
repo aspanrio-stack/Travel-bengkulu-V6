@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
 
 export const metadata: Metadata = {
-  title: 'Lampung Bengkulu Lewat Mana? Ini Jalur Paling Enak 2026',
+  title: 'Lampung Bengkulu Lewat Mana? Ini Jalur Paling Enak',
   description:
     'Mau ke Bengkulu dari Lampung tapi bingung lewat mana? Panduan lengkap jalur via Liwa-Krui vs jalur alternatif, titik menarik, dan tips perjalanan 2026.',
   alternates: { canonical: 'https://bengkulutravel.com/lampung-bengkulu-lewat-mana' },
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function LampungBengkuluLewatMana() {
   return (
     <ArticleLayout
-      title="Lampung Bengkulu Lewat Mana? Ini Jalur Paling Enak 2026"
+      title="Lampung Bengkulu Lewat Mana? Ini Jalur Paling Enak"
       description="Panduan rute perjalanan Lampung ke Bengkulu: perbandingan jalur, daya tarik pemandangan, dan rekomendasi jalur terbaik untuk perjalanan nyaman."
       breadcrumbs={[
         { label: 'Travel Lampung Bengkulu', href: '/travel-lampung-bengkulu' },

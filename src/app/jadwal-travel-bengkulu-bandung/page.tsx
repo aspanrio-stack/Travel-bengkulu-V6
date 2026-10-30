@@ -12,7 +12,7 @@ const bdg = infoBandung('bdg-bkl');
 const arah = ARAH_BANDUNG.map((a) => ({ ...a, i: infoBandung(a.id) }));
 
 export const metadata: Metadata = {
-  title: `Jadwal Travel Bengkulu Bandung, ${bkl.hariLabel.replace(' dan ', ' & ')} ${titik(bkl.jam)}`,
+  title: 'Jadwal Travel Bengkulu Bandung: Hari & Jam Keberangkatan Hiace',
   description: `Jadwal travel Bengkulu Bandung: Hiace berangkat ${bkl.hariLabel} pukul ${titik(bkl.jam)} WIB dari Kota Bengkulu. Jadwal Curup dan Bandung juga ada. WA 0852-6864-5461.`,
   alternates: { canonical: URL },
   openGraph: { title: 'Jadwal Travel Bengkulu Bandung | Travel Bengkulu', url: URL, locale: 'id_ID', type: 'article', images: [hiaceOg('bandung-kapal')] },
