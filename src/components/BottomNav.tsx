@@ -92,7 +92,7 @@ export default function BottomNav() {
 
       <nav
         aria-label="Navigasi utama"
-        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-slate-100 shadow-[0_-4px_20px_rgba(15,23,42,0.06)] pb-[env(safe-area-inset-bottom)]"
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 transform-gpu bg-white border-t border-slate-100 shadow-[0_-4px_20px_rgba(15,23,42,0.06)] pb-[env(safe-area-inset-bottom)]"
       >
         {/* Penanda tab aktif — lingkaran ringan, bergeser via transform (GPU, tanpa layout) */}
         <div

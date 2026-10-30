@@ -18,9 +18,12 @@
 
 html {
   scroll-behavior: smooth;
+  /* Cegah efek tarik/regang (overscroll) di Android/Chrome yang menggeser navigasi bawah (fixed) ke bawah saat scroll mentok */
+  overscroll-behavior-y: none;
 }
 
 body {
+  overscroll-behavior-y: none;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   color: var(--text);
   background: #fff;
