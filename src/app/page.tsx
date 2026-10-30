@@ -5,6 +5,7 @@ import DestinationCard from '@/components/DestinationCard';
 import HomeGreeting from '@/components/HomeGreeting';
 import HomeBookingCard from '@/components/HomeBookingCard';
 import CustomerReviewsCard from '@/components/CustomerReviewsCard';
+import ETicketSection from '@/components/ETicketSection';
 import { DESTINATIONS } from '@/lib/destinations';
 import { getRouteById, formatPrice } from '@/lib/routes';
 
@@ -185,6 +186,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* E-TICKETING */}
+      <ETicketSection />
 
       {/* KENAPA PILIH KAMI */}
       <section className="relative py-12 md:py-20 bg-gradient-to-br from-primary-900 via-primary-800 to-slate-900 overflow-hidden">
