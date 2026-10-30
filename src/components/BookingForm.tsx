@@ -19,7 +19,6 @@ interface BookingFormProps {
 const today = new Date().toISOString().split('T')[0];
 
 export default function BookingForm({ preselectedRouteId, preselectedPassengers, preselectedTime }: BookingFormProps) {
-  const [step, setStep] = useState(1);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [sukses, setSukses] = useState<{ orderId: string; paymentMethod: string } | null>(null);
@@ -128,13 +127,7 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
     return '';
   };
 
-  const goToStep2 = () => {
-    const err = validateStep1();
-    if (err) { setError(err); return; }
-    setStep(2);
-    setError('');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const validateAll = () => validateStep1() || validateStep2();
 
   const selectedTimeInfo = form.departureTime ? getTimeInfo(selectedRoute, form.departureTime) : undefined;
   const departureTimeLabel = (() => {
@@ -169,7 +162,7 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
 
   // ── TUNAI: simpan ke DB lalu langsung redirect ke WA admin ──
   const handleKonfirmasi = async () => {
-    const err = validateStep2();
+    const err = validateAll();
     if (err) { setError(err); return; }
     if (!selectedRoute) return;
 
@@ -232,7 +225,7 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
 
   // ── QRIS ──
   const handleBayarQRIS = async () => {
-    const err = validateStep2();
+    const err = validateAll();
     if (err) { setError(err); return; }
     if (!selectedRoute) return;
 
@@ -328,35 +321,18 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
 
-      {/* Progress Steps */}
-      <div className="flex border-b border-slate-100">
-        {[{ num: 1, label: 'Pilih Rute' }, { num: 2, label: 'Data & Konfirmasi' }].map((s) => (
-          <button
-            key={s.num}
-            onClick={() => s.num < step && setStep(s.num)}
-            className={`flex-1 py-4 text-sm font-semibold flex items-center justify-center gap-2 transition-colors ${
-              step === s.num
-                ? 'bg-primary-50 text-primary-700 border-b-2 border-primary-600'
-                : step > s.num
-                ? 'text-primary-600 cursor-pointer hover:bg-primary-50'
-                : 'text-slate-400 cursor-not-allowed'
-            }`}
-          >
-            <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-              step >= s.num ? 'bg-primary-700 text-white' : 'bg-slate-200 text-slate-500'
-            }`}>
-              {step > s.num ? '✓' : s.num}
-            </span>
-            {s.label}
-          </button>
-        ))}
-      </div>
-
       <div className="p-6 md:p-8">
 
-        {/* STEP 1 */}
-        {step === 1 && (
-          <div className="space-y-5">
+        <div className="space-y-5">
+
+          <LoginPrompt
+            status={authStatus}
+            onStatus={setAuthStatus}
+            onUser={prefillUser}
+            nextUrl={`/pesan?rute=${form.routeId}`}
+            required={REQUIRE_LOGIN}
+          />
+
             <div>
               <div className="flex items-end gap-2">
                 <div className="flex-1 min-w-0">
@@ -488,55 +464,6 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
               </div>
             </div>
 
-            {selectedRoute && (
-              <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
-                <p className="mb-2 text-sm font-semibold text-slate-700">Ringkasan Harga</p>
-                <div className="flex justify-between text-sm text-slate-600">
-                  <span>{formatPrice(unitPrice)} × {form.passengers} orang</span>
-                  <span>{formatPrice(totalPrice)}</span>
-                </div>
-                <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3">
-                  <span className="font-semibold text-slate-700">Total</span>
-                  <span className="text-xl font-bold text-primary-700">{formatPrice(totalPrice)}</span>
-                </div>
-              </div>
-            )}
-
-            {error && <p className="text-red-500 text-sm bg-red-50 px-4 py-3 rounded-xl">{error}</p>}
-
-            <button onClick={goToStep2} disabled={!form.routeId}
-              className="w-full bg-primary-700 hover:bg-primary-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-colors text-lg">
-              Lanjut Isi Data →
-            </button>
-          </div>
-        )}
-
-        {/* STEP 2 */}
-        {step === 2 && (
-          <div className="space-y-5">
-
-            {selectedRoute && (
-              <div className="bg-primary-50 border border-primary-200 rounded-xl p-4">
-                <p className="text-xs text-primary-500 font-semibold mb-1">RINGKASAN PESANAN</p>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="font-bold text-primary-800">{selectedRoute.from} → {selectedRoute.to}</p>
-                    <p className="text-sm text-primary-600">{form.date} · {form.passengers} penumpang</p>
-                    {departureTimeLabel && <p className="text-sm text-primary-600">🕐 {departureTimeLabel}</p>}
-                  </div>
-                  <p className="font-bold text-primary-700 text-xl">{formatPrice(totalPrice)}</p>
-                </div>
-              </div>
-            )}
-
-            <LoginPrompt
-              status={authStatus}
-              onStatus={setAuthStatus}
-              onUser={prefillUser}
-              nextUrl={`/pesan?rute=${form.routeId}`}
-              required={REQUIRE_LOGIN}
-            />
-
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">Nama <span className="text-red-500">*</span></label>
               <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Nama lengkap pemesan"
@@ -628,6 +555,16 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
                 </div>
               </button>
 
+              {selectedRoute && (
+                <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
+                  <p className="mb-2 text-xs font-bold uppercase tracking-wide text-amber-800">Total Pembayaran</p>
+                  <div className="flex items-end justify-between gap-3">
+                    <span className="text-sm text-slate-600">{formatPrice(unitPrice)} × {form.passengers} orang</span>
+                    <span className="text-2xl font-extrabold text-primary-700">{formatPrice(totalPrice)}</span>
+                  </div>
+                </div>
+              )}
+
               <button onClick={handleKonfirmasi} disabled={submitting || blocked}
                 className="w-full bg-gradient-to-r from-primary-600 to-primary-800 hover:from-primary-700 hover:to-primary-900 active:scale-[0.97] disabled:opacity-60 disabled:cursor-not-allowed text-white font-extrabold text-lg py-5 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-lg shadow-primary-700/40 ring-2 ring-primary-300 ring-offset-2">
                 {submitting ? (
@@ -647,16 +584,10 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
 
             {error && <p className="text-red-500 text-sm bg-red-50 px-4 py-3 rounded-xl">{error}</p>}
 
-            <button onClick={() => { setStep(1); setError(''); }} disabled={submitting}
-              className="w-full border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-50 font-semibold py-3 rounded-xl transition-colors text-sm">
-              ← Kembali Pilih Rute
-            </button>
-
             <p className="text-center text-xs text-slate-400">
               🔒 Data Anda aman · Driver akan menghubungi setelah konfirmasi
             </p>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
