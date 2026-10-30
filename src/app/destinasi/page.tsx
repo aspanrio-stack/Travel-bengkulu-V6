@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import DestinationCard from '@/components/DestinationCard';
+import HotelBanner from '@/components/HotelBanner';
 import ReviewGuideSection from '@/components/ReviewGuideSection';
 import { CATEGORIES, DESTINATIONS } from '@/lib/destinations';
 
@@ -57,6 +58,8 @@ export default async function DestinasiPage({
             </div>
           </section>
         )}
+
+        {showPopular && <HotelBanner />}
 
         {!showPopular && (
           <>
