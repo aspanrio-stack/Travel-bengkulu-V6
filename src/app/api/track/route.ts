@@ -1,74 +1,77 @@
 /**
- * API: POST /api/track
- * Catat klik WhatsApp ke Redis — ringan, tanpa response data.
- * Hanya increment counter, tidak ada konfirmasi ke user.
+ * API: POST /api/track  { path, source }
+ * Catat klik WhatsApp ke Redis — ringan, tanpa response data. Dipanggil oleh WaClickTracker
+ * (satu listener global untuk semua tautan wa.me di luar halaman pemesanan & admin).
  *
- * Data tersimpan di Redis:
+ * Data di Redis:
  *   wa:total          → total semua klik
- *   wa:YYYY-MM-DD     → klik per hari
- *   wa:YYYY-MM        → klik per bulan
+ *   wa:YYYY-MM-DD     → klik per hari (WIB), kedaluwarsa 90 hari
+ *   wa:YYYY-MM        → klik per bulan (WIB)
+ *   wa:pages          → hash: path halaman → jumlah klik
+ *   wa:src            → hash: sumber tombol (bottomnav | cta | footer) → jumlah klik
+ *   wa:since          → waktu mulai penghitungan
  */
 import { NextRequest, NextResponse } from 'next/server';
-import Redis from 'ioredis';
+import { getRedis } from '@/lib/orders';
 
-let redis: Redis | null = null;
+const ok = () => new NextResponse(null, { status: 204 });
+const SOURCES = ['bottomnav', 'cta', 'footer'];
+// Halaman yang TIDAK dihitung: pemesanan/pembayaran, admin, dan credits (bukan chat layanan travel)
+const EXCLUDED = ['/pesan', '/pembayaran', '/admin', '/credits'];
 
-function getRedis(): Redis {
-  if (redis) return redis;
-  const url = process.env.REDIS_URL;
-  if (!url) throw new Error('REDIS_URL tidak ada');
-  redis = new Redis(url, { maxRetriesPerRequest: 1, connectTimeout: 3000 });
-  return redis;
+function wibNow(ms = Date.now()) {
+  const d = new Date(ms + 7 * 3600_000).toISOString();
+  return { hari: d.slice(0, 10), bulan: d.slice(0, 7) };
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const { source } = await req.json();
-    const r = getRedis();
-    const now = new Date();
-    const hari = now.toISOString().slice(0, 10);   // 2026-04-23
-    const bulan = now.toISOString().slice(0, 7);   // 2026-04
+    const body = await req.json().catch(() => null);
+    let path = typeof body?.path === 'string' ? body.path.split('?')[0].split('#')[0] : '';
+    if (!/^\/[a-z0-9\-_/]{0,118}$/i.test(path)) return ok();
+    path = path.replace(/\/+$/, '') || '/';
+    if (EXCLUDED.some(p => path === p || path.startsWith(p + '/'))) return ok();
+    const source = SOURCES.includes(body?.source) ? body.source : 'cta';
 
-    // Increment semua counter sekaligus (pipeline = 1 round-trip)
+    const r = getRedis();
+
+    // Batas wajar per IP (anti-spam): maks 30 klik / menit
+    const ip = (req.headers.get('x-forwarded-for') ?? 'unknown').split(',')[0].trim();
+    const rl = `wa:rl:${ip}`;
+    const n = await r.incr(rl);
+    if (n === 1) await r.expire(rl, 60);
+    if (n > 30) return ok();
+
+    const { hari, bulan } = wibNow();
     const p = r.pipeline();
     p.incr('wa:total');
     p.incr(`wa:${hari}`);
     p.incr(`wa:${bulan}`);
-    // Set expiry 90 hari untuk data harian
     p.expire(`wa:${hari}`, 60 * 60 * 24 * 90);
-    // Set expiry 1 tahun untuk data bulanan
     p.expire(`wa:${bulan}`, 60 * 60 * 24 * 365);
+    p.hincrby('wa:pages', path, 1);
+    p.hincrby('wa:src', source, 1);
+    p.set('wa:since', new Date().toISOString(), 'NX');
     await p.exec();
-
-    // Respons kosong 204 — tidak ada data yang dikembalikan ke user
-    return new NextResponse(null, { status: 204 });
-
   } catch {
-    // Diam-diam abaikan error — jangan ganggu user
-    return new NextResponse(null, { status: 204 });
+    // Diam-diam abaikan error — jangan ganggu pengunjung
   }
+  return ok();
 }
 
-// GET — Ambil statistik klik (untuk admin dashboard)
+// GET — Total klik (dipakai kartu "Klik WA" di dashboard admin)
 export async function GET() {
   try {
     const r = getRedis();
-    const now = new Date();
-    const hari = now.toISOString().slice(0, 10);
-    const bulan = now.toISOString().slice(0, 7);
-
+    const { hari, bulan } = wibNow();
     const [total, hariIni, bulanIni] = await Promise.all([
-      r.get('wa:total'),
-      r.get(`wa:${hari}`),
-      r.get(`wa:${bulan}`),
+      r.get('wa:total'), r.get(`wa:${hari}`), r.get(`wa:${bulan}`),
     ]);
-
     return NextResponse.json({
       total: parseInt(total || '0'),
       hariIni: parseInt(hariIni || '0'),
       bulanIni: parseInt(bulanIni || '0'),
     });
-
   } catch {
     return NextResponse.json({ total: 0, hariIni: 0, bulanIni: 0 });
   }

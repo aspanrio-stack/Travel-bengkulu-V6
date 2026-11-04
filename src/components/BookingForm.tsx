@@ -4,6 +4,7 @@ import { ROUTES, formatPrice, formatDepartureTime, getTimeInfo, getRoutePrice, i
 import LocationPicker from '@/components/LocationPicker';
 import SavedAddressBox from '@/components/SavedAddressBox';
 import LoginPrompt, { type AuthStatus } from '@/components/LoginPrompt';
+import { useRates } from '@/lib/useRates';
 
 const REQUIRE_LOGIN = process.env.NEXT_PUBLIC_REQUIRE_LOGIN_TO_BOOK === 'true';
 
@@ -23,6 +24,7 @@ const today = new Date().toISOString().split('T')[0];
 export default function BookingForm({ preselectedRouteId, preselectedPassengers, preselectedTime }: BookingFormProps) {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const { overrides: rateOverrides, ready: ratesReady } = useRates();
   const [sukses, setSukses] = useState<{ orderId: string; paymentMethod: string } | null>(null);
 
   // ── BARU: state lokasi GPS ──
@@ -90,7 +92,7 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
   };
   const hasReverse = !!selectedRoute && ROUTES.some(r => r.from === selectedRoute.to && r.to === selectedRoute.from);
   const fullPhone = form.phone ? '+62' + form.phone.replace(/^0+/, '') : '';
-  const unitPrice = getRoutePrice(selectedRoute, form.departureTime);
+  const unitPrice = getRoutePrice(selectedRoute, form.departureTime, rateOverrides);
   const totalPrice = selectedRoute ? unitPrice * parseInt(form.passengers) : 0;
 
   const hasFixedTimes = selectedRoute && selectedRoute.departureTimes && selectedRoute.departureTimes.length > 0;
@@ -164,6 +166,7 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
 
   // ── TUNAI: simpan ke DB lalu langsung redirect ke WA admin ──
   const handleKonfirmasi = async () => {
+    if (!ratesReady) { setError('Memuat tarif terbaru, coba lagi sebentar.'); return; }
     const err = validateAll();
     if (err) { setError(err); return; }
     if (!selectedRoute) return;
@@ -227,6 +230,7 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
 
   // ── QRIS ──
   const handleBayarQRIS = async () => {
+    if (!ratesReady) { setError('Memuat tarif terbaru, coba lagi sebentar.'); return; }
     const err = validateAll();
     if (err) { setError(err); return; }
     if (!selectedRoute) return;

@@ -157,3 +157,16 @@ export async function purgeExpiredTickets(): Promise<number> {
   if (error) throw error;
   return data?.length ?? 0;
 }
+
+/** Cabut tiket (QR verifikasi) milik satu pesanan — dipakai saat pesanan dibatalkan/dihapus admin. */
+export async function revokeTicketByOrder(orderId: string): Promise<void> {
+  try {
+    const sb = getSupabaseAdmin();
+    if (!sb) return;
+    const { data } = await sb.from('tickets').delete().eq('order_id', orderId).select('unique_token');
+    const redis = getRedis();
+    for (const row of data ?? []) await redis.del(`ticket:${row.unique_token}`);
+  } catch (e) {
+    console.error('[TICKET] Gagal mencabut tiket:', orderId, e);
+  }
+}

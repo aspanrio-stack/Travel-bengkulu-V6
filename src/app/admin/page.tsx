@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Order } from '@/lib/orders';
 import RatesTab from './RatesTab';
+import StatsTab from './StatsTab';
 
 // ─────────────────────────────────────────────
 // Helpers
@@ -472,12 +473,13 @@ export default function AdminDashboard() {
   const [error, setError]           = useState('');
   const [confirming, setConfirming] = useState<string | null>(null);
   const [toast, setToast]           = useState('');
-  const [filter, setFilter]         = useState<'all' | 'pending' | 'success'>('all');
+  const [filter, setFilter]         = useState<'all' | 'pending' | 'success' | 'cancelled'>('all');
   const [search, setSearch]         = useState('');
   const [selected, setSelected]     = useState<Order | null>(null);
 
   const [printingTicket, setPrintingTicket] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'pesanan' | 'kwitansi' | 'tarif'>('pesanan');
+  const [busyId, setBusyId] = useState<string | null>(null); // pesanan yang sedang dibatalkan/dihapus
+  const [activeTab, setActiveTab] = useState<'pesanan' | 'kwitansi' | 'tarif' | 'grafik'>('pesanan');
   const [waStats, setWaStats] = useState({ total: 0, hariIni: 0, bulanIni: 0 });
 
   // ── Ambil semua pesanan ──
@@ -571,6 +573,49 @@ export default function AdminDashboard() {
     }
   };
 
+  // ── Batalkan / aktifkan kembali pesanan ──
+  const handleCancel = async (order: Order, restore = false) => {
+    const msg = restore
+      ? `Aktifkan kembali pesanan ${order.id} (${order.name})?`
+      : `Batalkan pesanan ${order.id} (${order.name})?\n\nPesanan batal tidak dihitung di total, pendapatan, dan grafik. QR tiket (jika ada) dinonaktifkan. Bisa diaktifkan lagi kapan saja.`;
+    if (!confirm(msg)) return;
+    setBusyId(order.id);
+    try {
+      const res = await fetch('/api/admin/cancel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: order.id, restore }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setOrders(prev => prev.map(o => o.id === order.id ? data.order : o));
+      setToast(restore ? '✅ Pesanan diaktifkan kembali' : '✅ Pesanan dibatalkan');
+    } catch (err) {
+      setToast(`❌ ${err instanceof Error ? err.message : 'Gagal memproses'}`);
+    } finally {
+      setBusyId(null);
+      setTimeout(() => setToast(''), 4000);
+    }
+  };
+
+  // ── Hapus permanen pesanan (mis. data demo) ──
+  const handleDelete = async (order: Order) => {
+    if (!confirm(`HAPUS PERMANEN pesanan ${order.id} (${order.name})?\n\nData tidak bisa dikembalikan. Untuk pesanan nyata sebaiknya gunakan Batalkan.`)) return;
+    setBusyId(order.id);
+    try {
+      const res = await fetch(`/api/admin/orders?id=${encodeURIComponent(order.id)}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setOrders(prev => prev.filter(o => o.id !== order.id));
+      setToast('✅ Pesanan dihapus');
+    } catch (err) {
+      setToast(`❌ ${err instanceof Error ? err.message : 'Gagal menghapus'}`);
+    } finally {
+      setBusyId(null);
+      setTimeout(() => setToast(''), 4000);
+    }
+  };
+
   // ── Logout ──
   const handleLogout = async () => {
     await fetch('/api/admin/logout', { method: 'POST' });
@@ -579,7 +624,7 @@ export default function AdminDashboard() {
 
   // ── Filter & Search ──
   const filtered = orders.filter(o => {
-    const matchFilter = filter === 'all' || o.status === filter;
+    const matchFilter = filter === 'all' ? o.status !== 'cancelled' : o.status === filter;
     const q = search.toLowerCase();
     const matchSearch = !q || o.name.toLowerCase().includes(q) ||
       o.phone.includes(q) || o.route.toLowerCase().includes(q) ||
@@ -588,13 +633,15 @@ export default function AdminDashboard() {
   });
 
   // ── Stats ──
+  const activeOrders = orders.filter(o => o.status !== 'cancelled');
+  const cancelledCount = orders.length - activeOrders.length;
   const stats = {
-    total:   orders.length,
+    total:   activeOrders.length,
     pending: orders.filter(o => o.status === 'pending').length,
     success: orders.filter(o => o.status === 'success').length,
     revenue: orders.filter(o => o.status === 'success').reduce((s, o) => s + o.harga, 0),
-    qris:    orders.filter(o => o.paymentMethod === 'qris').length,
-    tunai:   orders.filter(o => o.paymentMethod === 'tunai').length,
+    qris:    activeOrders.filter(o => o.paymentMethod === 'qris').length,
+    tunai:   activeOrders.filter(o => o.paymentMethod === 'tunai').length,
   };
 
   // ── Toast helper (untuk KwitansiTab) ──
@@ -647,7 +694,7 @@ export default function AdminDashboard() {
           </h1>
           <p className="text-slate-400 text-sm mt-1 italic">karya Dekcik</p>
         </div>
-        <div className="flex gap-3 mb-6">
+        <div className="flex gap-2 sm:gap-3 mb-6">
           <button
             onClick={() => setActiveTab('pesanan')}
             className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all border-2 ${
@@ -677,6 +724,16 @@ export default function AdminDashboard() {
             }`}
           >
             💰 Update Tarif
+          </button>
+          <button
+            onClick={() => setActiveTab('grafik')}
+            className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all border-2 ${
+              activeTab === 'grafik'
+                ? 'bg-blue-600 border-blue-600 text-white shadow-md'
+                : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300'
+            }`}
+          >
+            📈 Grafik
           </button>
         </div>
       </div>
@@ -718,7 +775,7 @@ export default function AdminDashboard() {
               { label: 'Pendapatan',    value: formatRp(stats.revenue), icon: '💰', color: 'text-primary-600' },
               { label: 'Via QRIS',      value: stats.qris,              icon: '📱', color: 'text-blue-600' },
               { label: 'Via Tunai',     value: stats.tunai,             icon: '💵', color: 'text-amber-600' },
-              { label: 'Klik WA',       value: waStats.total,           icon: '💬', color: 'text-green-600' },
+              { label: `Klik WA · hari ini ${waStats.hariIni}`, value: waStats.total, icon: '💬', color: 'text-green-600' },
             ].map(s => (
               <div key={s.label} className="bg-white rounded-lg border border-slate-100 p-3 shadow-sm flex items-center gap-2.5">
                 <span className="text-xl shrink-0">{s.icon}</span>
@@ -740,7 +797,7 @@ export default function AdminDashboard() {
               className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
             <div className="flex gap-2 shrink-0">
-              {(['all', 'pending', 'success'] as const).map(f => (
+              {(['all', 'pending', 'success', 'cancelled'] as const).map(f => (
                 <button
                   key={f}
                   onClick={() => setFilter(f)}
@@ -750,7 +807,7 @@ export default function AdminDashboard() {
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
                 >
-                  {f === 'all' ? 'Semua' : f === 'pending' ? '⏳ Pending' : '✅ Sukses'}
+                  {f === 'all' ? 'Semua' : f === 'pending' ? '⏳ Pending' : f === 'success' ? '✅ Sukses' : `🚫 Batal${cancelledCount ? ` (${cancelledCount})` : ''}`}
                 </button>
               ))}
             </div>
@@ -798,7 +855,7 @@ export default function AdminDashboard() {
                     </thead>
                     <tbody className="divide-y divide-slate-50">
                       {filtered.map(order => (
-                        <tr key={order.id} className="hover:bg-slate-50 transition-colors">
+                        <tr key={order.id} className={`hover:bg-slate-50 transition-colors ${order.status === 'cancelled' ? 'opacity-60' : ''}`}>
                           <td className="px-4 py-3">
                             <span className="font-mono text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded">
                               {order.id}
@@ -879,7 +936,7 @@ export default function AdminDashboard() {
                                   {confirming === order.id ? '...' : '✅ Konfirmasi'}
                                 </button>
                               )}
-                              {/* ── GANTI: Kirim Invoice → Print Tiket ── */}
+                              {order.status !== 'cancelled' && (
                               <button
                                 onClick={() => handlePrintTicket(order.id)}
                                 disabled={printingTicket === order.id}
@@ -887,6 +944,32 @@ export default function AdminDashboard() {
                                 title="Download PDF tiket"
                               >
                                 {printingTicket === order.id ? '...' : '🖨️ Print Tiket'}
+                              </button>
+                              )}
+                              {order.status === 'cancelled' ? (
+                                <button
+                                  onClick={() => { handleCancel(order, true); }}
+                                  disabled={busyId === order.id}
+                                  className="text-xs bg-sky-600 hover:bg-sky-700 text-white px-3 py-1.5 rounded-lg font-semibold disabled:opacity-60 transition-colors"
+                                >
+                                  {busyId === order.id ? '...' : '↩️ Aktifkan Lagi'}
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => { handleCancel(order); }}
+                                  disabled={busyId === order.id}
+                                  className="text-xs bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-lg font-semibold disabled:opacity-60 transition-colors"
+                                >
+                                  {busyId === order.id ? '...' : '🚫 Batalkan'}
+                                </button>
+                              )}
+                              <button
+                                onClick={() => { handleDelete(order); }}
+                                disabled={busyId === order.id}
+                                className="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg font-semibold disabled:opacity-60 transition-colors"
+                                title="Hapus permanen (data demo)"
+                              >
+                                {busyId === order.id ? '...' : '🗑️ Hapus'}
                               </button>
                             </div>
                           </td>
@@ -899,7 +982,7 @@ export default function AdminDashboard() {
                 {/* Mobile Cards */}
                 <div className="md:hidden divide-y divide-slate-100">
                   {filtered.map(order => (
-                    <div key={order.id} className="p-4">
+                    <div key={order.id} className={`p-4 ${order.status === 'cancelled' ? 'opacity-60' : ''}`}>
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <p className="font-bold text-slate-800">{order.name}</p>
@@ -947,13 +1030,39 @@ export default function AdminDashboard() {
                               {confirming === order.id ? '...' : '✅ Konfirmasi'}
                             </button>
                           )}
-                          {/* ── GANTI: Kirim Invoice → Print Tiket ── */}
+                          {order.status !== 'cancelled' && (
                           <button
                             onClick={() => handlePrintTicket(order.id)}
                             disabled={printingTicket === order.id}
                             className="text-xs bg-indigo-500 disabled:opacity-60 text-white px-3 py-1.5 rounded-lg font-semibold"
                           >
                             {printingTicket === order.id ? '...' : '🖨️ Print Tiket'}
+                          </button>
+                          )}
+                          {order.status === 'cancelled' ? (
+                            <button
+                              onClick={() => { handleCancel(order, true); }}
+                              disabled={busyId === order.id}
+                              className="text-xs bg-sky-600 hover:bg-sky-700 text-white px-3 py-1.5 rounded-lg font-semibold disabled:opacity-60 transition-colors"
+                            >
+                              {busyId === order.id ? '...' : '↩️ Aktifkan Lagi'}
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => { handleCancel(order); }}
+                              disabled={busyId === order.id}
+                              className="text-xs bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-lg font-semibold disabled:opacity-60 transition-colors"
+                            >
+                              {busyId === order.id ? '...' : '🚫 Batalkan'}
+                            </button>
+                          )}
+                          <button
+                            onClick={() => { handleDelete(order); }}
+                            disabled={busyId === order.id}
+                            className="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg font-semibold disabled:opacity-60 transition-colors"
+                            title="Hapus permanen (data demo)"
+                          >
+                            {busyId === order.id ? '...' : '🗑️ Hapus'}
                           </button>
                         </div>
                       </div>
@@ -975,6 +1084,11 @@ export default function AdminDashboard() {
       {/* ── KONTEN UPDATE TARIF ── */}
       {activeTab === 'tarif' && (
         <RatesTab setToast={showToast} />
+      )}
+
+      {/* ── KONTEN GRAFIK ── */}
+      {activeTab === 'grafik' && (
+        <StatsTab />
       )}
 
       {/* ── MODAL DETAIL PESANAN ── */}
@@ -1035,13 +1149,39 @@ export default function AdminDashboard() {
                   ✅ Konfirmasi & Kirim Tiket
                 </button>
               )}
-              {/* ── GANTI: Kirim Invoice → Print Tiket ── */}
+              {selected.status !== 'cancelled' && (
               <button
                 onClick={() => { handlePrintTicket(selected.id); setSelected(null); }}
                 disabled={printingTicket === selected.id}
                 className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-bold py-3 rounded-xl text-sm transition-colors"
               >
                 🖨️ Print Tiket
+              </button>
+              )}
+              {selected.status === 'cancelled' ? (
+                <button
+                  onClick={() => { handleCancel(selected, true); setSelected(null); }}
+                  disabled={busyId === selected.id}
+                  className="flex-1 bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl text-sm disabled:opacity-60 transition-colors"
+                >
+                  {busyId === selected.id ? '...' : '↩️ Aktifkan Lagi'}
+                </button>
+              ) : (
+                <button
+                  onClick={() => { handleCancel(selected); setSelected(null); }}
+                  disabled={busyId === selected.id}
+                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-xl text-sm disabled:opacity-60 transition-colors"
+                >
+                  {busyId === selected.id ? '...' : '🚫 Batalkan'}
+                </button>
+              )}
+              <button
+                onClick={() => { handleDelete(selected); setSelected(null); }}
+                disabled={busyId === selected.id}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl text-sm disabled:opacity-60 transition-colors"
+                title="Hapus permanen (data demo)"
+              >
+                {busyId === selected.id ? '...' : '🗑️ Hapus'}
               </button>
             </div>
           </div>

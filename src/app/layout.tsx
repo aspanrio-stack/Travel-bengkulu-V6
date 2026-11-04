@@ -4,6 +4,7 @@ import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import BottomNav from '@/components/BottomNav';
+import WaClickTracker from '@/components/WaClickTracker';
 
 const fontDisplay = Playfair_Display({
   subsets: ['latin'],
@@ -94,6 +95,7 @@ export default function RootLayout({
         <main>{children}</main>
         <Footer />
         <BottomNav />
+        <WaClickTracker />
       </body>
     </html>
   );

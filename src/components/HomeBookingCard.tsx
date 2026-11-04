@@ -1,7 +1,8 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { ROUTES, formatPrice } from '@/lib/routes';
+import { ROUTES, formatPrice, getRoutePrice } from '@/lib/routes';
+import { useRates } from '@/lib/useRates';
 
 const MAX_PAX = 13;
 
@@ -10,6 +11,7 @@ export default function HomeBookingCard() {
   const [routeId, setRouteId] = useState(ROUTES[0].id);
   const [pax, setPax] = useState(1);
   const [flip, setFlip] = useState(0);
+  const { overrides } = useRates();
 
   const route = ROUTES.find(r => r.id === routeId) ?? ROUTES[0];
   const reverse = ROUTES.find(r => r.from === route.to && r.to === route.from);
@@ -67,7 +69,7 @@ export default function HomeBookingCard() {
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-500">Penumpang</p>
             <p className="text-base font-semibold text-slate-800">
-              {pax} orang · {formatPrice(route.price * pax)}
+              {pax} orang · {formatPrice(getRoutePrice(route, undefined, overrides) * pax)}
             </p>
           </div>
           <div className="flex items-center gap-2">

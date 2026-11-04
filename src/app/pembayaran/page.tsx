@@ -5,9 +5,11 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import QRISCheckout from '@/components/QRISCheckout';
 import { ROUTES, formatPrice, getRoutePrice } from '@/lib/routes';
+import { useRates } from '@/lib/useRates';
 
 function PembayaranContent() {
   const params = useSearchParams();
+  const { overrides: rateOverrides, ready: ratesReady } = useRates();
 
   // ── Ambil semua data dari URL params ──
   const routeId       = params.get('rute') || '';
@@ -23,7 +25,7 @@ function PembayaranContent() {
   // ── Kalkulasi harga ──
   const route         = ROUTES.find(r => r.id === routeId);
   const departureTime = params.get('departureTime') || '';
-  const hargaPerOrang = getRoutePrice(route, departureTime);
+  const hargaPerOrang = getRoutePrice(route, departureTime, rateOverrides);
   const jumlah        = parseInt(passengers);
   const totalHarga    = hargaPerOrang * jumlah;
 
@@ -35,7 +37,8 @@ function PembayaranContent() {
   // ── Simpan pesanan ke Redis saat halaman pertama dibuka ──
   useEffect(() => {
     // Jangan simpan jika data tidak lengkap atau sudah disimpan
-    if (!route || !totalHarga || !name || !phone || savedRef.current) return;
+    // Tunggu tarif terbaru (Update Tarif admin) selesai dimuat agar pesanan tersimpan dengan harga yang benar
+    if (!ratesReady || !route || !totalHarga || !name || !phone || savedRef.current) return;
     savedRef.current = true;
     setSaveStatus('saving');
 
@@ -70,7 +73,7 @@ function PembayaranContent() {
       .catch(() => setSaveStatus('error'));
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ratesReady]);
 
   // ── Error: data tidak lengkap ──
   if (!route || !totalHarga) {

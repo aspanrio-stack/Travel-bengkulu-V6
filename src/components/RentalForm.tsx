@@ -1,6 +1,8 @@
 'use client';
 import { useState, useRef } from 'react';
 import SavedAddressBox from '@/components/SavedAddressBox';
+import { applyRentalOverrides } from '@/lib/rates';
+import { useRates } from '@/lib/useRates';
 import {
   RENTAL_PRICES,
   VEHICLE_LABELS,
@@ -29,6 +31,8 @@ export default function RentalForm() {
   const [step, setStep] = useState(1);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const { overrides: rateOverrides, ready: ratesReady } = useRates();
+  const PRICES = applyRentalOverrides(rateOverrides); // RENTAL_PRICES + tarif dari Update Tarif admin
 
   const [form, setForm] = useState({
     vehicle: '' as RentalVehicle | '',
@@ -59,14 +63,14 @@ export default function RentalForm() {
   const pricePerDay = (() => {
     if (!form.vehicle || !form.rentalType) return 0;
     if (form.rentalType === 'lepas_kunci') {
-      return RENTAL_PRICES.lepas_kunci.dalam_kota[form.vehicle as 'avanza' | 'innova'] ?? 0;
+      return PRICES.lepas_kunci.dalam_kota[form.vehicle as 'avanza' | 'innova'] ?? 0;
     }
-    return RENTAL_PRICES.with_driver[form.area][form.vehicle as 'avanza' | 'innova' | 'hiace'];
+    return PRICES.with_driver[form.area][form.vehicle as 'avanza' | 'innova' | 'hiace'];
   })();
 
   const driverFeePerDay = (() => {
     if (form.rentalType !== 'with_driver') return 0;
-    return RENTAL_PRICES.driver_fee[form.area];
+    return PRICES.driver_fee[form.area];
   })();
 
   const totalPrice = (pricePerDay + driverFeePerDay) * (days || 1);
@@ -105,6 +109,7 @@ export default function RentalForm() {
 
   // ── Submit tunai via WA ──
   const handleKirimWA = async () => {
+    if (!ratesReady) { setError('Memuat tarif terbaru, coba lagi sebentar.'); return; }
     const err = validateStep2();
     if (err) { setError(err); return; }
 
@@ -170,6 +175,7 @@ export default function RentalForm() {
 
   // ── Submit QRIS ──
   const handleBayarQRIS = async () => {
+    if (!ratesReady) { setError('Memuat tarif terbaru, coba lagi sebentar.'); return; }
     const err = validateStep2();
     if (err) { setError(err); return; }
 

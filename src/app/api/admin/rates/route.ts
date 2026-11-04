@@ -1,45 +1,26 @@
 /**
  * app/api/admin/rates/route.ts
  *
- * GET  /api/admin/rates  — baca tarif dari Redis, fallback ke default
- *                          (routes.ts + rental-config.ts) jika belum pernah disimpan
- * POST /api/admin/rates  — simpan tarif baru ke Redis (dipakai tab "Update Tarif")
- *
- * Pola sama seperti /api/rates pada dashboard RPM Travel, disesuaikan dengan
- * getRedis() milik lib/orders.ts yang sudah dipakai proyek ini.
+ * GET  /api/admin/rates  — daftar tarif untuk tab "Update Tarif": default dari kode
+ *                          (routes.ts + rental-config.ts) + nilai yang pernah disimpan admin
+ * POST /api/admin/rates  — simpan tarif (hanya admin). Yang disimpan hanya item yang berbeda
+ *                          dari default; selanjutnya dibaca form pemesanan, halaman pembayaran,
+ *                          kalkulator beranda, dan halaman daftar ongkos lewat /api/rates.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getRedis } from '@/lib/orders';
-import { buildDefaultRates, type PriceItem } from '@/lib/rates';
+import { buildDefaultRates, mergeWithOverrides, type PriceItem } from '@/lib/rates';
+import { getRateOverrides, RATES_REDIS_KEY } from '@/lib/rates-server';
 import { getSession } from '@/lib/auth';
 
-const REDIS_KEY = 'bengkulu:rates';
+export const dynamic = 'force-dynamic';
 
-// ─────────────────────────────────────────────
-// GET — ambil semua tarif
-// ─────────────────────────────────────────────
 export async function GET() {
-  try {
-    const redis = getRedis();
-    const raw = await redis.get(REDIS_KEY);
-
-    if (!raw) {
-      // Belum pernah disimpan → kembalikan default dari routes.ts + rental-config.ts
-      return NextResponse.json({ rates: buildDefaultRates() });
-    }
-
-    return NextResponse.json({ rates: JSON.parse(raw) as PriceItem[] });
-  } catch (error) {
-    console.error('Get rates error:', error);
-    // Fallback ke default jika Redis error, dashboard tetap bisa dipakai
-    return NextResponse.json({ rates: buildDefaultRates() });
-  }
+  const overrides = await getRateOverrides();
+  return NextResponse.json({ rates: mergeWithOverrides(overrides) });
 }
 
-// ─────────────────────────────────────────────
-// POST — simpan tarif baru
-// ─────────────────────────────────────────────
 export async function POST(req: NextRequest) {
   const session = await getSession();
   if (!session) {
@@ -54,19 +35,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Format data tidak valid' }, { status: 400 });
     }
 
+    const defaults = new Map(buildDefaultRates().map((d) => [d.id, d.harga]));
+    const diffs: { id: string; harga: number }[] = [];
+
     for (const r of rates) {
-      if (!r.id || typeof r.harga !== 'number' || r.harga < 0) {
-        return NextResponse.json(
-          { error: `Data tidak valid pada: ${r.id ?? '?'}` },
-          { status: 400 }
-        );
+      if (!r?.id || !defaults.has(r.id)) {
+        return NextResponse.json({ error: `Item tarif tidak dikenal: ${r?.id ?? '?'}` }, { status: 400 });
       }
+      if (!Number.isFinite(r.harga) || r.harga <= 0 || r.harga > 100_000_000) {
+        return NextResponse.json({ error: `Harga tidak valid pada: ${r.id}` }, { status: 400 });
+      }
+      const harga = Math.round(r.harga);
+      if (harga !== defaults.get(r.id)) diffs.push({ id: r.id, harga });
     }
 
     const redis = getRedis();
-    await redis.set(REDIS_KEY, JSON.stringify(rates));
+    if (diffs.length) await redis.set(RATES_REDIS_KEY, JSON.stringify(diffs));
+    else await redis.del(RATES_REDIS_KEY);
 
-    return NextResponse.json({ ok: true, saved: rates.length });
+    return NextResponse.json({ ok: true, saved: rates.length, overridden: diffs.length });
   } catch (error) {
     console.error('Save rates error:', error);
     return NextResponse.json({ error: 'Gagal menyimpan tarif' }, { status: 500 });

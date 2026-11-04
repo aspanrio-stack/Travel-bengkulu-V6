@@ -41,6 +41,10 @@ export interface Order {
   reviewEmailSent?: boolean;
   /** ISO waktu email permintaan ulasan terkirim */
   reviewEmailSentAt?: string;
+  /** ISO waktu dibatalkan admin (pesanan batal tidak dihitung di statistik/pendapatan) */
+  cancelledAt?: string;
+  /** Status sebelum dibatalkan — dipakai saat admin "Aktifkan Lagi" */
+  statusBeforeCancel?: 'pending' | 'success';
 }
 
 // ─────────────────────────────────────────────
@@ -160,6 +164,50 @@ export async function getOrderById(id: string): Promise<Order | null> {
   const data = await redis.get(`order:${id}`);
   if (!data) return null;
   return JSON.parse(data) as Order;
+}
+
+/** Daftar pesanan lebih panjang (default 2000 terbaru) khusus untuk statistik/grafik admin. */
+export async function getOrdersForStats(limit = 2000): Promise<Order[]> {
+  const redis = getRedis();
+  const ids = await redis.zrevrange('orders', 0, limit - 1);
+  if (ids.length === 0) return [];
+  const values = await redis.mget(...ids.map(id => `order:${id}`));
+  return values.filter((v): v is string => v !== null).map(v => JSON.parse(v) as Order);
+}
+
+/** Batalkan pesanan, atau aktifkan kembali (restore) ke status sebelumnya. */
+export async function setOrderCancelled(id: string, cancel: boolean): Promise<Order | null> {
+  const order = await getOrderById(id);
+  if (!order) return null;
+  let updated: Order;
+  if (cancel) {
+    if (order.status === 'cancelled') return order;
+    updated = {
+      ...order,
+      status: 'cancelled',
+      cancelledAt: new Date().toISOString(),
+      statusBeforeCancel: order.status,
+    };
+  } else {
+    if (order.status !== 'cancelled') return order;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { cancelledAt, statusBeforeCancel, ...rest } = order;
+    updated = { ...rest, status: statusBeforeCancel ?? 'pending' };
+  }
+  await getRedis().set(`order:${id}`, JSON.stringify(updated));
+  return updated;
+}
+
+/** Hapus permanen satu pesanan beserta index-nya. */
+export async function deleteOrderById(id: string): Promise<boolean> {
+  const order = await getOrderById(id);
+  if (!order) return false;
+  const pipeline = getRedis().pipeline();
+  pipeline.del(`order:${id}`);
+  pipeline.zrem('orders', id);
+  if (order.userId) pipeline.zrem(`user_orders:${order.userId}`, id);
+  await pipeline.exec();
+  return true;
 }
 
 export async function updateOrderStatus(
