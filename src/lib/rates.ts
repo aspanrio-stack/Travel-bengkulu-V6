@@ -82,3 +82,48 @@ export function buildDefaultRates(): PriceItem[] {
 
   return [...travelItems, ...sewaItems];
 }
+
+// ─────────────────────────────────────────────
+// Tarif yang disimpan admin = daftar override { id, harga }, hanya untuk item yang BERBEDA
+// dari default di kode. Item yang tidak diubah selalu mengikuti routes.ts / rental-config.ts.
+// (Data lama berformat daftar PriceItem lengkap juga tetap terbaca.)
+// ─────────────────────────────────────────────
+export type RateOverrides = Record<string, number>;
+
+/** Ubah data tersimpan (array) → map id→harga; abaikan id tak dikenal / harga tidak valid. */
+export function toOverrides(saved: unknown): RateOverrides {
+  const known = new Set(buildDefaultRates().map((d) => d.id));
+  const out: RateOverrides = {};
+  if (!Array.isArray(saved)) return out;
+  for (const it of saved) {
+    if (it && typeof it.id === 'string' && known.has(it.id) && Number.isFinite(it.harga) && it.harga > 0) {
+      out[it.id] = Math.round(it.harga);
+    }
+  }
+  return out;
+}
+
+/** Daftar default + nilai tersimpan (untuk tab Update Tarif). */
+export function mergeWithOverrides(overrides: RateOverrides): PriceItem[] {
+  return buildDefaultRates().map((d) => ({ ...d, harga: overrides[d.id] ?? d.harga }));
+}
+
+type Wide<T> = T extends number ? number : { -readonly [K in keyof T]: Wide<T[K]> };
+
+/** Tabel harga sewa mobil dengan override admin diterapkan (bentuk sama dengan RENTAL_PRICES). */
+export function applyRentalOverrides(overrides: RateOverrides): Wide<typeof RENTAL_PRICES> {
+  const out = JSON.parse(JSON.stringify(RENTAL_PRICES)) as Wide<typeof RENTAL_PRICES>;
+  RENTAL_TYPES.forEach((type) =>
+    AREAS.forEach((area) =>
+      VEHICLES.forEach((vehicle) => {
+        const v = overrides[`rental:${type}:${area}:${vehicle}`];
+        if (v) (out[type][area] as Record<string, number>)[vehicle] = v;
+      })
+    )
+  );
+  AREAS.forEach((area) => {
+    const v = overrides[`rental:driver_fee:${area}`];
+    if (v) out.driver_fee[area] = v;
+  });
+  return out;
+}

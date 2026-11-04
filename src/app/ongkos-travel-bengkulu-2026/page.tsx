@@ -1,6 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ArticleLayout from '@/components/ArticleLayout';
+import { ROUTES, getRoutePrice } from '@/lib/routes';
+import { getRateOverrides } from '@/lib/rates-server';
+
+// Tarif ikut tab "Update Tarif" admin; halaman diperbarui otomatis tiap 60 detik.
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Update Ongkos Travel Bengkulu 2026 – Tarif Terbaru Semua Rute',
@@ -128,7 +133,14 @@ function formatPrice(price: number) {
   }).format(price);
 }
 
-export default function OngkosTravelBengkulu2026() {
+export default async function OngkosTravelBengkulu2026() {
+  const overrides = await getRateOverrides();
+  const norm = (v: string) => v.trim().toLowerCase();
+  // Cocokkan baris tabel dengan rute di routes.ts agar harga mengikuti Update Tarif admin
+  const hargaRute = (from: string, to: string, fallback: number) => {
+    const r = ROUTES.find((x) => norm(x.from) === norm(from) && norm(x.to) === norm(to));
+    return r ? getRoutePrice(r, undefined, overrides) : fallback;
+  };
   return (
     <ArticleLayout
       title="Update Ongkos Travel Bengkulu 2026"
@@ -167,7 +179,7 @@ export default function OngkosTravelBengkulu2026() {
                   </span>
                 )}
               </td>
-              <td><strong>{formatPrice(r.price)}</strong>/orang</td>
+              <td><strong>{formatPrice(hargaRute(r.from, r.to, r.price))}</strong>/orang</td>
               <td>{r.duration}</td>
               <td>{r.via || '—'}</td>
             </tr>

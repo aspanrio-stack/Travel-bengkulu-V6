@@ -8,7 +8,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllOrders, saveOrder, Order } from '@/lib/orders';
+import { getAllOrders, saveOrder, deleteOrderById, Order } from '@/lib/orders';
+import { revokeTicketByOrder } from '@/lib/tickets';
 import { autoConfirmDueOrders } from '@/lib/auto-confirm';
 import { getSession } from '@/lib/auth';
 import { getCurrentUser } from '@/lib/supabase/server';
@@ -119,5 +120,26 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('Save order error:', error);
     return NextResponse.json({ error: 'Gagal menyimpan pesanan' }, { status: 500 });
+  }
+}
+
+// ─────────────────────────────────────────────
+// DELETE — Hapus permanen satu pesanan (hanya admin), mis. data demo
+// ─────────────────────────────────────────────
+export async function DELETE(req: NextRequest) {
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  try {
+    const orderId = req.nextUrl.searchParams.get('id');
+    if (!orderId) return NextResponse.json({ error: 'id diperlukan' }, { status: 400 });
+    const ok = await deleteOrderById(orderId);
+    if (!ok) return NextResponse.json({ error: 'Pesanan tidak ditemukan' }, { status: 404 });
+    await revokeTicketByOrder(orderId);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Delete order error:', error);
+    return NextResponse.json({ error: 'Gagal menghapus pesanan' }, { status: 500 });
   }
 }

@@ -326,10 +326,22 @@ export function getRouteById(id: string): Route | undefined {
   return ROUTES.find(r => r.id === id);
 }
 
-/** Harga per orang; mobil non-Hiace (timeInfo.price) bisa berbeda dari harga dasar */
-export function getRoutePrice(route: Route | undefined, time?: string): number {
+/**
+ * Harga per orang; mobil non-Hiace (timeInfo.price) bisa berbeda dari harga dasar.
+ * `overrides` (id → harga) berasal dari tab "Update Tarif" admin: key rute = `route:${id}`.
+ * Bila harga dasar diubah, harga mobil non-Hiace ikut bergeser dengan selisih yang sama
+ * (selisih/diskon terhadap Hiace tetap terjaga).
+ */
+export function getRoutePrice(
+  route: Route | undefined,
+  time?: string,
+  overrides?: Record<string, number>
+): number {
   if (!route) return 0;
-  return (time && route.timeInfo?.[time]?.price) || route.price;
+  const base = overrides?.[`route:${route.id}`] ?? route.price;
+  const timePrice = time ? route.timeInfo?.[time]?.price : undefined;
+  if (timePrice) return Math.max(0, timePrice + (base - route.price));
+  return base;
 }
 
 /** Cek apakah tanggal (YYYY-MM-DD) jatuh pada hari keberangkatan rute */

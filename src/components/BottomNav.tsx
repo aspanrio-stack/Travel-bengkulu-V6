@@ -147,15 +147,7 @@ export default function BottomNav() {
               href={waLinkUntukPath(pathname)}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => {
-                // Hitung klik WhatsApp (diam-diam, tidak mengganggu pengguna)
-                fetch('/api/track', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ source: 'wa_nav', page: pathname }),
-                  keepalive: true,
-                }).catch(() => {});
-              }}
+              data-wa-src="bottomnav"
               aria-label="Chat admin via WhatsApp"
               className="flex w-full flex-col items-center gap-0.5 py-2.5 text-[11px] font-medium text-slate-500 transition-colors active:scale-95"
             >

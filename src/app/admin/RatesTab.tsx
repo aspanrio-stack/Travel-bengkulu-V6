@@ -170,7 +170,7 @@ export default function RatesTab({ setToast }: { setToast: (msg: string) => void
       return;
     }
 
-    if (!confirm('Simpan perubahan tarif? Harga baru langsung tampil di dashboard.')) return;
+    if (!confirm('Simpan perubahan tarif? Harga baru langsung berlaku di form pemesanan, pembayaran, dan halaman daftar ongkos.')) return;
 
     setSaving(true);
     try {
@@ -216,7 +216,7 @@ export default function RatesTab({ setToast }: { setToast: (msg: string) => void
           <div>
             <h2 className="text-white font-bold text-lg">💰 Update Tarif</h2>
             <p className="text-blue-200 text-xs mt-0.5">
-              Ubah harga tiap rute travel & paket sewa. Klik Simpan agar langsung tampil.
+              Ubah harga tiap rute travel & paket sewa. Klik Simpan agar langsung berlaku di website.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -292,9 +292,12 @@ export default function RatesTab({ setToast }: { setToast: (msg: string) => void
           <p>1. Klik kolom harga pada rute/paket yang ingin diubah</p>
           <p>2. Ketik harga baru (angka saja, tanpa titik/koma)</p>
           <p>3. Klik tombol <strong className="text-slate-700">💾 Simpan Tarif</strong></p>
-          <p className="text-amber-600 mt-2">
-            ⚠️ Harga di sini merapikan tampilan dashboard. Form pemesanan di website masih
-            memakai harga tetap di routes.ts / rental-config.ts sampai disambungkan ke tarif ini.
+          <p className="text-green-700 mt-2">
+            ✅ Berlaku otomatis di: form pemesanan, halaman pembayaran, kalkulator beranda, form sewa mobil,
+            dan halaman Update Ongkos 2026. Untuk jam berangkat mobil non-Hiace, harganya ikut bergeser dengan selisih yang sama.
+          </p>
+          <p className="text-slate-500">
+            Catatan: teks harga di artikel/halaman rute (mis. Bandung, Padang) masih tulisan tetap dan tidak ikut berubah.
           </p>
         </div>
       )}

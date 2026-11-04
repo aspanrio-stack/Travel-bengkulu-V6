@@ -182,6 +182,9 @@ export async function POST(req: NextRequest) {
     if (order.status === 'success') {
       return NextResponse.json({ error: 'Pesanan sudah dikonfirmasi sebelumnya' }, { status: 400 });
     }
+    if (order.status === 'cancelled') {
+      return NextResponse.json({ error: 'Pesanan sudah dibatalkan' }, { status: 400 });
+    }
 
     // 1. Update status → 'success'
     const updated = await updateOrderStatus(orderId, 'success');
