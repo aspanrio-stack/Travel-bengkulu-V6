@@ -3,13 +3,13 @@ import Link from 'next/link';
 import DestinationCard from '@/components/DestinationCard';
 import HotelBanner from '@/components/HotelBanner';
 import PaketWisataBanner from '@/components/PaketWisataBanner';
-import ReviewGuideSection from '@/components/ReviewGuideSection';
+import RentalMobilSection from '@/components/RentalMobilSection';
 import { CATEGORIES, DESTINATIONS } from '@/lib/destinations';
 
 export const metadata: Metadata = {
-  title: 'Jelajah Bengkulu – Destinasi Wisata, Ulasan & Rating Penumpang',
+  title: 'Jelajah Bengkulu – Destinasi Wisata, Hotel, Paket Wisata & Rental Mobil',
   description:
-    'Jelajahi destinasi wisata Bengkulu: Pantai Panjang, Benteng Marlborough, Bukit Kaba, Air Terjun Suban, Pulau Tikus dan lainnya. Lengkap dengan akses travel, rental mobil, serta panduan memberi ulasan dan rating penumpang.',
+    'Jelajahi destinasi wisata Bengkulu: Pantai Panjang, Benteng Marlborough, Bukit Kaba, Air Terjun Suban, Pulau Tikus dan lainnya. Lengkap dengan hotel, paket wisata, dan rental mobil.',
   alternates: { canonical: 'https://bengkulutravel.com/destinasi' },
   // noindex sementara: konten masih tipis. Hapus baris ini setelah tiap destinasi punya artikel lengkap.
   robots: { index: false, follow: true },
@@ -33,7 +33,7 @@ export default async function DestinasiPage({
     <div className="min-h-screen bg-slate-50 pt-6 md:pt-20 pb-28">
       <div className="mx-auto max-w-6xl px-4">
         <h1 className="font-display text-2xl font-bold text-slate-800 md:text-3xl">Jelajah Bengkulu</h1>
-        <p className="mt-1 text-slate-500">Temukan tujuan wisata, pesan travel atau sewa mobil, dan bagikan ulasan perjalanan Anda.</p>
+        <p className="mt-1 text-slate-500">Temukan tujuan wisata, menginap di hotel, ikut paket wisata, atau sewa mobil untuk perjalanan Anda.</p>
 
         <form action="/destinasi" className="mt-4">
           <input type="hidden" name="kategori" value={kategori} />
@@ -64,6 +64,7 @@ export default async function DestinasiPage({
           <>
             <HotelBanner />
             <PaketWisataBanner />
+            <RentalMobilSection />
           </>
         )}
 
@@ -81,8 +82,6 @@ export default async function DestinasiPage({
 
           </>
         )}
-
-        <ReviewGuideSection />
 
         <p className="mt-8 text-sm text-slate-500">
           Ingin panduan lengkap? Baca <Link className="font-semibold text-primary-700 underline" href="/tempat-wisata-bengkulu">Tempat Wisata di Bengkulu</Link>.

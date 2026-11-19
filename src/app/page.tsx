@@ -5,6 +5,7 @@ import HomeGreeting from '@/components/HomeGreeting';
 import HomeBookingCard from '@/components/HomeBookingCard';
 import CustomerReviewsCard from '@/components/CustomerReviewsCard';
 import ETicketSection from '@/components/ETicketSection';
+import ReviewGuideSection from '@/components/ReviewGuideSection';
 
 export const metadata: Metadata = {
   title: 'Travel Bengkulu | Antar Jemput Door to Door – Curup, Palembang, Jambi',
@@ -204,6 +205,13 @@ export default function HomePage() {
 
       {/* ULASAN PELANGGAN — otomatis hilang jika belum ada ulasan terpublikasi */}
       <CustomerReviewsCard />
+
+      {/* PANDUAN ULASAN & RATING — tepat di bawah Kata Pelanggan Kami */}
+      <div className="bg-slate-50 px-4 pb-14 pt-2 md:pb-20">
+        <div className="mx-auto max-w-7xl">
+          <ReviewGuideSection className="mt-0" />
+        </div>
+      </div>
     </>
   );
 }

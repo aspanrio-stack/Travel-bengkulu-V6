@@ -77,9 +77,9 @@ function ReviewMockup() {
   );
 }
 
-export default function ReviewGuideSection() {
+export default function ReviewGuideSection({ className = 'mt-10' }: { className?: string } = {}) {
   return (
-    <section id="ulasan" aria-labelledby="ulasan-heading" className="relative mt-10 overflow-hidden rounded-3xl bg-white px-4 py-10 shadow-sm ring-1 ring-slate-100 md:px-10 md:py-14">
+    <section id="ulasan" aria-labelledby="ulasan-heading" className={`relative overflow-hidden rounded-3xl bg-white px-4 py-10 shadow-sm ring-1 ring-slate-100 md:px-10 md:py-14 ${className}`}>
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <div className="absolute -left-20 top-0 h-64 w-64 rounded-full bg-primary-100/60 blur-3xl" />
         <div className="absolute -right-20 bottom-0 h-64 w-64 rounded-full bg-amber-100/60 blur-3xl" />
