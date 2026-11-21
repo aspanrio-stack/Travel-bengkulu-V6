@@ -1,171 +1,136 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { RENTAL_PRICES } from '@/lib/rental-config';
+import { getRateOverrides } from '@/lib/rates-server';
+import { applyRentalOverrides } from '@/lib/rates';
 
 /**
- * Iklan Rental Mobil untuk halaman Jelajah (/destinasi), menaut ke /rental-mobil-curup.
- * Server component. Foto armada dari /public/images (avanza, innova, hiace).
+ * Section Rental Mobil di beranda: "papan harga" tiga armada (Avanza, Innova, HiAce)
+ * dengan dua pilihan sewa (Lepas Kunci / Dengan Sopir), menaut ke /rental-mobil-curup.
+ * Server component async: harga ikut tarif dari tab Update Tarif admin (halaman beranda
+ * di-revalidate berkala); bila Redis bermasalah otomatis memakai harga default.
  * Fakta mengacu pada halaman rental: Avanza & Innova 7 penumpang, HiAce 12-14 penumpang;
- * lepas kunci (SIM A + KTP asli sebagai jaminan, BBM ditanggung penyewa) atau dengan sopir.
+ * lepas kunci butuh SIM A + KTP asli (jaminan), BBM ditanggung penyewa.
  */
 
-const hargaMulai = RENTAL_PRICES.lepas_kunci.dalam_kota.avanza.toLocaleString('id-ID');
+const rp = (n: number) => `Rp ${n.toLocaleString('id-ID')}`;
 
-const fleet = [
-  { name: 'Toyota Avanza', seat: '7 penumpang', src: '/images/avanza.jpg', w: 801, h: 487, note: 'Irit & lincah' },
-  { name: 'Toyota Innova', seat: '7 penumpang', src: '/images/innova.jpg', w: 800, h: 500, note: 'Lega & bertenaga' },
-  { name: 'Toyota HiAce', seat: '12–14 penumpang', src: '/images/hiace.jpg', w: 804, h: 503, note: 'Untuk rombongan' },
+type Vehicle = 'avanza' | 'innova' | 'hiace';
+
+const fleet: { id: Vehicle; name: string; seat: string; note: string; src: string; w: number; h: number }[] = [
+  { id: 'avanza', name: 'Toyota Avanza', seat: '7 penumpang', note: 'Irit dan lincah untuk keluarga kecil', src: '/images/avanza.jpg', w: 801, h: 487 },
+  { id: 'innova', name: 'Toyota Innova', seat: '7 penumpang', note: 'Lega dan bertenaga untuk jarak jauh', src: '/images/innova.jpg', w: 800, h: 500 },
+  { id: 'hiace', name: 'Toyota HiAce', seat: '12–14 penumpang', note: 'Pas untuk rombongan dan gathering', src: '/images/hiace.jpg', w: 804, h: 503 },
 ];
 
-const perks = [
-  { icon: '🔑', title: 'Lepas Kunci atau Dengan Sopir', desc: 'Setir sendiri sesuka hati, atau duduk manis dan biarkan sopir kami yang mengantar.' },
-  { icon: '👨‍👩‍👧‍👦', title: 'Muat 7 sampai 14 Penumpang', desc: 'Dari liburan keluarga kecil sampai gathering dan rombongan besar.' },
-  { icon: '🏔️', title: 'Cocok ke Mana Saja', desc: 'Wisata, urusan bisnis, hingga acara keluarga di Curup dan Rejang Lebong.' },
-  { icon: '💬', title: 'Pesan Gampang', desc: 'Pesan lewat website atau tanya dulu via WhatsApp, bayar tunai atau QRIS.' },
+const aturan = [
+  { icon: '🪪', text: 'Lepas kunci: siapkan KTP dan SIM A asli' },
+  { icon: '⛽', text: 'Lepas kunci: BBM ditanggung penyewa' },
+  { icon: '🗺️', text: 'Tarif dalam kota dan luar kota berbeda' },
 ];
 
-const caraLepasKunci = [
-  { title: 'Pilih armada & tanggal', desc: 'Tentukan unit dan jadwal sewa yang Anda butuhkan.' },
-  { title: 'Isi data & lokasi ambil', desc: 'Lengkapi data diri dan tempat pengambilan unit.' },
-  { title: 'Siapkan KTP & SIM A asli', desc: 'Unit diserahkan, KTP asli jadi jaminan selama sewa.' },
-];
+export default async function RentalMobilSection() {
+  const prices = applyRentalOverrides(await getRateOverrides());
 
-const caraSopir = [
-  { title: 'Pilih armada & tujuan', desc: 'Sebutkan unit, tanggal, dan tujuan perjalanan Anda.' },
-  { title: 'Pesan lewat website atau WhatsApp', desc: 'Tarif dalam kota dan luar kota berbeda, admin siap membantu.' },
-  { title: 'Duduk manis, berangkat', desc: 'Sopir kami menjemput dan mengantar Anda sampai tujuan.' },
-];
-
-function Steps({ items, tone }: { items: { title: string; desc: string }[]; tone: 'teal' | 'amber' }) {
-  const dot = tone === 'teal' ? 'bg-primary-700 text-white' : 'bg-amber-400 text-slate-900';
   return (
-    <ol className="relative mt-4 space-y-4">
-      {items.map((s, i) => (
-        <li key={s.title} className="relative flex gap-3">
-          {i < items.length - 1 && (
-            <span className="absolute left-[15px] top-8 h-[calc(100%-0.5rem)] border-l-2 border-dashed border-slate-300" aria-hidden="true" />
-          )}
-          <span className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${dot}`}>
-            {i + 1}
+    <section
+      id="rental-mobil"
+      aria-labelledby="rental-heading"
+      className="relative overflow-hidden bg-gradient-to-b from-amber-50 via-amber-50/40 to-white py-12 md:py-20"
+    >
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div className="absolute -left-24 top-8 h-64 w-64 rounded-full bg-amber-200/40 blur-3xl" />
+        <div className="absolute -right-24 bottom-8 h-64 w-64 rounded-full bg-primary-100/60 blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto max-w-7xl px-4">
+        {/* Judul */}
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-amber-300 bg-white px-4 py-2 text-sm font-medium text-amber-900 shadow-sm">
+            🚗 Rental Mobil
           </span>
-          <div>
-            <p className="font-bold text-slate-800">{s.title}</p>
-            <p className="mt-0.5 text-[13px] leading-relaxed text-slate-600">{s.desc}</p>
+          <h2 id="rental-heading" className="mt-4 font-display text-3xl font-bold leading-tight text-slate-900 md:text-4xl">
+            Pilih Mobilnya, <span className="text-primary-700">Tentukan Gaya Sewanya</span>
+          </h2>
+          <p className="mt-3 text-[15px] leading-relaxed text-slate-600 md:text-base">
+            Setir sendiri dengan sewa lepas kunci, atau duduk manis ditemani sopir. Liburan keluarga,
+            urusan bisnis, hingga acara kantor, semua ada armadanya.
+          </p>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs font-semibold">
+            <span className="rounded-full bg-primary-700 px-3 py-1.5 text-white">🔑 Lepas Kunci</span>
+            <span className="rounded-full bg-amber-400 px-3 py-1.5 text-slate-900">🧑‍✈️ Dengan Sopir</span>
           </div>
-        </li>
-      ))}
-    </ol>
-  );
-}
-
-/** Mockup kartu "Pilih Armada" dengan foto asli tiga unit */
-function FleetMockup() {
-  return (
-    <div className="relative mx-auto w-full max-w-sm">
-      <div className="absolute -inset-5 -z-10 rounded-[2.5rem] bg-gradient-to-br from-primary-200/60 via-primary-50 to-amber-100/70 blur-2xl" aria-hidden="true" />
-      <div className="-rotate-1 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl shadow-primary-900/15 transition-transform duration-500 hover:rotate-0">
-        <div className="flex items-center justify-between">
-          <p className="font-display text-base font-bold text-slate-800">Pilih Armada Anda</p>
-          <span className="rounded-full bg-primary-50 px-2.5 py-1 text-[11px] font-semibold text-primary-700">3 pilihan</span>
         </div>
-        <ul className="mt-3 space-y-2.5">
-          {fleet.map(f => (
-            <li key={f.name} className="flex items-center gap-3 rounded-xl border border-primary-100 bg-primary-50/50 p-2">
-              <Image
-                src={f.src}
-                alt={`${f.name}, ${f.seat}`}
-                width={f.w}
-                height={f.h}
-                sizes="96px"
-                className="h-14 w-24 shrink-0 rounded-lg bg-white object-contain"
-              />
-              <div className="min-w-0">
-                <p className="truncate text-sm font-bold text-slate-800">{f.name}</p>
-                <p className="text-[11px] text-slate-600">{f.seat} · {f.note}</p>
-              </div>
+
+        {/* Papan harga: geser di HP, tiga kolom di layar lebar */}
+        <ul className="-mx-4 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0">
+          {fleet.map(v => {
+            const lepas = prices.lepas_kunci.dalam_kota[v.id];
+            const sopir = prices.with_driver.dalam_kota[v.id];
+            return (
+              <li
+                key={v.id}
+                className="w-[80%] shrink-0 snap-center overflow-hidden rounded-3xl bg-white shadow-lg shadow-amber-900/10 ring-1 ring-amber-100 sm:w-[55%] md:w-auto"
+              >
+                {/* Foto di atas latar hangat */}
+                <div className="relative bg-gradient-to-br from-amber-100 to-primary-50 px-4 pb-2 pt-5">
+                  <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-bold text-primary-800 shadow">
+                    👥 {v.seat}
+                  </span>
+                  <Image
+                    src={v.src}
+                    alt={`${v.name}, ${v.seat}`}
+                    width={v.w}
+                    height={v.h}
+                    sizes="(max-width: 768px) 80vw, 380px"
+                    className="mx-auto mt-4 h-32 w-auto object-contain mix-blend-multiply md:h-36"
+                  />
+                </div>
+
+                <div className="p-4">
+                  <h3 className="font-display text-xl font-bold text-slate-900">{v.name}</h3>
+                  <p className="mt-0.5 text-[13px] text-slate-600">{v.note}</p>
+
+                  <div className="mt-4 space-y-2">
+                    <div className="flex items-center justify-between rounded-xl bg-primary-50 px-3 py-2.5">
+                      <span className="text-xs font-bold text-primary-800">🔑 Lepas Kunci</span>
+                      {lepas > 0 ? (
+                        <span className="text-sm font-bold text-slate-900">
+                          {rp(lepas)}<span className="text-[11px] font-medium text-slate-500">/hari</span>
+                        </span>
+                      ) : (
+                        <span className="text-[11px] font-semibold text-slate-500">Hanya dengan sopir</span>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between rounded-xl bg-amber-50 px-3 py-2.5">
+                      <span className="text-xs font-bold text-amber-900">🧑‍✈️ Dengan Sopir</span>
+                      <span className="text-sm font-bold text-slate-900">
+                        {rp(sopir)}<span className="text-[11px] font-medium text-slate-500">/hari</span>
+                      </span>
+                    </div>
+                  </div>
+                  <p className="mt-2 text-[11px] text-slate-500">Harga dalam kota, mulai dari. Luar kota bisa berbeda.</p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+
+        {/* Ketentuan singkat */}
+        <ul className="mx-auto mt-4 grid max-w-3xl gap-2 text-xs text-slate-700 sm:grid-cols-3">
+          {aturan.map(a => (
+            <li key={a.text} className="flex items-center gap-2 rounded-xl border border-amber-200 bg-white/80 px-3 py-2">
+              <span aria-hidden="true">{a.icon}</span>
+              <span>{a.text}</span>
             </li>
           ))}
         </ul>
-        <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-center text-[11px] font-semibold text-amber-900">
-          🔑 Lepas kunci mulai Rp {hargaMulai}/hari
-        </p>
-      </div>
-      <span className="absolute -right-2 -top-3 rotate-6 rounded-full bg-gradient-to-r from-amber-500 to-amber-400 px-3 py-1 text-[11px] font-bold tracking-wide text-slate-900 shadow-lg">
-        🚗 SIAP JALAN
-      </span>
-    </div>
-  );
-}
-
-export default function RentalMobilSection() {
-  return (
-    <section id="rental-mobil" aria-labelledby="rental-heading" className="relative mt-10 overflow-hidden rounded-3xl bg-white px-4 py-10 shadow-sm ring-1 ring-slate-100 md:px-10 md:py-14">
-      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-        <div className="absolute -left-20 top-0 h-64 w-64 rounded-full bg-primary-100/60 blur-3xl" />
-        <div className="absolute -right-20 bottom-0 h-64 w-64 rounded-full bg-amber-100/60 blur-3xl" />
-      </div>
-
-      <div className="relative">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-          <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-900">
-              🚗 Rental Mobil
-            </span>
-            <h2 id="rental-heading" className="mt-4 font-display text-3xl font-bold leading-tight text-slate-900 md:text-4xl">
-              Sewa Mobil Sesuka Hati,{' '}
-              <span className="text-primary-700">Bebas Jalan ke Mana Saja</span>
-            </h2>
-            <p className="mt-4 text-[15px] leading-relaxed text-slate-600 md:text-base">
-              Liburan keluarga, urusan bisnis, atau acara kantor? Pilih Avanza, Innova, atau HiAce
-              sesuai jumlah penumpang, lalu jalan kapan pun Anda siap. Mau setir sendiri atau
-              ditemani sopir, semuanya bisa diatur. Mulai dari Rp {hargaMulai} per hari untuk
-              sewa lepas kunci.
-            </p>
-
-            <ul className="mt-6 space-y-3">
-              {perks.map(t => (
-                <li key={t.title} className="flex items-start gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-xl" aria-hidden="true">{t.icon}</span>
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-800">{t.title}</h3>
-                    <p className="mt-0.5 text-[13px] leading-relaxed text-slate-600">{t.desc}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <FleetMockup />
-        </div>
-
-        <h3 className="mb-6 mt-12 text-center font-display text-xl font-bold text-slate-900 md:text-2xl">
-          Dua Cara Sewa, Pilih yang Paling Cocok
-        </h3>
-
-        <div className="grid gap-5 md:grid-cols-2">
-          <div className="rounded-2xl border border-primary-200 bg-primary-50/40 p-5">
-            <p className="inline-block rounded-full bg-primary-700 px-3 py-1 text-xs font-bold text-white">Cara 1 · Lepas Kunci</p>
-            <Steps items={caraLepasKunci} tone="teal" />
-            <p className="mt-4 rounded-lg bg-white/80 p-2.5 text-xs leading-relaxed text-slate-600">
-              ⛽ BBM ditanggung penyewa, mobil dikembalikan dalam kondisi bersih.
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-amber-200 bg-amber-50/50 p-5">
-            <p className="inline-block rounded-full bg-amber-400 px-3 py-1 text-xs font-bold text-slate-900">Cara 2 · Dengan Sopir</p>
-            <Steps items={caraSopir} tone="amber" />
-            <p className="mt-4 rounded-lg bg-white/80 p-2.5 text-xs leading-relaxed text-slate-600">
-              🧭 Pas untuk yang ingin santai dan tidak hafal jalan.
-            </p>
-          </div>
-        </div>
 
         <div className="mt-8 text-center">
           <Link href="/rental-mobil-curup" className="btn-primary">
-            Lihat Rental Mobil &amp; Harga
+            Lihat Rental Mobil &amp; Pesan
             <span aria-hidden="true">→</span>
           </Link>
-          <p className="mt-3 text-xs text-slate-500">Armada, ketentuan sewa, dan tarif lengkap ada di halaman rental mobil.</p>
+          <p className="mt-3 text-xs text-slate-500">Armada, ketentuan, dan tarif lengkap ada di halaman rental mobil.</p>
         </div>
       </div>
     </section>

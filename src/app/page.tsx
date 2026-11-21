@@ -5,6 +5,8 @@ import HomeGreeting from '@/components/HomeGreeting';
 import HomeBookingCard from '@/components/HomeBookingCard';
 import CustomerReviewsCard from '@/components/CustomerReviewsCard';
 import ETicketSection from '@/components/ETicketSection';
+import PaketWisataBanner from '@/components/PaketWisataBanner';
+import RentalMobilSection from '@/components/RentalMobilSection';
 import ReviewGuideSection from '@/components/ReviewGuideSection';
 
 export const metadata: Metadata = {
@@ -162,6 +164,16 @@ export default function HomePage() {
 
       {/* ARMADA — gambar mobil, tepat di bawah kolom cari & ikon */}
       <FleetGallery />
+
+      {/* PAKET WISATA — tepat di bawah Armada Unggulan */}
+      <div className="bg-white px-4 pb-10 pt-6 md:pb-14">
+        <div className="mx-auto max-w-7xl">
+          <PaketWisataBanner className="mt-0" />
+        </div>
+      </div>
+
+      {/* RENTAL MOBIL */}
+      <RentalMobilSection />
 
       {/* E-TICKETING */}
       <ETicketSection />

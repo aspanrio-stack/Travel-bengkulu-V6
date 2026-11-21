@@ -2,15 +2,13 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import DestinationCard from '@/components/DestinationCard';
 import HotelBanner from '@/components/HotelBanner';
-import PaketWisataBanner from '@/components/PaketWisataBanner';
 import KulinerKhasSection from '@/components/KulinerKhasSection';
-import RentalMobilSection from '@/components/RentalMobilSection';
 import { CATEGORIES, DESTINATIONS } from '@/lib/destinations';
 
 export const metadata: Metadata = {
-  title: 'Jelajah Bengkulu – Destinasi Wisata, Hotel, Paket Wisata & Rental Mobil',
+  title: 'Jelajah Bengkulu – Destinasi Wisata, Hotel & Kuliner Khas',
   description:
-    'Jelajahi destinasi wisata Bengkulu: Pantai Panjang, Benteng Marlborough, Bukit Kaba, Air Terjun Suban, Pulau Tikus dan lainnya. Lengkap dengan hotel, paket wisata, dan rental mobil.',
+    'Jelajahi destinasi wisata Bengkulu: Pantai Panjang, Benteng Marlborough, Bukit Kaba, Air Terjun Suban, Pulau Tikus dan lainnya. Lengkap dengan pilihan hotel dan kuliner khas Kota Bengkulu.',
   alternates: { canonical: 'https://bengkulutravel.com/destinasi' },
   // noindex sementara: konten masih tipis. Hapus baris ini setelah tiap destinasi punya artikel lengkap.
   robots: { index: false, follow: true },
@@ -34,7 +32,7 @@ export default async function DestinasiPage({
     <div className="min-h-screen bg-slate-50 pt-6 md:pt-20 pb-28">
       <div className="mx-auto max-w-6xl px-4">
         <h1 className="font-display text-2xl font-bold text-slate-800 md:text-3xl">Jelajah Bengkulu</h1>
-        <p className="mt-1 text-slate-500">Temukan tujuan wisata, menginap di hotel, ikut paket wisata, atau sewa mobil untuk perjalanan Anda.</p>
+        <p className="mt-1 text-slate-500">Temukan tujuan wisata, tempat menginap, dan kuliner khas Bengkulu untuk perjalanan Anda.</p>
 
         <form action="/destinasi" className="mt-4">
           <input type="hidden" name="kategori" value={kategori} />
@@ -64,8 +62,6 @@ export default async function DestinasiPage({
         {showPopular && (
           <>
             <HotelBanner />
-            <PaketWisataBanner />
-            <RentalMobilSection />
             <KulinerKhasSection />
           </>
         )}

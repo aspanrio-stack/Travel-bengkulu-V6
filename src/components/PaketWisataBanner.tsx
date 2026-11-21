@@ -21,9 +21,9 @@ const paketAllIn = [
 
 const paketKendaraan = ['Kendaraan', 'BBM', 'Sopir'];
 
-export default function PaketWisataBanner() {
+export default function PaketWisataBanner({ className = 'mt-8' }: { className?: string } = {}) {
   return (
-    <section id="paket-wisata" aria-label="Paket perjalanan wisata Bromo, Yogyakarta, Borobudur" className="mt-8 scroll-mt-20">
+    <section id="paket-wisata" aria-label="Paket perjalanan wisata Bromo, Yogyakarta, Borobudur" className={`scroll-mt-20 ${className}`}>
       <div className="grid overflow-hidden rounded-3xl bg-primary-900 shadow-xl shadow-primary-900/15 ring-1 ring-primary-900/10 lg:grid-cols-5">
         {/* Foto (tanpa teks di atasnya) */}
         <div className="relative aspect-video overflow-hidden lg:order-2 lg:col-span-3 lg:aspect-auto lg:min-h-[400px]">
