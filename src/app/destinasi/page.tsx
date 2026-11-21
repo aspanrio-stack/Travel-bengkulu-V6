@@ -3,6 +3,7 @@ import Link from 'next/link';
 import DestinationCard from '@/components/DestinationCard';
 import HotelBanner from '@/components/HotelBanner';
 import PaketWisataBanner from '@/components/PaketWisataBanner';
+import KulinerKhasSection from '@/components/KulinerKhasSection';
 import RentalMobilSection from '@/components/RentalMobilSection';
 import { CATEGORIES, DESTINATIONS } from '@/lib/destinations';
 
@@ -65,6 +66,7 @@ export default async function DestinasiPage({
             <HotelBanner />
             <PaketWisataBanner />
             <RentalMobilSection />
+            <KulinerKhasSection />
           </>
         )}
 
