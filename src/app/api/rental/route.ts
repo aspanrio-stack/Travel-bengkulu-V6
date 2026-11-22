@@ -124,7 +124,7 @@ export async function POST(req: NextRequest) {
       `💳 Metode    : ${paymentMethod === 'qris' ? '📱 QRIS' : '💵 Tunai'}`,
       `━━━━━━━━━━━━━━━━━━━━━━━`,
       paymentMethod === 'qris'
-        ? `⚠️ *Segera cek pembayaran QRIS!*\nSetelah pembayaran diterima, tekan *✅ Konfirmasi* di dashboard admin.\nTiket/Invoice otomatis terkirim ke pelanggan.`
+        ? `⚠️ *Segera cek pembayaran QRIS!*\nSetelah pembayaran diterima, tekan *✅ Konfirmasi* di dashboard admin.\nTiket dikirim otomatis ke pelanggan sekitar 2 jam setelah jadwal.`
         : `ℹ️ Pesanan *Tunai* — Segera konfirmasi ketersediaan unit kepada pelanggan.`,
     ].filter(Boolean).join('\n');
 

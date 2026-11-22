@@ -20,6 +20,10 @@
     {
       "path": "/api/cron/purge-expired-tickets",
       "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/send-due-tickets",
+      "schedule": "30 1 * * *"
     }
   ]
 }
