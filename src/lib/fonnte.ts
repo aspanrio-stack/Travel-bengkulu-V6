@@ -156,7 +156,7 @@ export function msgAdminPesananBaru(data: BookingData): string {
     `💳 Metode    : ${data.paymentMethod === 'qris' ? '📱 QRIS' : '💵 Tunai'}`,
     `━━━━━━━━━━━━━━━━━━━━━━━`,
     data.paymentMethod === 'qris'
-      ? `⚠️ *Segera cek pembayaran QRIS!*\nSetelah pembayaran diterima, tekan tombol *✅ Konfirmasi* di dashboard admin.\nTiket otomatis terkirim ke pelanggan (via email ${data.email ? `ke ${data.email}` : '(tidak ada email)'} + notif WA).`
+      ? `⚠️ *Segera cek pembayaran QRIS!*\nSetelah pembayaran diterima, tekan tombol *✅ Konfirmasi* di dashboard admin.\nTiket dikirim otomatis ke email pelanggan ${data.email ? `(${data.email})` : '(tidak ada email)'} sekitar 2 jam setelah jadwal keberangkatan.`
       : `ℹ️ Pesanan *Tunai* — Pembayaran dilakukan langsung ke driver saat penjemputan.\nTekan *✅ Konfirmasi* di dashboard setelah sepakat dengan pelanggan.`,
   ].filter(Boolean).join('\n');
 }
@@ -184,7 +184,7 @@ export function msgPemesanKonfirmasi(data: BookingData): string {
     `💰 Total       : ${formatRp(data.total)}`,
     '',
     data.email
-      ? `📧 *Tiket perjalanan telah dikirim ke email:*\n${data.email}\n_(Cek folder Spam jika tidak masuk Inbox)_`
+      ? `📧 *Tiket perjalanan akan dikirim otomatis ke email:*\n${data.email}\n_(Sekitar 2 jam setelah jadwal keberangkatan. Cek folder Spam jika tidak masuk Inbox)_`
       : `📌 Harap tunjukkan pesan ini kepada driver saat penjemputan sebagai bukti pemesanan.`,
     '',
     `Driver kami akan menghubungi Anda sebelum keberangkatan.`,

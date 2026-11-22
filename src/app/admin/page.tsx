@@ -513,7 +513,7 @@ export default function AdminDashboard() {
 
   // ── Konfirmasi pembayaran ──
   const handleConfirm = async (orderId: string) => {
-    if (!confirm(`Konfirmasi pembayaran pesanan ${orderId}?\n\nTiket + PDF akan dikirim ke email pelanggan (jika ada).`)) return;
+    if (!confirm(`Konfirmasi pembayaran pesanan ${orderId}?\n\nTiket + PDF TIDAK dikirim sekarang — dikirim otomatis ke email pelanggan (jika ada) sekitar 2 jam setelah jadwal keberangkatan.`)) return;
     setConfirming(orderId);
     try {
       const res = await fetch('/api/admin/confirm', {
@@ -752,7 +752,7 @@ export default function AdminDashboard() {
                   <li className="flex items-start gap-2 text-sm text-amber-900">
                     <span className="text-red-500 font-bold mt-0.5">⚠️</span>
                     <span>
-                      <strong>Jangan tekan tombol Konfirmasi</strong> sebelum pembayaran masuk, karena tiket akan terkirim otomatis ke pelanggan kak.
+                      <strong>Jangan tekan tombol Konfirmasi</strong> sebelum pembayaran masuk, karena pesanan akan berstatus lunas dan tiket akan terkirim otomatis ke pelanggan sesuai jadwal (sekitar 2 jam setelah keberangkatan) kak.
                     </span>
                   </li>
                   <li className="flex items-start gap-2 text-sm text-amber-900">

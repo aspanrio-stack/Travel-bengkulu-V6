@@ -41,6 +41,12 @@ export interface Order {
   reviewEmailSent?: boolean;
   /** ISO waktu email permintaan ulasan terkirim */
   reviewEmailSentAt?: string;
+  /** true jika pesanan ini dikonfirmasi lewat tombol admin versi baru → tiket dikirim terjadwal (lihat lib/ticket-scheduler.ts) */
+  ticketScheduled?: boolean;
+  /** true jika email tiket (PDF + QR) sudah terkirim (anti-duplikasi; undefined dianggap false) */
+  ticketEmailSent?: boolean;
+  /** ISO waktu email tiket terkirim */
+  ticketEmailSentAt?: string;
   /** ISO waktu dibatalkan admin (pesanan batal tidak dihitung di statistik/pendapatan) */
   cancelledAt?: string;
   /** Status sebelum dibatalkan — dipakai saat admin "Aktifkan Lagi" */

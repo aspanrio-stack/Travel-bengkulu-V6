@@ -528,7 +528,7 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
                   <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="contoh@email.com" autoFocus
                     className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
                   <p className="text-xs text-primary-600 mt-2 flex items-center gap-1.5">
-                    <span>📧</span> Tiket dikirim ke email ini setelah pembayaran dikonfirmasi admin
+                    <span>📧</span> Tiket dikirim otomatis ke email ini sekitar 2 jam setelah jadwal keberangkatan
                   </p>
                 </div>
               )}
