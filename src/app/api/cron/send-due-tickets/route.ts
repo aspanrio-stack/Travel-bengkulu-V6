@@ -6,7 +6,7 @@
  * lib/ticket-scheduler.ts.
  *
  * Otorisasi: header `Authorization: Bearer <CRON_SECRET>` (sama seperti cron lain).
- * Dipanggil tiap 15 menit oleh penjadwal eksternal (GitHub Actions / cron-job.org) dan
+ * Dipanggil tiap 15 menit oleh GitHub Actions (.github/workflows/send-due-tickets.yml) dan
  * sekali sehari oleh Vercel Cron (vercel.json) sebagai cadangan — Vercel Hobby hanya mengizinkan
  * cron harian, sehingga tidak bisa dipakai sendirian untuk presisi 1–2 jam.
  */

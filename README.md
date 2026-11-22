@@ -189,9 +189,9 @@ Jalankan di **Supabase → SQL Editor** (aman diulang):
 |---|---|---|
 | `/api/cron/send-review-requests` | `0 1 * * *` (08:00 WIB) | Email permintaan ulasan |
 | `/api/cron/purge-expired-tickets` | `0 2 * * *` (09:00 WIB) | Hapus tiket > 3 bulan |
-| `/api/cron/send-due-tickets` | `30 1 * * *` (08:30 WIB) | Cadangan harian kirim tiket terjadwal (pemicu utama: penjadwal eksternal tiap 15 menit yang memanggil endpoint ini dengan `Authorization: Bearer $CRON_SECRET`) |
+| `/api/cron/send-due-tickets` | `30 1 * * *` (08:30 WIB) | Cadangan harian kirim tiket terjadwal (pemicu utama: GitHub Actions tiap 15 menit, `.github/workflows/send-due-tickets.yml`) |
 
-**Pengiriman tiket**: tombol *Konfirmasi* admin hanya mengubah status — tiket (email + PDF ber-QR) dikirim otomatis 2 jam setelah jadwal keberangkatan (WIB), atau 2 jam setelah pesanan masuk untuk rute tanpa jam keberangkatan (`src/lib/ticket-scheduler.ts`). Pesanan QRIS yang belum dikonfirmasi tidak dikirimi tiket; tunai dianggap lunas. Pemicu 15 menit dipasang di luar repo (GitHub Actions / cron-job.org).
+**Pengiriman tiket**: tombol *Konfirmasi* admin hanya mengubah status — tiket (email + PDF ber-QR) dikirim otomatis 2 jam setelah jadwal keberangkatan (WIB), atau 2 jam setelah pesanan masuk untuk rute tanpa jam keberangkatan (`src/lib/ticket-scheduler.ts`). Pesanan QRIS yang belum dikonfirmasi tidak dikirimi tiket; tunai dianggap lunas. Pemicu 15 menit: GitHub Actions (`.github/workflows/send-due-tickets.yml`), perlu GitHub Secret `CRON_SECRET`.
 
 Tes manual: `curl -H "Authorization: Bearer $CRON_SECRET" https://bengkulutravel.com/api/cron/purge-expired-tickets`
 
