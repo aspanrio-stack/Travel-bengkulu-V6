@@ -21,6 +21,8 @@ import {
   msgAdminPesananBaru,
 } from '@/lib/fonnte';
 import { v4 as uuidv4 } from 'uuid';
+import { ROUTES } from '@/lib/routes';
+import { DATE_RE, isDeparturePast, todayWib } from '@/lib/booking-time';
 
 // ─────────────────────────────────────────────
 // GET — Daftar semua pesanan (hanya admin)
@@ -62,6 +64,23 @@ export async function POST(req: NextRequest) {
 
     if (!name || !phone || !route || !total) {
       return NextResponse.json({ error: 'Data tidak lengkap' }, { status: 400 });
+    }
+
+    // ── Tolak jadwal yang sudah lewat (WIB) ──
+    // Tiket dikirim otomatis X jam setelah jadwal, jadi jadwal yang sudah lewat tidak boleh dipesan.
+    // Jam dicek untuk rute berjam tetap & penerbangan keberangkatan (crp-bnd); lainnya hanya tanggal.
+    if (typeof date === 'string' && DATE_RE.test(date)) {
+      const rt = ROUTES.find(r => r.id === routeId);
+      const checkTime = !!rt?.departureTimes?.length || routeId === 'crp-bnd';
+      if (isDeparturePast(date, checkTime ? String(departureTime || '') : undefined)) {
+        const todayOrder = date === todayWib();
+        return NextResponse.json(
+          { error: todayOrder
+              ? 'Jam keberangkatan sudah lewat. Pilih jam yang masih tersedia atau ganti tanggal.'
+              : 'Tanggal keberangkatan sudah lewat. Pilih tanggal hari ini atau setelahnya.' },
+          { status: 400 }
+        );
+      }
     }
 
     // ── Buat objek pesanan ──
