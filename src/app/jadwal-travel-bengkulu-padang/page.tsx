@@ -11,7 +11,7 @@ const crp = jamPadang('crp-pdg');
 const pdgBkl = jamPadang('pdg-bkl');
 
 export const metadata: Metadata = {
-  title: `Jadwal Travel Bengkulu Padang: Hiace ${titik(bkl.hiace)}, Mobil Random ${titik(bkl.random)}`,
+  title: 'Jadwal Travel Bengkulu Padang Hari Ini & Jam Berangkat',
   description: `Jadwal travel Bengkulu Padang terbaru: Hiace berangkat ${titik(bkl.hiace)} dan mobil random ${titik(bkl.random)} dari Kota Bengkulu. Jadwal dari Padang dan Curup juga ada. Cek kursi via WA 0852-6864-5461.`,
   alternates: { canonical: URL },
   openGraph: { title: 'Jadwal Travel Bengkulu Padang | Travel Bengkulu', url: URL, locale: 'id_ID', type: 'article', images: [hiaceOg('padang-samping')] },
@@ -50,7 +50,7 @@ const jsonLd = {
 export default function Page() {
   return (
     <ArticleLayout
-      title="Jadwal Travel Bengkulu Padang: Jam Berangkat Hiace & Mobil Random"
+      title="Jadwal Travel Bengkulu Padang Hari Ini & Jam Berangkat"
       description="Jam keberangkatan travel Bengkulu–Padang dari Kota Bengkulu, Padang, dan Curup, lengkap dengan tarif per armada."
       breadcrumbs={[{ label: 'Travel Bengkulu Padang', href: '/travel-bengkulu-padang' }, { label: 'Jadwal Travel Bengkulu Padang' }]}
       badge="🕐 Jadwal Terbaru"
