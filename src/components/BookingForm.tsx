@@ -5,6 +5,7 @@ import LocationPicker from '@/components/LocationPicker';
 import SavedAddressBox from '@/components/SavedAddressBox';
 import LoginPrompt, { type AuthStatus } from '@/components/LoginPrompt';
 import { useRates } from '@/lib/useRates';
+import { todayWib, isDeparturePast } from '@/lib/booking-time';
 
 const REQUIRE_LOGIN = process.env.NEXT_PUBLIC_REQUIRE_LOGIN_TO_BOOK === 'true';
 
@@ -19,8 +20,6 @@ interface BookingFormProps {
   preselectedTime?: string;
 }
 
-const today = new Date().toISOString().split('T')[0];
-
 export default function BookingForm({ preselectedRouteId, preselectedPassengers, preselectedTime }: BookingFormProps) {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -29,6 +28,15 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
 
   // ── BARU: state lokasi GPS ──
   const [gpsLocation, setGpsLocation] = useState<{ lat: number; lng: number } | null>(null);
+
+  // ── Waktu sekarang (WIB) untuk menonaktifkan jam yang sudah lewat. null saat SSR → tidak ada yang dinonaktifkan ──
+  const [nowMs, setNowMs] = useState<number | null>(null);
+  useEffect(() => {
+    setNowMs(Date.now());
+    const id = setInterval(() => setNowMs(Date.now()), 30_000);
+    return () => clearInterval(id);
+  }, []);
+  const today = todayWib(nowMs ?? Date.now());
 
   const [form, setForm] = useState({
     routeId: preselectedRouteId || '',
@@ -99,12 +107,18 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
   const isAirportRoute = selectedRoute && (selectedRoute.id === 'crp-bnd' || selectedRoute.id === 'bnd-crp');
   const isFlexibleRoute = selectedRoute && !hasFixedTimes && !isAirportRoute;
 
+  const isTimePast = (t: string) => nowMs !== null && !!form.date && isDeparturePast(form.date, t, nowMs);
+  const allTimesPast = !!hasFixedTimes && !!form.date && selectedRoute!.departureTimes!.every(isTimePast);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm(prev => ({
       ...prev,
       [name]: value,
       ...(name === 'routeId' ? { departureTime: '', flightInfo: '' } : {}),
+      // Ganti tanggal ke hari ini → jam terpilih yang sudah lewat dikosongkan
+      ...(name === 'date' && prev.departureTime && isDeparturePast(value, prev.departureTime, Date.now())
+        ? { departureTime: '' } : {}),
     }));
     setError('');
   };
@@ -115,10 +129,16 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
     if (form.date < today) return 'Tanggal tidak boleh di masa lalu';
     if (!isDepartureDay(selectedRoute, form.date)) return `Rute ini hanya berangkat hari ${selectedRoute?.departureDaysLabel ?? 'tertentu'}. Pilih tanggal yang sesuai.`;
     if (hasFixedTimes && !form.departureTime) return 'Pilih jam keberangkatan';
+    if (hasFixedTimes && isDeparturePast(form.date, form.departureTime, Date.now())) {
+      return 'Jam keberangkatan sudah lewat. Pilih jam yang masih tersedia atau ganti tanggal.';
+    }
     if (isAirportRoute && !form.flightInfo.trim()) {
       return selectedRoute?.id === 'crp-bnd'
         ? 'Masukkan jam / nomor penerbangan keberangkatan'
         : 'Masukkan jam / nomor penerbangan kedatangan';
+    }
+    if (selectedRoute?.id === 'crp-bnd' && isDeparturePast(form.date, form.flightInfo, Date.now())) {
+      return 'Jam penerbangan keberangkatan sudah lewat. Periksa kembali jam / tanggalnya.';
     }
     return '';
   };
@@ -407,9 +427,12 @@ export default function BookingForm({ preselectedRouteId, preselectedPassengers,
                       className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500">
                       <option value="">-- Pilih Jam --</option>
                       {selectedRoute.departureTimes!.map(t => (
-                        <option key={t} value={t}>🕐 {formatDepartureTime(t)}{getTimeInfo(selectedRoute, t) ? ` · ${getTimeInfo(selectedRoute, t)!.car}` : ''}{getTimeInfo(selectedRoute, t)?.price ? ` · ${formatPrice(getTimeInfo(selectedRoute, t)!.price!)}` : ''}</option>
+                        <option key={t} value={t} disabled={isTimePast(t)}>🕐 {formatDepartureTime(t)}{isTimePast(t) ? ' · sudah lewat' : ''}{getTimeInfo(selectedRoute, t) ? ` · ${getTimeInfo(selectedRoute, t)!.car}` : ''}{getTimeInfo(selectedRoute, t)?.price ? ` · ${formatPrice(getTimeInfo(selectedRoute, t)!.price!)}` : ''}</option>
                       ))}
                     </select>
+                    {allTimesPast && (
+                      <p className="text-xs text-amber-700 mt-1.5">Semua jam keberangkatan hari ini sudah lewat. Silakan pilih tanggal lain.</p>
+                    )}
                     {selectedTimeInfo?.notice && (
                       <div role="alert" className="mt-2 bg-amber-50 border border-amber-300 rounded-xl px-4 py-3 flex items-start gap-2">
                         <span className="text-amber-500 shrink-0 mt-0.5">⚠️</span>
