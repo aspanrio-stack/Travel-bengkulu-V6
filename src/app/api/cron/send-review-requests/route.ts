@@ -84,6 +84,7 @@ function emailHtml(order: Order, token: string): string {
     <div style="margin:0 0 24px;">${stars}</div>
     <a href="${base}" style="display:inline-block;background:#0f766e;color:#ffffff;font-size:14px;font-weight:700;padding:14px 28px;border-radius:10px;text-decoration:none;">Tulis Ulasan</a>
     <p style="color:#64748b;font-size:12px;line-height:1.6;margin:20px 0 0;">Hanya butuh 1 menit. Tautan ini berlaku 60 hari dan tidak perlu login. Anda juga bisa mengubah ulasan lewat tautan yang sama.</p>
+    <div style="margin:22px 0 0;padding-top:14px;border-top:1px solid #e2e8f0;"><p style="color:#94a3b8;font-size:11px;line-height:1.6;margin:0;">Info: butuh website untuk bisnis Anda?<br>Jasa pembuatan website &middot; <strong style="color:#64748b;">0813-1556-592</strong></p></div>
   </div>
   <div style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:16px;text-align:center;">
     <p style="color:#64748b;font-size:11px;margin:0;">No. Pesanan ${esc(order.id)} &middot; cs@bengkulutravel.com &middot; ${esc(SITE_URL.replace(/^https?:\/\//, ''))}</p>
@@ -100,6 +101,8 @@ function emailText(order: Order, token: string): string {
     `${SITE_URL}/review?token=${token}`,
     '',
     `No. Pesanan ${order.id}`,
+    '',
+    'Info: jasa pembuatan website bisnis - 0813-1556-592',
   ].join('\n');
 }
 
